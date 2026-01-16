@@ -99,6 +99,24 @@ TypeScript type and interface specifications.
 
 ---
 
+### [Accessibility](./accessibility.md)
+
+Accessibility features and WCAG compliance specifications.
+
+| Section | Contents |
+|---------|----------|
+| Keyboard Navigation | Global shortcuts, review page shortcuts |
+| Skip to Main Content | Skip link implementation |
+| Focus Management | Focus indicators, focus traps |
+| Toast Notifications | ToastProvider API, accessibility features |
+| Error Boundary | ErrorBoundary component API |
+| ARIA Landmarks | Page structure, navigation labels |
+| Color and Contrast | Color independence, contrast ratios |
+| Touch Targets | Minimum sizes, WCAG compliance |
+| Screen Reader Support | Live regions, dynamic content |
+
+---
+
 ## Quick Reference
 
 ### Entity Summary

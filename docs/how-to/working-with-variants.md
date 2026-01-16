@@ -143,4 +143,4 @@ Returns array with: `id`, `dimension`, `difficulty`, `front`, `back`, timestamps
 ## Related
 
 - [Creating Concepts](./creating-concepts.md) - Add concepts to attach variants to
-- [Reference: Dimensions](../reference/dimensions.md) - Full dimension specifications
+- [Reference: Domain Model](../reference/domain-model.md#dimension) - Full dimension specifications

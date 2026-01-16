@@ -83,6 +83,9 @@ Traditional spaced repetition systems (like Anki) treat all correct answers equa
 - **Adapts card selection** - Prioritizes question types you struggle with
 - **Prevents frustration** - Backs off after repeated failures
 - **Shows honest feedback** - Your actual skill profile, not just "cards due"
+- **Keyboard-first design** - Full keyboard navigation with Space and 1-4 rating shortcuts
+- **Accessible by default** - WCAG 2.1 AA compliant with screen reader support
+- **Graceful error handling** - Error boundaries and toast notifications for clear feedback
 
 Learn more in [Six Dimensions Explanation](explanation/six-dimensions.md)
 
@@ -105,6 +108,9 @@ Learn more in [Six Dimensions Explanation](explanation/six-dimensions.md)
 - [Customizing Review Sessions](how-to/customizing-reviews.md)
 - [Working with Variants](how-to/working-with-variants.md)
 - [Managing Mastery Scores](how-to/managing-mastery.md)
+- [Using Keyboard Shortcuts](how-to/using-keyboard-shortcuts.md)
+- [Handling Errors](how-to/handling-errors.md)
+- [Using Notifications](how-to/using-notifications.md)
 - [Troubleshooting](how-to/troubleshooting.md)
 
 ### 📕 [Reference](reference/)
@@ -116,6 +122,7 @@ Learn more in [Six Dimensions Explanation](explanation/six-dimensions.md)
 - [IPC API](reference/ipc-api.md) - Channels, types, error codes
 - [Configuration](reference/configuration.md) - Settings, defaults, environment variables
 - [Type Definitions](reference/types.md) - Core types, DTOs, constants
+- [Accessibility](reference/accessibility.md) - WCAG compliance, keyboard shortcuts, screen reader support
 
 ### 📙 [Explanation](explanation/)
 

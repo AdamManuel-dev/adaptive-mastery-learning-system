@@ -112,4 +112,4 @@ Progress is saved. Remaining cards stay due.
 ## Related
 
 - [Managing Mastery](./managing-mastery.md) - Understand your skill profile
-- [Reference: Rating System](../reference/rating-system.md) - How ratings affect scheduling
+- [Reference: Domain Model](../reference/domain-model.md#reviewresult) - How ratings affect scheduling

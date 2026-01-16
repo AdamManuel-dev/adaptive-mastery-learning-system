@@ -133,4 +133,4 @@ These tutorials are designed to guarantee your success. If any step is unclear o
 
 ---
 
-*These tutorials get you started. For task-oriented guides on specific goals, see the [How-To guides](../how-to/index.md) (coming soon). For deep understanding of how the system works, see [Explanations](../explanation/index.md) (coming soon).*
+*These tutorials get you started. For task-oriented guides on specific goals, see the [How-To guides](../how-to/index.md). For deep understanding of how the system works, see [Explanations](../explanation/index.md).*

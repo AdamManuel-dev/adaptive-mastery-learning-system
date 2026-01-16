@@ -73,7 +73,7 @@ Clear the search field to show all concepts again.
 - JSON array of `{ name, definition }` objects
 - CSV with `name,definition` columns
 
-See [Explanation: Data Model](../explanation/data-model.md) for the concept schema.
+See [Domain Model Reference](../reference/domain-model.md) for the concept schema.
 
 ---
 

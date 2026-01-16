@@ -62,6 +62,40 @@ Task-oriented guides for the Adaptive Mastery Learning System. Find solutions to
 
 ---
 
+## Keyboard & Accessibility
+
+| Task | Guide |
+|------|-------|
+| Use review shortcuts | [Using Keyboard Shortcuts](./using-keyboard-shortcuts.md#use-keyboard-shortcuts-during-review-sessions) |
+| Skip to main content | [Using Keyboard Shortcuts](./using-keyboard-shortcuts.md#skip-to-main-content) |
+| Navigate with keyboard | [Using Keyboard Shortcuts](./using-keyboard-shortcuts.md#navigate-with-keyboard-only) |
+| Dismiss notifications | [Using Keyboard Shortcuts](./using-keyboard-shortcuts.md#dismiss-notifications-with-keyboard) |
+| Navigate modals | [Using Keyboard Shortcuts](./using-keyboard-shortcuts.md#navigate-modals-with-keyboard) |
+
+---
+
+## Notifications & Feedback
+
+| Task | Guide |
+|------|-------|
+| Understand notification types | [Using Notifications](./using-notifications.md#understand-notification-types) |
+| Dismiss notifications | [Using Notifications](./using-notifications.md#dismiss-notifications) |
+| Respond to errors | [Using Notifications](./using-notifications.md#respond-to-error-notifications) |
+| Settings confirmation | [Using Notifications](./using-notifications.md#settings-page-confirmation) |
+
+---
+
+## Error Handling
+
+| Task | Guide |
+|------|-------|
+| Recover from page errors | [Handling Errors](./handling-errors.md#recover-from-page-errors) |
+| Handle API key errors | [Handling Errors](./handling-errors.md#handle-api-key-errors) |
+| Handle database errors | [Handling Errors](./handling-errors.md#handle-database-errors) |
+| Report persistent errors | [Handling Errors](./handling-errors.md#report-persistent-errors) |
+
+---
+
 ## Troubleshooting
 
 | Problem | Solution |

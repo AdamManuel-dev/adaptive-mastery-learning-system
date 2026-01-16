@@ -237,5 +237,5 @@ If these solutions don't resolve your issue:
 
 ## Related
 
-- [Reference: Database Schema](../reference/schema.md) - Table structures
-- [Reference: IPC Channels](../reference/api.md) - API specification
+- [Reference: Database Schema](../reference/database-schema.md) - Table structures
+- [Reference: IPC Channels](../reference/ipc-api.md) - API specification

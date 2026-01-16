@@ -115,7 +115,7 @@ mastery = 0.7 * accuracy + 0.3 * speed
 - Rating scores: again=0, hard=0.4, good=0.7, easy=1.0
 - Speed score: Based on response time vs. difficulty target
 
-See [Explanation: EWMA Algorithm](../explanation/ewma-algorithm.md) for details.
+See [Explanation: Mastery Algorithm](../explanation/mastery-algorithm.md) for details.
 
 ---
 
@@ -155,4 +155,4 @@ console.log(profile)
 ## Related
 
 - [Customizing Reviews](./customizing-reviews.md) - Adjust session behavior
-- [Reference: Mastery API](../reference/api.md#mastery) - Full API specification
+- [Reference: Mastery API](../reference/ipc-api.md#mastery-channels) - Full API specification
