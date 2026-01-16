@@ -1,0 +1,43 @@
+appId: com.adammanuel.adaptive-mastery
+productName: Adaptive Mastery Learning System
+directories:
+  buildResources: build
+  output: dist
+files:
+  - out/**/*
+  - "!**/*.ts"
+  - "!**/*.map"
+extraResources:
+  - from: data/
+    to: data/
+    filter:
+      - "**/*"
+asar: true
+win:
+  executableName: adaptive-mastery
+  target:
+    - target: nsis
+      arch:
+        - x64
+nsis:
+  artifactName: ${name}-${version}-setup.${ext}
+  shortcutName: ${productName}
+  uninstallDisplayName: ${productName}
+  createDesktopShortcut: always
+mac:
+  entitlementsInherit: build/entitlements.mac.plist
+  target:
+    - target: dmg
+      arch:
+        - x64
+        - arm64
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  notarize: false
+linux:
+  target:
+    - target: AppImage
+      arch:
+        - x64
+  maintainer: Adam Manuel
+  category: Education
