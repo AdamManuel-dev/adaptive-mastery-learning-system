@@ -1,0 +1,12 @@
+{
+  "name": "adaptive-mastery-learning-system",
+  "version": "1.0.0",
+  "description": "A local spaced repetition system that goes beyond basic flashcard drilling by detecting which types of questions you struggle with and automatically rebalancing practice toward your weaknesses. Instead of treating all correct answers equally, it tracks performance across six cognitive dimensions and adapts card selection to push you toward genuine mastery.",
+  "license": "ISC",
+  "author": "Adam Manuel",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
