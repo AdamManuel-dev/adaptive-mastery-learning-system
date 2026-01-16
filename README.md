@@ -6,6 +6,8 @@
 
 > A spaced repetition system that goes beyond basic flashcard drilling by detecting which *types* of questions you struggle with and automatically rebalancing practice toward your weaknesses.
 
+**📖 [Complete Documentation](./docs/index.md)** | **🚀 [Quick Start Tutorial](./docs/tutorials/getting-started.md)**
+
 ## 🎯 Core Innovation
 
 Unlike traditional SRS systems (like Anki) that treat all correct answers equally, this system tracks your performance across **six cognitive dimensions** and adapts card selection to push you toward genuine mastery.
@@ -294,9 +296,45 @@ function weaknessBoost(dimensionMastery: number): number {
 
 ## 📚 Documentation
 
+Comprehensive documentation following the [Diátaxis framework](https://diataxis.fr/):
+
+### 📖 [Complete Documentation Hub](./docs/index.md)
+
+**Navigate by your goal:**
+
+| I want to... | Documentation Type | Start Here |
+|--------------|-------------------|------------|
+| 🆕 **Learn the basics** | Tutorials | [Getting Started](./docs/tutorials/getting-started.md) (30 min) |
+| 🎯 **Accomplish a task** | How-To Guides | [How-To Index](./docs/how-to/index.md) |
+| 📖 **Look up technical details** | Reference | [Reference Index](./docs/reference/index.md) |
+| 💡 **Understand design decisions** | Explanation | [Explanation Index](./docs/explanation/index.md) |
+
+### Quick Links
+
+**Learning Path:**
+- [Getting Started Tutorial](./docs/tutorials/getting-started.md) - Install, create first concept, complete first review
+- [Understanding Your Mastery Profile](./docs/tutorials/understanding-mastery.md) - Interpret dashboard and skill tracking
+
+**Common Tasks:**
+- [Creating and Managing Concepts](./docs/how-to/creating-concepts.md)
+- [Customizing Review Sessions](./docs/how-to/customizing-reviews.md)
+- [Troubleshooting Common Issues](./docs/how-to/troubleshooting.md)
+
+**Technical Reference:**
+- [Domain Model Specification](./docs/reference/domain-model.md) - Entities, value objects, aggregates
+- [Database Schema](./docs/reference/database-schema.md) - Complete SQLite schema
+- [IPC API Reference](./docs/reference/ipc-api.md) - All communication channels
+- [Type Definitions](./docs/reference/types.md) - TypeScript types and interfaces
+
+**Deep Dives:**
+- [Why This Architecture?](./docs/explanation/architecture.md) - Hexagonal + DDD rationale
+- [Mastery Algorithm Explained](./docs/explanation/mastery-algorithm.md) - EWMA and dual metrics
+- [Six Dimensions Framework](./docs/explanation/six-dimensions.md) - Cognitive science backing
+- [Technology Choices](./docs/explanation/technology-choices.md) - Stack decisions
+
+**Project Documentation:**
 - [PRD.md](./PRD.md) - Complete product requirements document
-- [ARCHITECTURE.md](./ARCHITECTURE.md) - Technical architecture details (coming soon)
-- [API.md](./API.md) - API documentation (coming soon)
+- [TECHNICAL.md](./TECHNICAL.md) - Technical architecture document
 
 ## 🤝 Contributing
 
