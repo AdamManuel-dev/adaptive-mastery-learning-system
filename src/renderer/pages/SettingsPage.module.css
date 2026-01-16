@@ -1,0 +1,184 @@
+/**
+ * @fileoverview CSS Module styles for the Settings page
+ * @lastmodified 2026-01-16T00:00:00Z
+ *
+ * Features: Form styling, section layout, theme toggle buttons
+ * Patterns: Card-based sections, consistent form field styling
+ */
+
+.settingsPage {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Header */
+.header {
+  margin-bottom: var(--space-xl);
+}
+
+.header h1 {
+  margin-bottom: var(--space-xs);
+}
+
+.subtitle {
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* Settings Container */
+.settingsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* Section */
+.section {
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+}
+
+.sectionTitle {
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--space-xs);
+}
+
+.sectionDescription {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-lg);
+}
+
+/* Field Group */
+.fieldGroup {
+  margin-bottom: var(--space-lg);
+}
+
+.fieldGroup:last-child {
+  margin-bottom: 0;
+}
+
+.label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: var(--space-xs);
+  color: var(--color-text-primary);
+}
+
+.input,
+.select {
+  width: 100%;
+  max-width: 400px;
+}
+
+.fieldHint {
+  display: block;
+  margin-top: var(--space-xs);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+/* Test Button */
+.testButton {
+  margin-top: var(--space-md);
+}
+
+/* Theme Options */
+.themeOptions {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xs);
+}
+
+.themeButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-md) var(--space-lg);
+  background-color: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.themeButton:hover {
+  border-color: var(--color-primary);
+}
+
+.themeButtonActive {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-light);
+}
+
+.themeIcon {
+  width: 32px;
+  height: 32px;
+  background-color: var(--color-background);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+}
+
+.themeButtonActive .themeIcon {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.themeLabel {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.themeButtonActive .themeLabel {
+  color: var(--color-primary);
+}
+
+/* Save Section */
+.saveSection {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+}
+
+.saveMessage {
+  font-size: var(--font-size-sm);
+  color: var(--color-success);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .settingsPage {
+    padding: 0;
+  }
+
+  .themeOptions {
+    flex-wrap: wrap;
+  }
+
+  .themeButton {
+    flex: 1;
+    min-width: 80px;
+  }
+
+  .saveSection {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .saveMessage {
+    text-align: center;
+  }
+}

@@ -2,8 +2,10 @@
 
 **Generated from:** PRD.md v1.0.0
 **Date:** 2025-01-16
-**Status:** Planning Phase
+**Last Updated:** 2026-01-16
+**Status:** Active Development - Phase 5 In Progress
 **Total Tasks:** 147
+**Completed:** ~75 tasks
 
 ---
 
@@ -29,47 +31,47 @@
 
 ---
 
-## Phase 1: Foundation & Infrastructure (Weeks 1-2)
+## Phase 1: Foundation & Infrastructure (Weeks 1-2) ✅ COMPLETE
 
-### 1.1 Project Setup & Configuration
+### 1.1 Project Setup & Configuration ✅
 
-- [ ] **[P1/S/H]** Initialize Node.js/TypeScript project with proper tsconfig
+- [x] **[P1/S/H]** Initialize Node.js/TypeScript project with proper tsconfig
   - Dependencies: None
   - Owner: TBD
   - Estimate: 2 hours
   - Acceptance: Build succeeds, strict mode enabled
 
-- [ ] **[P1/S/H]** Set up Electron project structure with main/renderer processes
+- [x] **[P1/S/H]** Set up Electron project structure with main/renderer processes
   - Dependencies: Node.js setup
   - Owner: TBD
   - Estimate: 3 hours
   - Acceptance: Electron window opens successfully
 
-- [ ] **[P1/S/M]** Configure ESLint with Airbnb + Prettier rules
+- [x] **[P1/S/M]** Configure ESLint with Airbnb + Prettier rules
   - Dependencies: Project initialization
   - Owner: TBD
   - Estimate: 2 hours
   - Acceptance: Linting runs without errors
 
-- [ ] **[P1/S/M]** Set up Jest testing framework with React Testing Library
+- [x] **[P1/S/M]** Set up Jest testing framework with React Testing Library
   - Dependencies: Project initialization
   - Owner: TBD
   - Estimate: 3 hours
   - Acceptance: Sample test passes
 
-- [ ] **[P1/S/H]** Configure build system (webpack/vite) for Electron
+- [x] **[P1/S/H]** Configure build system (webpack/vite) for Electron
   - Dependencies: Electron setup
   - Owner: TBD
   - Estimate: 4 hours
   - Acceptance: Hot reload works in dev mode
 
-- [ ] **[P2/S/M]** Set up electron-builder for packaging
+- [x] **[P2/S/M]** Set up electron-builder for packaging
   - Dependencies: Electron configuration
   - Owner: TBD
   - Estimate: 3 hours
   - Acceptance: Can build .dmg/.exe/.AppImage
 
-- [ ] **[P2/S/M]** Create config.example.json template
+- [x] **[P2/S/M]** Create config.example.json template
   - Dependencies: None
   - Owner: TBD
   - Estimate: 1 hour
@@ -81,74 +83,74 @@
   - Estimate: 2 hours
   - Acceptance: Hooks block commits with errors
 
-- [ ] **[P3/S/L]** Create .gitignore with proper exclusions
+- [x] **[P3/S/L]** Create .gitignore with proper exclusions
   - Dependencies: None
   - Owner: TBD
   - Estimate: 1 hour
   - Acceptance: Config files and data excluded
 
-### 1.2 Database Schema & Setup
+### 1.2 Database Schema & Setup ✅
 
-- [ ] **[P1/M/H]** Install and configure better-sqlite3
+- [x] **[P1/M/H]** Install and configure better-sqlite3
   - Dependencies: Node.js setup
   - Owner: TBD
   - Estimate: 2 hours
   - Acceptance: Can create and query database
 
-- [ ] **[P1/M/H]** Create `concepts` table schema
+- [x] **[P1/M/H]** Create `concepts` table schema
   - Dependencies: SQLite setup
   - Owner: TBD
   - Estimate: 2 hours
   - Fields: id, name, definition, facts (JSON)
   - Acceptance: Table creation script runs successfully
 
-- [ ] **[P1/M/H]** Create `variants` table schema
+- [x] **[P1/M/H]** Create `variants` table schema
   - Dependencies: SQLite setup
   - Owner: TBD
   - Estimate: 2 hours
   - Fields: id, concept_id, dimension, difficulty, front, back, hints (JSON), last_shown_at
   - Acceptance: Table with foreign key constraints
 
-- [ ] **[P1/M/H]** Create `mastery` table schema
+- [x] **[P1/M/H]** Create `mastery` table schema
   - Dependencies: SQLite setup
   - Owner: TBD
   - Estimate: 2 hours
   - Fields: dimension, accuracy_ewma, speed_ewma, recent_count
   - Acceptance: Table with default values
 
-- [ ] **[P1/M/H]** Create `events` table schema
+- [x] **[P1/M/H]** Create `events` table schema
   - Dependencies: SQLite setup
   - Owner: TBD
   - Estimate: 2 hours
   - Fields: id, concept_id, variant_id, dimension, difficulty, result, time_ms, hints_used, created_at
   - Acceptance: Table with auto-increment and timestamp
 
-- [ ] **[P1/M/H]** Create `schedule` table schema
+- [x] **[P1/M/H]** Create `schedule` table schema
   - Dependencies: SQLite setup
   - Owner: TBD
   - Estimate: 2 hours
   - Fields: concept_id, due_at, interval_days, ease_factor
   - Acceptance: Table with proper indexing
 
-- [ ] **[P1/S/H]** Add indexes for performance (concept_id, dimension, due_at)
+- [x] **[P1/S/H]** Add indexes for performance (concept_id, dimension, due_at)
   - Dependencies: All tables created
   - Owner: TBD
   - Estimate: 2 hours
   - Acceptance: Query performance < 50ms for typical operations
 
-- [ ] **[P1/M/H]** Create database migration system
+- [x] **[P1/M/H]** Create database migration system
   - Dependencies: SQLite setup
   - Owner: TBD
   - Estimate: 4 hours
   - Acceptance: Can version and migrate schema changes
 
-- [ ] **[P2/S/M]** Implement database initialization on first run
+- [x] **[P2/S/M]** Implement database initialization on first run
   - Dependencies: All tables defined
   - Owner: TBD
   - Estimate: 3 hours
   - Acceptance: Fresh install creates all tables
 
-- [ ] **[P2/S/M]** Create seed data script with example concepts
+- [x] **[P2/S/M]** Create seed data script with example concepts
   - Dependencies: Database schema
   - Owner: TBD
   - Estimate: 2 hours
@@ -160,83 +162,83 @@
   - Estimate: 4 hours
   - Acceptance: Can export/import .db files
 
-### 1.3 Core TypeScript Types & Interfaces
+### 1.3 Core TypeScript Types & Interfaces ✅
 
-- [ ] **[P1/S/H]** Define `Dimension` enum type
+- [x] **[P1/S/H]** Define `Dimension` enum type
   - Dependencies: None
   - Owner: TBD
   - Estimate: 1 hour
   - Values: definition_recall, paraphrase_recognition, example_classification, scenario_application, discrimination, cloze_fill
 
-- [ ] **[P1/S/H]** Define `ReviewResult` type
+- [x] **[P1/S/H]** Define `ReviewResult` type
   - Dependencies: None
   - Owner: TBD
   - Estimate: 1 hour
   - Values: 'again' | 'hard' | 'good' | 'easy'
 
-- [ ] **[P1/S/H]** Define `Concept` interface
+- [x] **[P1/S/H]** Define `Concept` interface
   - Dependencies: None
   - Owner: TBD
   - Estimate: 1 hour
   - Acceptance: Matches database schema
 
-- [ ] **[P1/S/H]** Define `Variant` interface
+- [x] **[P1/S/H]** Define `Variant` interface
   - Dependencies: Dimension enum
   - Owner: TBD
   - Estimate: 1 hour
   - Acceptance: Matches database schema
 
-- [ ] **[P1/S/H]** Define `ReviewEvent` interface
+- [x] **[P1/S/H]** Define `ReviewEvent` interface
   - Dependencies: Dimension, ReviewResult types
   - Owner: TBD
   - Estimate: 1 hour
   - Acceptance: Includes all fields from PRD spec
 
-- [ ] **[P1/S/H]** Define `DimensionMastery` interface
+- [x] **[P1/S/H]** Define `DimensionMastery` interface
   - Dependencies: None
   - Owner: TBD
   - Estimate: 1 hour
   - Fields: accuracyEwma, speedEwma, recentCount
 
-- [ ] **[P1/S/H]** Define `ScheduleEntry` interface
+- [x] **[P1/S/H]** Define `ScheduleEntry` interface
   - Dependencies: None
   - Owner: TBD
   - Estimate: 1 hour
   - Fields: conceptId, dueAt, intervalDays, easeFactor
 
-- [ ] **[P2/S/M]** Define `ConceptWithVariants` composite type
+- [x] **[P2/S/M]** Define `ConceptWithVariants` composite type
   - Dependencies: Concept, Variant interfaces
   - Owner: TBD
   - Estimate: 1 hour
   - Acceptance: Useful for API responses
 
-- [ ] **[P2/S/M]** Define `MasteryProfile` type for dashboard display
+- [x] **[P2/S/M]** Define `MasteryProfile` type for dashboard display
   - Dependencies: DimensionMastery
   - Owner: TBD
   - Estimate: 1 hour
   - Acceptance: Includes all 6 dimensions
 
-### 1.4 Basic UI Framework Setup
+### 1.4 Basic UI Framework Setup ✅
 
-- [ ] **[P1/M/H]** Set up React with TypeScript in renderer process
+- [x] **[P1/M/H]** Set up React with TypeScript in renderer process
   - Dependencies: Electron setup
   - Owner: TBD
   - Estimate: 4 hours
   - Acceptance: Can render React components
 
-- [ ] **[P2/M/M]** Choose and configure UI library (Material-UI/Tailwind/etc)
+- [x] **[P2/M/M]** Choose and configure UI library (Material-UI/Tailwind/etc)
   - Dependencies: React setup
   - Owner: TBD
   - Estimate: 3 hours
   - Acceptance: Can use library components
 
-- [ ] **[P2/M/M]** Create base layout component with navigation
+- [x] **[P2/M/M]** Create base layout component with navigation
   - Dependencies: UI library setup
   - Owner: TBD
   - Estimate: 4 hours
   - Acceptance: Header with route links
 
-- [ ] **[P2/S/M]** Implement basic routing (react-router-dom)
+- [x] **[P2/S/M]** Implement basic routing (react-router-dom)
   - Dependencies: React setup
   - Owner: TBD
   - Estimate: 3 hours
@@ -251,53 +253,53 @@
 
 ---
 
-## Phase 2: Core SRS Implementation (Week 3)
+## Phase 2: Core SRS Implementation (Week 3) ✅ COMPLETE
 
-### 2.1 Database Operations Layer
+### 2.1 Database Operations Layer ✅
 
-- [ ] **[P1/M/H]** Implement `db.ts` connection management
+- [x] **[P1/M/H]** Implement `db.ts` connection management
   - Dependencies: better-sqlite3 installed
   - Owner: TBD
   - Estimate: 3 hours
   - Acceptance: Singleton pattern, error handling
 
-- [ ] **[P1/M/H]** Create CRUD operations for `concepts` table
+- [x] **[P1/M/H]** Create CRUD operations for `concepts` table
   - Dependencies: Database schema
   - Owner: TBD
   - Estimate: 4 hours
   - Methods: create, read, update, delete, list
 
-- [ ] **[P1/M/H]** Create CRUD operations for `variants` table
+- [x] **[P1/M/H]** Create CRUD operations for `variants` table
   - Dependencies: Database schema
   - Owner: TBD
   - Estimate: 4 hours
   - Methods: create, readByConcept, update, delete
 
-- [ ] **[P1/M/H]** Create operations for `events` table
+- [x] **[P1/M/H]** Create operations for `events` table
   - Dependencies: Database schema
   - Owner: TBD
   - Estimate: 3 hours
   - Methods: insert, getHistory, getRecentByConcept
 
-- [ ] **[P1/M/H]** Create operations for `schedule` table
+- [x] **[P1/M/H]** Create operations for `schedule` table
   - Dependencies: Database schema
   - Owner: TBD
   - Estimate: 4 hours
   - Methods: getDue, updateSchedule, getNextDueDate
 
-- [ ] **[P1/M/H]** Create operations for `mastery` table
+- [x] **[P1/M/H]** Create operations for `mastery` table
   - Dependencies: Database schema
   - Owner: TBD
   - Estimate: 3 hours
   - Methods: get, update, initialize
 
-- [ ] **[P2/M/M]** Add TypeScript types to all database operations
+- [x] **[P2/M/M]** Add TypeScript types to all database operations
   - Dependencies: All CRUD operations
   - Owner: TBD
   - Estimate: 2 hours
   - Acceptance: Full type safety, no `any`
 
-- [ ] **[P2/M/M]** Implement transaction support for complex operations
+- [x] **[P2/M/M]** Implement transaction support for complex operations
   - Dependencies: db.ts connection
   - Owner: TBD
   - Estimate: 3 hours
@@ -309,107 +311,107 @@
   - Estimate: 2 hours
   - Acceptance: Log queries in dev mode only
 
-### 2.2 SM-2 Scheduling Algorithm
+### 2.2 SM-2 Scheduling Algorithm ✅
 
-- [ ] **[P1/M/H]** Implement `scheduler.ts` with SM-2 algorithm
+- [x] **[P1/M/H]** Implement `scheduler.ts` with SM-2 algorithm
   - Dependencies: Schedule table operations
   - Owner: TBD
   - Estimate: 6 hours
   - Acceptance: Correct interval calculation
 
-- [ ] **[P1/M/H]** Create `calculateNextInterval()` function
+- [x] **[P1/M/H]** Create `calculateNextInterval()` function
   - Dependencies: SM-2 algorithm
   - Owner: TBD
   - Estimate: 3 hours
   - Formula: interval = previousInterval * easeFactor
 
-- [ ] **[P1/M/H]** Create `updateEaseFactor()` function
+- [x] **[P1/M/H]** Create `updateEaseFactor()` function
   - Dependencies: SM-2 algorithm
   - Owner: TBD
   - Estimate: 2 hours
   - Logic: Adjust based on review result (again/hard/good/easy)
 
-- [ ] **[P1/M/H]** Create `getDueCards()` function
+- [x] **[P1/M/H]** Create `getDueCards()` function
   - Dependencies: Schedule table
   - Owner: TBD
   - Estimate: 3 hours
   - Acceptance: Returns concepts due now or overdue
 
-- [ ] **[P1/M/H]** Create `scheduleNextReview()` function
+- [x] **[P1/M/H]** Create `scheduleNextReview()` function
   - Dependencies: SM-2 functions
   - Owner: TBD
   - Estimate: 3 hours
   - Acceptance: Updates schedule table correctly
 
-- [ ] **[P2/M/M]** Implement initial scheduling for new concepts
+- [x] **[P2/M/M]** Implement initial scheduling for new concepts
   - Dependencies: Scheduler functions
   - Owner: TBD
   - Estimate: 2 hours
   - Acceptance: New concepts appear in first session
 
-- [ ] **[P2/S/M]** Add edge case handling (first review, overdue cards)
+- [x] **[P2/S/M]** Add edge case handling (first review, overdue cards)
   - Dependencies: Scheduler implementation
   - Owner: TBD
   - Estimate: 3 hours
   - Acceptance: No crashes on edge cases
 
-- [ ] **[P3/M/M]** Write unit tests for SM-2 algorithm
+- [x] **[P3/M/M]** Write unit tests for SM-2 algorithm
   - Dependencies: Scheduler implementation
   - Owner: TBD
   - Estimate: 4 hours
-  - Coverage: All rating types, boundary conditions
+  - Coverage: All rating types, boundary conditions (124 tests passing)
 
-### 2.3 Basic Review UI (No Adaptation Yet)
+### 2.3 Basic Review UI (No Adaptation Yet) ✅
 
-- [ ] **[P1/L/H]** Create `Review.tsx` component skeleton
+- [x] **[P1/L/H]** Create `Review.tsx` component skeleton
   - Dependencies: React setup, routing
   - Owner: TBD
   - Estimate: 4 hours
   - Acceptance: Component renders
 
-- [ ] **[P1/M/H]** Implement card display with front/back
+- [x] **[P1/M/H]** Implement card display with front/back
   - Dependencies: Review component
   - Owner: TBD
   - Estimate: 4 hours
   - Acceptance: Shows question, reveals answer
 
-- [ ] **[P1/M/H]** Add rating buttons (Again/Hard/Good/Easy)
+- [x] **[P1/M/H]** Add rating buttons (Again/Hard/Good/Easy)
   - Dependencies: Card display
   - Owner: TBD
   - Estimate: 3 hours
   - Acceptance: Buttons trigger review submission
 
-- [ ] **[P1/M/H]** Implement timer for tracking answer duration
+- [x] **[P1/M/H]** Implement timer for tracking answer duration
   - Dependencies: Card display
   - Owner: TBD
   - Estimate: 2 hours
   - Acceptance: Accurate to milliseconds
 
-- [ ] **[P1/M/H]** Create review session state management
+- [x] **[P1/M/H]** Create review session state management
   - Dependencies: Review component
   - Owner: TBD
   - Estimate: 4 hours
   - State: currentCard, sessionProgress, completedCount
 
-- [ ] **[P1/M/H]** Implement "Show Answer" button functionality
+- [x] **[P1/M/H]** Implement "Show Answer" button functionality
   - Dependencies: Card display
   - Owner: TBD
   - Estimate: 2 hours
   - Acceptance: Reveals back of card
 
-- [ ] **[P2/M/M]** Add session progress indicator (8/25)
+- [x] **[P2/M/M]** Add session progress indicator (8/25)
   - Dependencies: Session state
   - Owner: TBD
   - Estimate: 2 hours
   - Acceptance: Updates in real-time
 
-- [ ] **[P2/M/M]** Implement session completion screen
+- [x] **[P2/M/M]** Implement session completion screen
   - Dependencies: Review flow
   - Owner: TBD
   - Estimate: 3 hours
   - Acceptance: Shows summary, returns to dashboard
 
-- [ ] **[P2/S/M]** Add keyboard shortcuts (Space = show, 1-4 = rating)
+- [x] **[P2/S/M]** Add keyboard shortcuts (Space = show, 1-4 = rating)
   - Dependencies: Review component
   - Owner: TBD
   - Estimate: 3 hours
@@ -421,15 +423,15 @@
   - Estimate: 2 hours
   - Acceptance: Smooth CSS transition
 
-### 2.4 Manual Card Creation UI
+### 2.4 Manual Card Creation UI ✅
 
-- [ ] **[P1/L/H]** Create `ConceptEditor.tsx` component
+- [x] **[P1/L/H]** Create `ConceptEditor.tsx` component
   - Dependencies: React setup
   - Owner: TBD
   - Estimate: 6 hours
   - Acceptance: Form renders with validation
 
-- [ ] **[P1/M/H]** Implement concept creation form (name, definition, facts)
+- [x] **[P1/M/H]** Implement concept creation form (name, definition, facts)
   - Dependencies: ConceptEditor component
   - Owner: TBD
   - Estimate: 4 hours
@@ -459,13 +461,13 @@
   - Estimate: 2 hours
   - Acceptance: Can add multiple hints
 
-- [ ] **[P2/M/M]** Implement save/cancel buttons with validation
+- [x] **[P2/M/M]** Implement save/cancel buttons with validation
   - Dependencies: Both editors
   - Owner: TBD
   - Estimate: 3 hours
   - Acceptance: Shows errors, prevents invalid saves
 
-- [ ] **[P2/M/M]** Create concept list view with edit/delete actions
+- [x] **[P2/M/M]** Create concept list view with edit/delete actions
   - Dependencies: Concept CRUD operations
   - Owner: TBD
   - Estimate: 4 hours
@@ -486,35 +488,35 @@
 
 ---
 
-## Phase 3: Instrumentation & Mastery Tracking (Week 3)
+## Phase 3: Instrumentation & Mastery Tracking (Week 3) ✅ COMPLETE
 
-### 3.1 Event Logging System
+### 3.1 Event Logging System ✅
 
-- [ ] **[P1/M/H]** Create `logger.ts` module for event recording
+- [x] **[P1/M/H]** Create `logger.ts` module for event recording
   - Dependencies: Events table operations
   - Owner: TBD
   - Estimate: 3 hours
   - Acceptance: Can insert events with validation
 
-- [ ] **[P1/M/H]** Implement `logReviewEvent()` function
+- [x] **[P1/M/H]** Implement `logReviewEvent()` function
   - Dependencies: Logger module
   - Owner: TBD
   - Estimate: 2 hours
   - Params: conceptId, variantId, dimension, difficulty, result, timeMs, hintsUsed
 
-- [ ] **[P1/M/H]** Integrate event logging into review flow
+- [x] **[P1/M/H]** Integrate event logging into review flow
   - Dependencies: Review component, logger
   - Owner: TBD
   - Estimate: 3 hours
   - Acceptance: Every answer creates event record
 
-- [ ] **[P2/S/M]** Add event validation (required fields, ranges)
+- [x] **[P2/S/M]** Add event validation (required fields, ranges)
   - Dependencies: Logger module
   - Owner: TBD
   - Estimate: 2 hours
   - Acceptance: Rejects invalid events
 
-- [ ] **[P2/M/M]** Implement event query functions (history, stats)
+- [x] **[P2/M/M]** Implement event query functions (history, stats)
   - Dependencies: Events table
   - Owner: TBD
   - Estimate: 4 hours
@@ -526,109 +528,109 @@
   - Estimate: 3 hours
   - Acceptance: Can export all events
 
-### 3.2 EWMA Mastery Calculation
+### 3.2 EWMA Mastery Calculation ✅
 
-- [ ] **[P1/M/H]** Create `mastery.ts` module
+- [x] **[P1/M/H]** Create `mastery.ts` module
   - Dependencies: Mastery table operations
   - Owner: TBD
   - Estimate: 3 hours
   - Acceptance: Module exports calculation functions
 
-- [ ] **[P1/M/H]** Implement `updateEwma()` utility function
+- [x] **[P1/M/H]** Implement `updateEwma()` utility function
   - Dependencies: None
   - Owner: TBD
   - Estimate: 2 hours
   - Formula: (1 - α) * current + α * newValue
   - Acceptance: Alpha parameter configurable
 
-- [ ] **[P1/M/H]** Implement `ratingToScore()` mapping
+- [x] **[P1/M/H]** Implement `ratingToScore()` mapping
   - Dependencies: ReviewResult type
   - Owner: TBD
   - Estimate: 1 hour
   - Map: again=0, hard=0.4, good=0.7, easy=1.0
 
-- [ ] **[P1/M/H]** Implement `speedScore()` calculation
+- [x] **[P1/M/H]** Implement `speedScore()` calculation
   - Dependencies: None
   - Owner: TBD
   - Estimate: 3 hours
   - Formula: 1 - clamp(timeMs / targetMs, 0, 2) / 2
   - Acceptance: Handles all difficulty levels
 
-- [ ] **[P1/M/H]** Create `updateMastery()` function
+- [x] **[P1/M/H]** Create `updateMastery()` function
   - Dependencies: updateEwma, ratingToScore, speedScore
   - Owner: TBD
   - Estimate: 4 hours
   - Acceptance: Updates accuracy and speed EWMAs
 
-- [ ] **[P1/M/H]** Implement `calculateCombinedMastery()` function
+- [x] **[P1/M/H]** Implement `calculateCombinedMastery()` function
   - Dependencies: DimensionMastery interface
   - Owner: TBD
   - Estimate: 2 hours
   - Formula: 0.7 * accuracyEwma + 0.3 * speedEwma
 
-- [ ] **[P1/M/H]** Integrate mastery updates into review flow
+- [x] **[P1/M/H]** Integrate mastery updates into review flow
   - Dependencies: Review component, mastery module
   - Owner: TBD
   - Estimate: 3 hours
   - Acceptance: Mastery updates after each answer
 
-- [ ] **[P2/M/M]** Initialize default mastery values for new users
+- [x] **[P2/M/M]** Initialize default mastery values for new users
   - Dependencies: Mastery table
   - Owner: TBD
   - Estimate: 2 hours
   - Defaults: accuracyEwma=0.5, speedEwma=0.5, recentCount=0
 
-- [ ] **[P2/S/M]** Add mastery calculation edge case handling
+- [x] **[P2/S/M]** Add mastery calculation edge case handling
   - Dependencies: Mastery calculations
   - Owner: TBD
   - Estimate: 2 hours
   - Cases: First review, very fast answers, very slow answers
 
-- [ ] **[P3/M/M]** Write unit tests for all mastery calculations
+- [x] **[P3/M/M]** Write unit tests for all mastery calculations
   - Dependencies: Mastery module complete
   - Owner: TBD
   - Estimate: 4 hours
   - Coverage: EWMA, speed scoring, combined mastery
 
-### 3.3 Dashboard with Mastery Visualization
+### 3.3 Dashboard with Mastery Visualization ✅
 
-- [ ] **[P1/L/H]** Create `Dashboard.tsx` component
+- [x] **[P1/L/H]** Create `Dashboard.tsx` component
   - Dependencies: React setup, routing
   - Owner: TBD
   - Estimate: 6 hours
   - Acceptance: Component renders with layout
 
-- [ ] **[P1/M/H]** Implement mastery profile data fetching
+- [x] **[P1/M/H]** Implement mastery profile data fetching
   - Dependencies: Mastery table operations
   - Owner: TBD
   - Estimate: 3 hours
   - Acceptance: Loads all 6 dimension scores
 
-- [ ] **[P1/M/H]** Create dimension skill bars component
+- [x] **[P1/M/H]** Create dimension skill bars component
   - Dependencies: Dashboard component
   - Owner: TBD
   - Estimate: 4 hours
   - Acceptance: Visual bars showing 0-100% per dimension
 
-- [ ] **[P1/M/H]** Add mastery percentage labels
+- [x] **[P1/M/H]** Add mastery percentage labels
   - Dependencies: Skill bars
   - Owner: TBD
   - Estimate: 2 hours
   - Acceptance: Shows numeric percentage next to bars
 
-- [ ] **[P2/M/M]** Implement gap detection and highlighting
+- [x] **[P2/M/M]** Implement gap detection and highlighting
   - Dependencies: Mastery data
   - Owner: TBD
   - Estimate: 3 hours
   - Acceptance: Highlights weakest dimension with ⚠️
 
-- [ ] **[P2/M/M]** Add suggestion text ("Focus on scenarios")
+- [x] **[P2/M/M]** Add suggestion text ("Focus on scenarios")
   - Dependencies: Gap detection
   - Owner: TBD
   - Estimate: 2 hours
   - Acceptance: Shows actionable suggestion
 
-- [ ] **[P2/M/M]** Display due cards count and "Start Review" button
+- [x] **[P2/M/M]** Display due cards count and "Start Review" button
   - Dependencies: Schedule operations
   - Owner: TBD
   - Estimate: 3 hours
@@ -640,7 +642,7 @@
   - Estimate: 3 hours
   - Acceptance: Shows count and accuracy for today
 
-- [ ] **[P3/M/M]** Implement color coding (red=weak, yellow=medium, green=strong)
+- [x] **[P3/M/M]** Implement color coding (red=weak, yellow=medium, green=strong)
   - Dependencies: Skill bars
   - Owner: TBD
   - Estimate: 2 hours
@@ -654,23 +656,23 @@
 
 ---
 
-## Phase 4: Adaptive Selection & Weakness Detection (Weeks 4-5)
+## Phase 4: Adaptive Selection & Weakness Detection (Weeks 4-5) ✅ COMPLETE
 
-### 4.1 Weakness Detection System
+### 4.1 Weakness Detection System ✅
 
-- [ ] **[P1/M/H]** Create `detector.ts` module for weakness analysis
+- [x] **[P1/M/H]** Create `detector.ts` module for weakness analysis
   - Dependencies: Mastery module
   - Owner: TBD
   - Estimate: 4 hours
   - Acceptance: Module exports detection functions
 
-- [ ] **[P1/M/H]** Implement `detectWeakDimension()` function
+- [x] **[P1/M/H]** Implement `detectWeakDimension()` function
   - Dependencies: Mastery data
   - Owner: TBD
   - Estimate: 4 hours
   - Logic: Compare dimensions, require minimum sample size
 
-- [ ] **[P1/M/H]** Implement `detectFragileConfidence()` function
+- [x] **[P1/M/H]** Implement `detectFragileConfidence()` function
   - Dependencies: Mastery data
   - Owner: TBD
   - Estimate: 3 hours
@@ -682,13 +684,13 @@
   - Estimate: 3 hours
   - Logic: Strong definitions, weak everything else
 
-- [ ] **[P2/M/M]** Create composite weakness profile
+- [x] **[P2/M/M]** Create composite weakness profile
   - Dependencies: All detection functions
   - Owner: TBD
   - Estimate: 3 hours
   - Output: Primary weakness + confidence issues
 
-- [ ] **[P2/S/M]** Add minimum sample size checks (20+ reviews)
+- [x] **[P2/S/M]** Add minimum sample size checks (20+ reviews)
   - Dependencies: Detection functions
   - Owner: TBD
   - Estimate: 2 hours
@@ -700,45 +702,45 @@
   - Estimate: 4 hours
   - Coverage: All detection scenarios
 
-### 4.2 Weighted Card Selection Algorithm
+### 4.2 Weighted Card Selection Algorithm ✅
 
-- [ ] **[P1/L/H]** Create `selector.ts` module for adaptive selection
+- [x] **[P1/L/H]** Create `selector.ts` module for adaptive selection
   - Dependencies: Mastery, Detector modules
   - Owner: TBD
   - Estimate: 6 hours
   - Acceptance: Module exports selection functions
 
-- [ ] **[P1/M/H]** Implement `calculateWeaknessBoost()` function
+- [x] **[P1/M/H]** Implement `calculateWeaknessBoost()` function
   - Dependencies: Mastery data
   - Owner: TBD
   - Estimate: 3 hours
   - Formula: if mastery < 0.7, boost = 1 + 2 * (0.7 - mastery), else 0.9
 
-- [ ] **[P1/M/H]** Implement `calculateNoveltyBoost()` function
+- [x] **[P1/M/H]** Implement `calculateNoveltyBoost()` function
   - Dependencies: Variant last_shown_at
   - Owner: TBD
   - Estimate: 2 hours
   - Logic: daysSinceShown > 7 ? 1.5 : 0.8
 
-- [ ] **[P1/M/H]** Implement `calculateAntiFrustrationPenalty()` function
+- [x] **[P1/M/H]** Implement `calculateAntiFrustrationPenalty()` function
   - Dependencies: Recent event history
   - Owner: TBD
   - Estimate: 3 hours
   - Logic: consecutiveFailures >= 3 ? 0.3 : 1.0
 
-- [ ] **[P1/M/H]** Implement `calculateBaseWeight()` function
+- [x] **[P1/M/H]** Implement `calculateBaseWeight()` function
   - Dependencies: Variant difficulty
   - Owner: TBD
   - Estimate: 2 hours
   - Logic: Weight based on difficulty level
 
-- [ ] **[P1/L/H]** Implement `selectVariantForConcept()` main function
+- [x] **[P1/L/H]** Implement `selectVariantForConcept()` main function
   - Dependencies: All weight functions
   - Owner: TBD
   - Estimate: 6 hours
   - Formula: weight = base * weakness * novelty * antiFrustration
 
-- [ ] **[P1/M/H]** Add weighted random selection logic
+- [x] **[P1/M/H]** Add weighted random selection logic
   - Dependencies: selectVariantForConcept
   - Owner: TBD
   - Estimate: 4 hours
@@ -750,7 +752,7 @@
   - Estimate: 4 hours
   - Acceptance: Review uses weighted selection
 
-- [ ] **[P2/M/M]** Implement consecutive dimension limiting (max 4 same)
+- [x] **[P2/M/M]** Implement consecutive dimension limiting (max 4 same)
   - Dependencies: Selector module
   - Owner: TBD
   - Estimate: 3 hours
@@ -762,9 +764,9 @@
   - Estimate: 5 hours
   - Coverage: All weight calculations, edge cases
 
-### 4.3 Safety Rails Implementation
+### 4.3 Safety Rails Implementation ✅
 
-- [ ] **[P1/M/H]** Implement session dimension cap (70% max)
+- [x] **[P1/M/H]** Implement session dimension cap (70% max)
   - Dependencies: Selector module
   - Owner: TBD
   - Estimate: 3 hours
@@ -776,7 +778,7 @@
   - Estimate: 3 hours
   - Acceptance: Strong dimensions still get practice
 
-- [ ] **[P1/M/H]** Implement confidence card insertion after 3 failures
+- [x] **[P1/M/H]** Implement confidence card insertion after 3 failures
   - Dependencies: Selector module, event history
   - Owner: TBD
   - Estimate: 4 hours
@@ -828,21 +830,23 @@
 
 ---
 
-## Phase 5: LLM Integration & Card Generation (Week 6)
+## Phase 5: LLM Integration & Card Generation (Week 6) 🚧 IN PROGRESS
 
-### 5.1 LLM API Integration
+### 5.1 LLM API Integration ✅ (Completed 2026-01-16)
 
-- [ ] **[P2/M/M]** Create `generator.ts` module for LLM integration
+- [x] **[P2/M/M]** Create `generator.ts` module for LLM integration
   - Dependencies: config.json
   - Owner: TBD
   - Estimate: 4 hours
   - Acceptance: Module exports generation functions
+  - **Implemented:** OpenAIGenerator class with full LLMGateway interface
 
-- [ ] **[P2/M/M]** Implement OpenAI API client
+- [x] **[P2/M/M]** Implement OpenAI API client
   - Dependencies: Generator module
   - Owner: TBD
   - Estimate: 3 hours
   - Library: openai npm package
+  - **Implemented:** Full client with retry logic, error handling
 
 - [ ] **[P2/M/M]** Implement Anthropic API client (alternative)
   - Dependencies: Generator module
@@ -850,11 +854,12 @@
   - Estimate: 3 hours
   - Library: @anthropic-ai/sdk
 
-- [ ] **[P2/S/M]** Add API key configuration handling
+- [x] **[P2/S/M]** Add API key configuration handling
   - Dependencies: config.json
   - Owner: TBD
   - Estimate: 2 hours
   - Acceptance: Validates key, shows clear errors
+  - **Implemented:** LLMConfigDTO in settings IPC, validation in generator
 
 - [ ] **[P3/M/L]** Implement Ollama local model support (optional)
   - Dependencies: Generator module
@@ -862,11 +867,12 @@
   - Estimate: 4 hours
   - Acceptance: Can use local LLMs
 
-- [ ] **[P3/S/M]** Add LLM provider selection in settings
+- [x] **[P3/S/M]** Add LLM provider selection in settings
   - Dependencies: Multiple clients
   - Owner: TBD
   - Estimate: 2 hours
   - Options: OpenAI, Anthropic, Ollama
+  - **Implemented:** Settings UI and IPC types ready
 
 ### 5.2 Prompt Engineering & Card Generation
 

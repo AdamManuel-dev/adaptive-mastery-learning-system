@@ -1,0 +1,162 @@
+/**
+ * @fileoverview CSS Module styles for the Layout component
+ * @lastmodified 2026-01-16T00:00:00Z
+ *
+ * Features: Header styling, navigation styles, responsive layout
+ * Patterns: CSS Modules for scoped styling, CSS custom properties for theming
+ */
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--color-surface);
+}
+
+/* Header */
+.header {
+  background-color: var(--color-background);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.headerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.logoIcon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+  color: white;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: var(--font-size-lg);
+}
+
+.logoText {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+/* Navigation */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+  font-weight: 500;
+}
+
+.navLink:hover {
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+}
+
+.navLinkActive {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.navLinkActive:hover {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.navIcon {
+  width: 24px;
+  height: 24px;
+  background-color: var(--color-surface);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+}
+
+.navLinkActive .navIcon {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.navLabel {
+  font-size: var(--font-size-sm);
+}
+
+/* Main content */
+.main {
+  flex: 1;
+  padding: var(--space-lg);
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .headerContent {
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .logoText {
+    font-size: var(--font-size-base);
+  }
+
+  .nav {
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .navLabel {
+    display: none;
+  }
+
+  .navLink {
+    padding: var(--space-sm);
+  }
+
+  .navIcon {
+    width: 32px;
+    height: 32px;
+    font-size: var(--font-size-sm);
+  }
+
+  .main {
+    padding: var(--space-md);
+  }
+}
