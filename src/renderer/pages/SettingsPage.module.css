@@ -1,8 +1,8 @@
 /**
  * @fileoverview CSS Module styles for the Settings page
- * @lastmodified 2026-01-16T21:00:00Z
+ * @lastmodified 2026-01-17T01:30:00Z
  *
- * Features: Form styling, section layout, theme toggle buttons, connection testing
+ * Features: Form styling, section layout, theme toggle buttons, connection testing, API key visibility toggle
  * Patterns: Card-based sections, consistent form field styling, WCAG 2.5.5 touch targets, sticky save on mobile
  */
 
@@ -104,6 +104,60 @@
   color: var(--color-text-muted);
 }
 
+/* API Key Field */
+.apiKeyInputWrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: 400px;
+}
+
+.apiKeyInput {
+  padding-right: 44px; /* Space for toggle button */
+}
+
+.apiKeyToggle {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.apiKeyToggle:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-surface);
+}
+
+.apiKeyToggle:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.apiKeyStatus {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-top: var(--space-xs);
+  font-size: var(--font-size-xs);
+  color: var(--color-success);
+}
+
+.apiKeyCheckIcon {
+  flex-shrink: 0;
+}
+
 /* Test Button and Connection Section */
 .testButton {
   display: inline-flex;
@@ -120,6 +174,25 @@
   flex-direction: column;
   gap: var(--space-sm);
   margin-top: var(--space-md);
+}
+
+/* Browser Mode Connection Help */
+.connectionHelp {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-info-light, rgba(59, 130, 246, 0.1));
+  border: 1px solid var(--color-info, #3b82f6);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-info, #3b82f6);
+  line-height: 1.5;
+}
+
+.connectionHelpIcon {
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 
 .connectionResult {
@@ -246,6 +319,10 @@
   .input,
   .select {
     max-width: none; /* Full width inputs on mobile */
+  }
+
+  .apiKeyInputWrapper {
+    max-width: none; /* Full width on mobile */
   }
 
   .testButton {

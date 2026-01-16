@@ -1,26 +1,23 @@
 /**
  * @fileoverview Settings page for application configuration with persistence
- * @lastmodified 2026-01-16T00:00:00Z
+ * @lastmodified 2026-01-17T01:30:00Z
  *
- * Features: LLM API configuration, review settings, theme toggle with persistence
- * Main APIs: React hooks, useTheme context, IPC settings API
+ * Features: LLM API configuration, review settings, theme toggle with persistence, toast notifications
+ * Main APIs: React hooks, useTheme context, IPC settings API, useToast hook
  * Constraints: Settings are persisted via Electron IPC or localStorage in browser mode
- * Patterns: Form-based configuration with section grouping, Lucide React icons
+ * Patterns: Form-based configuration with section grouping, Lucide React icons, toast feedback
  */
 
+import { Sun, Moon, Monitor, Check, X, Loader2, Eye, EyeOff, Info } from 'lucide-react'
 import { useState, useEffect, useCallback } from 'react'
-import { Sun, Moon, Monitor, Check, X, Loader2 } from 'lucide-react'
-import type { LucideIcon } from 'lucide-react'
-
-import { useTheme, type Theme } from '../contexts/ThemeContext'
-import {
-  isElectronAPIAvailable,
-  getElectronAPI,
-} from '../hooks/useElectronAPI'
 
 import styles from './SettingsPage.module.css'
+import { useToast } from '../components/Toast'
+import { useTheme, type Theme } from '../contexts/ThemeContext'
+import { isElectronAPIAvailable, getElectronAPI } from '../hooks/useElectronAPI'
 
 import type { SettingsDTO, LLMConfigDTO } from '../../shared/types/ipc'
+import type { LucideIcon } from 'lucide-react'
 
 // -----------------------------------------------------------------------------
 // Types
@@ -58,6 +55,7 @@ type ConnectionStatus = 'idle' | 'testing' | 'success' | 'error'
  */
 function SettingsPage(): React.JSX.Element {
   const { theme, setTheme } = useTheme()
+  const { showToast } = useToast()
 
   // Form state
   const [settings, setSettings] = useState<SettingsFormState>({
@@ -72,12 +70,9 @@ function SettingsPage(): React.JSX.Element {
   // UI state
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
-  const [saveMessage, setSaveMessage] = useState<{
-    type: 'success' | 'error'
-    text: string
-  } | null>(null)
   const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>('idle')
   const [connectionMessage, setConnectionMessage] = useState<string | null>(null)
+  const [showApiKey, setShowApiKey] = useState(false)
 
   // Load settings on mount
   useEffect(() => {
@@ -124,7 +119,6 @@ function SettingsPage(): React.JSX.Element {
   const handleChange = useCallback(
     <K extends keyof SettingsFormState>(key: K, value: SettingsFormState[K]): void => {
       setSettings((prev) => ({ ...prev, [key]: value }))
-      setSaveMessage(null)
       // Reset connection status when LLM config changes
       if (['llmProvider', 'apiKey', 'modelName', 'apiBaseUrl'].includes(key)) {
         setConnectionStatus('idle')
@@ -145,7 +139,6 @@ function SettingsPage(): React.JSX.Element {
   // Save settings
   const handleSave = useCallback(async (): Promise<void> => {
     setIsSaving(true)
-    setSaveMessage(null)
 
     try {
       const llmConfig: LLMConfigDTO = {
@@ -173,17 +166,17 @@ function SettingsPage(): React.JSX.Element {
         localStorage.setItem('app-settings', JSON.stringify(settingsToSave))
       }
 
-      setSaveMessage({ type: 'success', text: 'Settings saved successfully' })
+      showToast('Settings saved successfully!', 'success')
     } catch (error) {
       console.error('Failed to save settings:', error)
-      setSaveMessage({
-        type: 'error',
-        text: error instanceof Error ? error.message : 'Failed to save settings',
-      })
+      showToast(
+        error instanceof Error ? error.message : 'Failed to save settings',
+        'error'
+      )
     } finally {
       setIsSaving(false)
     }
-  }, [settings, theme])
+  }, [settings, theme, showToast])
 
   // Test LLM connection
   const handleTestConnection = useCallback(async (): Promise<void> => {
@@ -273,16 +266,39 @@ function SettingsPage(): React.JSX.Element {
             <label className={styles.label} htmlFor="apiKey">
               API Key
             </label>
-            <input
-              id="apiKey"
-              type="password"
-              value={settings.apiKey}
-              onChange={(e) => handleChange('apiKey', e.target.value)}
-              placeholder={settings.llmProvider === 'local' ? 'Not required for local models' : 'sk-...'}
-              className={styles.input}
-              disabled={settings.llmProvider === 'local'}
-            />
-            <span className={styles.fieldHint}>
+            <div className={styles.apiKeyInputWrapper}>
+              <input
+                id="apiKey"
+                type={showApiKey ? 'text' : 'password'}
+                value={settings.apiKey}
+                onChange={(e) => handleChange('apiKey', e.target.value)}
+                placeholder={
+                  settings.llmProvider === 'local'
+                    ? 'Not required for local models'
+                    : 'No API key set'
+                }
+                className={`${styles.input} ${styles.apiKeyInput}`}
+                disabled={settings.llmProvider === 'local'}
+                aria-describedby="apiKeyHint apiKeyStatus"
+              />
+              {settings.llmProvider !== 'local' && (
+                <button
+                  type="button"
+                  className={styles.apiKeyToggle}
+                  onClick={() => setShowApiKey((prev) => !prev)}
+                  aria-label={showApiKey ? 'Hide API key' : 'Show API key'}
+                >
+                  {showApiKey ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              )}
+            </div>
+            {settings.apiKey && settings.llmProvider !== 'local' && (
+              <span id="apiKeyStatus" className={styles.apiKeyStatus}>
+                <Check size={14} className={styles.apiKeyCheckIcon} />
+                API key is set
+              </span>
+            )}
+            <span id="apiKeyHint" className={styles.fieldHint}>
               Your API key is stored locally and never sent to our servers.
             </span>
           </div>
@@ -324,13 +340,23 @@ function SettingsPage(): React.JSX.Element {
           )}
 
           <div className={styles.connectionSection}>
+            {!isElectronAPIAvailable() && (
+              <div className={styles.connectionHelp}>
+                <Info size={16} className={styles.connectionHelpIcon} />
+                <span>
+                  Connection testing is only available in the desktop app. In browser
+                  mode, your API key will be validated when you start a review.
+                </span>
+              </div>
+            )}
             <button
               type="button"
               className={`btn-secondary ${styles.testButton}`}
               onClick={() => {
                 void handleTestConnection()
               }}
-              disabled={connectionStatus === 'testing'}
+              disabled={connectionStatus === 'testing' || !isElectronAPIAvailable()}
+              aria-describedby={!isElectronAPIAvailable() ? 'connectionHelpText' : undefined}
             >
               {connectionStatus === 'testing' ? (
                 <>
@@ -342,7 +368,7 @@ function SettingsPage(): React.JSX.Element {
               )}
             </button>
 
-            {connectionMessage && (
+            {connectionMessage && isElectronAPIAvailable() && (
               <div
                 className={`${styles.connectionResult} ${
                   connectionStatus === 'success'
@@ -443,17 +469,6 @@ function SettingsPage(): React.JSX.Element {
 
         {/* Save Button */}
         <div className={styles.saveSection}>
-          {saveMessage && (
-            <span
-              className={`${styles.saveMessage} ${
-                saveMessage.type === 'error' ? styles.saveMessageError : ''
-              }`}
-            >
-              {saveMessage.type === 'success' && <Check size={16} />}
-              {saveMessage.type === 'error' && <X size={16} />}
-              {saveMessage.text}
-            </span>
-          )}
           <button
             type="button"
             className="btn-primary"

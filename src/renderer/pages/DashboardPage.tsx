@@ -1,8 +1,8 @@
 /**
  * @fileoverview Dashboard page showing mastery overview and quick actions
- * @lastmodified 2026-01-16T19:00:00Z
+ * @lastmodified 2026-01-16T21:21:33Z
  *
- * Features: Mastery overview cards, due cards count, start review button, dimension skill bars, accessible loading states
+ * Features: Mastery overview cards, due cards count, start review button, dimension skill bars, accessible loading states, interactive focus area alert
  * Main APIs: useElectronAPI hook for safe API access
  * Constraints: Requires preload API to be available (useElectronAPI provides error handling)
  * Patterns: Card-based layout with clear visual hierarchy, hook-based API access, WCAG 2.1 AA compliant
@@ -10,6 +10,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
+import { AlertCircle, CheckCircle, ChevronRight } from 'lucide-react'
 
 import styles from './DashboardPage.module.css'
 import { useElectronAPI } from '../hooks/useElectronAPI'
@@ -73,7 +74,7 @@ function DashboardPage(): React.JSX.Element {
 
   const totalConcepts = concepts.length
   const dueForReview = dueCount?.total ?? 0
-  const overallMastery = masteryProfile?.overallScore ?? 0
+  const overallMastery = (masteryProfile?.overallScore ?? 0) * 100
   const hasData = totalConcepts > 0
 
   if (isLoading) {
@@ -192,13 +193,18 @@ function DashboardPage(): React.JSX.Element {
         <section className={styles.dimensionsSection}>
           <h2>Mastery by Dimension</h2>
           {masteryProfile.weakestDimension && (
-            <div className={styles.weakestWarning}>
-              <span className={styles.warningIcon}>!</span>
-              <span>
-                Focus area: <strong>{DIMENSION_LABELS[masteryProfile.weakestDimension]}</strong> needs
-                more practice
+            <Link
+              to="/review"
+              className={styles.focusAreaLink}
+              aria-label={`Start review session for ${DIMENSION_LABELS[masteryProfile.weakestDimension]}`}
+            >
+              <span className={styles.warningIcon} aria-hidden="true">!</span>
+              <span className={styles.focusAreaText}>
+                Focus area: <strong>{DIMENSION_LABELS[masteryProfile.weakestDimension]}</strong>
+                <span className={styles.focusAreaAction}>Start practicing</span>
               </span>
-            </div>
+              <ChevronRight className={styles.focusAreaArrow} aria-hidden="true" />
+            </Link>
           )}
           <div className={styles.dimensionsList}>
             {masteryProfile.dimensions.map((dimension) => {
@@ -215,8 +221,18 @@ function DashboardPage(): React.JSX.Element {
                   <div className={styles.dimensionHeader}>
                     <span className={styles.dimensionLabel}>
                       {DIMENSION_LABELS[dimension.dimension]}
-                      {isWeakest && <span className={styles.weakBadge}>Needs Work</span>}
-                      {isStrongest && <span className={styles.strongBadge}>Strongest</span>}
+                      {isWeakest && (
+                        <span className={styles.weakBadge}>
+                          <AlertCircle size={14} aria-hidden="true" />
+                          Needs Work
+                        </span>
+                      )}
+                      {isStrongest && (
+                        <span className={styles.strongBadge}>
+                          <CheckCircle size={14} aria-hidden="true" />
+                          Strongest
+                        </span>
+                      )}
                     </span>
                     <span className={styles.dimensionPercent}>{masteryPercent}%</span>
                   </div>

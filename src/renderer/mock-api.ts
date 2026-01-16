@@ -1,6 +1,6 @@
 /**
  * @fileoverview Mock API for browser-based development (Chrome/Firefox)
- * @lastmodified 2025-01-16T19:30:00Z
+ * @lastmodified 2026-01-16T20:35:00Z
  *
  * Features: In-memory mock implementation of all IPC APIs
  * Main APIs: Same surface as preload/index.ts but with mock data
@@ -59,16 +59,16 @@ function loadMockData(): MockData {
       {
         id: '1',
         name: 'React Hooks',
-        description: 'Understanding React Hooks API',
-        tags: ['react', 'javascript'],
+        definition: 'Understanding React Hooks API',
+        facts: ['useState manages state', 'useEffect handles side effects', 'Custom hooks reuse logic'],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       },
       {
         id: '2',
         name: 'TypeScript Generics',
-        description: 'Generic types in TypeScript',
-        tags: ['typescript', 'types'],
+        definition: 'Generic types in TypeScript',
+        facts: ['Allow type parameters', 'Provide type safety', 'Enable code reuse'],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       },
@@ -167,7 +167,9 @@ export const mockApi: ApiType = {
       await delay()
       const newConcept: ConceptDTO = {
         id: Math.random().toString(36).substr(2, 9),
-        ...data,
+        name: data.name,
+        definition: data.definition ?? null,
+        facts: data.facts ?? [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       }
@@ -181,13 +183,18 @@ export const mockApi: ApiType = {
       const index = mockData.concepts.findIndex((c) => c.id === data.id)
       if (index === -1) throw new Error('Concept not found')
 
+      const existing = mockData.concepts[index]
+      if (!existing) throw new Error('Concept not found')
+
       mockData.concepts[index] = {
-        ...mockData.concepts[index],
-        ...data,
+        ...existing,
+        name: data.name,
+        definition: data.definition ?? existing.definition,
+        facts: data.facts ?? existing.facts,
         updatedAt: new Date().toISOString(),
       }
       saveMockData(mockData)
-      return mockData.concepts[index]
+      return mockData.concepts[index]!
     },
 
     delete: async (id: string) => {

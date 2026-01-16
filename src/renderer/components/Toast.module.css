@@ -1,0 +1,257 @@
+/**
+ * @fileoverview CSS Module styles for the Toast notification component
+ * @lastmodified 2026-01-16T23:30:00Z
+ *
+ * Features: Slide-in animation, success/error/info variants, responsive design
+ * Patterns: Fixed positioning at top-right, consistent with design system
+ * Accessibility: 44x44px touch targets (WCAG AAA), keyboard focus indicators
+ */
+
+/* Container for all toasts - fixed at top-right */
+.toastContainer {
+  position: fixed;
+  top: var(--space-lg);
+  right: var(--space-lg);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  pointer-events: none;
+  max-width: calc(100vw - var(--space-lg) * 2);
+}
+
+/* Individual toast notification */
+.toast {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-md);
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+  min-width: 280px;
+  max-width: 420px;
+  pointer-events: auto;
+
+  /* Initial state - off-screen to the right */
+  transform: translateX(calc(100% + var(--space-lg)));
+  opacity: 0;
+  transition:
+    transform var(--transition-base) ease-out,
+    opacity var(--transition-base) ease-out;
+}
+
+/* Visible state - slide in from right */
+.toast.visible {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+/* Exiting state - slide out to right */
+.toast.exiting {
+  transform: translateX(calc(100% + var(--space-lg)));
+  opacity: 0;
+}
+
+/* Icon container */
+.icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+}
+
+/* Message text */
+.message {
+  flex: 1;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text-primary);
+  line-height: 1.4;
+}
+
+/* Close button - 44x44px minimum touch target per WCAG AAA */
+.closeButton {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  /* Negative margin to maintain visual alignment while increasing touch target */
+  margin: -8px -8px -8px 0;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.closeButton:hover {
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+}
+
+.closeButton:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.closeButton:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* -----------------------------------------------------------------------------
+ * Variant Styles
+ * -------------------------------------------------------------------------- */
+
+/* Success variant */
+.success {
+  border-color: var(--color-success);
+  background-color: var(--color-success-light);
+}
+
+.success .icon {
+  color: var(--color-success);
+  background-color: rgba(34, 197, 94, 0.1);
+}
+
+.success .message {
+  color: var(--color-success);
+}
+
+.success .closeButton {
+  color: var(--color-success);
+}
+
+.success .closeButton:hover {
+  background-color: rgba(34, 197, 94, 0.15);
+}
+
+/* Error variant */
+.error {
+  border-color: var(--color-error);
+  background-color: var(--color-error-light);
+}
+
+.error .icon {
+  color: var(--color-error);
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.error .message {
+  color: var(--color-error);
+}
+
+.error .closeButton {
+  color: var(--color-error);
+}
+
+.error .closeButton:hover {
+  background-color: rgba(239, 68, 68, 0.15);
+}
+
+/* Info variant */
+.info {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-light);
+}
+
+.info .icon {
+  color: var(--color-primary);
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.info .message {
+  color: var(--color-primary);
+}
+
+.info .closeButton {
+  color: var(--color-primary);
+}
+
+.info .closeButton:hover {
+  background-color: rgba(59, 130, 246, 0.15);
+}
+
+/* -----------------------------------------------------------------------------
+ * Responsive Styles
+ * -------------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  .toastContainer {
+    top: var(--space-md);
+    right: var(--space-md);
+    left: var(--space-md);
+    max-width: none;
+  }
+
+  .toast {
+    min-width: auto;
+    max-width: none;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .toastContainer {
+    top: var(--space-sm);
+    right: var(--space-sm);
+    left: var(--space-sm);
+  }
+
+  .toast {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .message {
+    font-size: var(--font-size-xs);
+  }
+}
+
+/* -----------------------------------------------------------------------------
+ * Dark Mode Adjustments
+ * -------------------------------------------------------------------------- */
+
+[data-theme='dark'] .toast {
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+[data-theme='dark'] .success {
+  background-color: rgba(34, 197, 94, 0.15);
+}
+
+[data-theme='dark'] .error {
+  background-color: rgba(239, 68, 68, 0.15);
+}
+
+[data-theme='dark'] .info {
+  background-color: rgba(59, 130, 246, 0.15);
+}
+
+/* -----------------------------------------------------------------------------
+ * Reduced Motion
+ * -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    transition: opacity var(--transition-fast) ease-out;
+    transform: translateX(0);
+  }
+
+  .toast.exiting {
+    transform: translateX(0);
+  }
+}

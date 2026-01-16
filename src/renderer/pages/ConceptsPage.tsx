@@ -1,6 +1,6 @@
 /**
  * @fileoverview Concepts management page for viewing and adding learning concepts
- * @lastmodified 2026-01-16T19:00:00Z
+ * @lastmodified 2026-01-16T21:27:30Z
  *
  * Features: Concept list display, CRUD operations via preload API, search/filter, accessible modal, custom delete confirmation
  * Main APIs: useElectronAPI hook for safe API access
@@ -54,6 +54,7 @@ function ConceptsPage(): React.JSX.Element {
 
   // Refs for focus management in modal
   const modalRef = useRef<HTMLDivElement>(null)
+  const deleteModalRef = useRef<HTMLDivElement>(null)
   const previousFocusRef = useRef<HTMLElement | null>(null)
   const firstFocusableRef = useRef<HTMLInputElement>(null)
 
@@ -178,6 +179,54 @@ function ConceptsPage(): React.JSX.Element {
       document.removeEventListener('keydown', handleKeyDown)
     }
   }, [isFormOpen])
+
+  /**
+   * Focus trap for delete confirmation modal - keeps focus within modal when open
+   */
+  useEffect(() => {
+    if (!deleteConfirmation || !deleteModalRef.current) return
+
+    // Focus the Cancel button when modal opens (safer action first)
+    const focusableElements = deleteModalRef.current.querySelectorAll<HTMLElement>(
+      'button:not([disabled])'
+    )
+    const firstElement = focusableElements[0]
+    const timer = setTimeout(() => {
+      firstElement?.focus()
+    }, 0)
+
+    const handleKeyDown = (e: KeyboardEvent): void => {
+      if (e.key === 'Escape') {
+        handleCancelDelete()
+        return
+      }
+
+      if (e.key !== 'Tab' || !deleteModalRef.current) return
+
+      const elements = deleteModalRef.current.querySelectorAll<HTMLElement>(
+        'button:not([disabled])'
+      )
+      const first = elements[0]
+      const last = elements[elements.length - 1]
+
+      // Shift+Tab from first element -> go to last element
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault()
+        last?.focus()
+      }
+      // Tab from last element -> go to first element
+      else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault()
+        first?.focus()
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      clearTimeout(timer)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [deleteConfirmation])
 
   /**
    * Add a new empty fact field
@@ -445,9 +494,9 @@ function ConceptsPage(): React.JSX.Element {
                 <span className={styles.metaItem}>
                   Created: {new Date(concept.createdAt).toLocaleDateString()}
                 </span>
-                {concept.facts.length > 0 && (
+                {(concept.facts?.length ?? 0) > 0 && (
                   <span className={styles.metaItem}>
-                    {concept.facts.length} fact{concept.facts.length !== 1 ? 's' : ''}
+                    {concept.facts?.length ?? 0} fact{(concept.facts?.length ?? 0) !== 1 ? 's' : ''}
                   </span>
                 )}
               </div>
@@ -634,6 +683,7 @@ function ConceptsPage(): React.JSX.Element {
           aria-hidden="true"
         >
           <div
+            ref={deleteModalRef}
             className={styles.confirmationModal}
             onClick={(e) => e.stopPropagation()}
             role="alertdialog"
