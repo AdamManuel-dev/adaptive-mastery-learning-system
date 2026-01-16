@@ -1,6 +1,6 @@
 /**
  * @fileoverview Preload script exposing secure IPC bridge to renderer
- * @lastmodified 2025-01-16T00:00:00Z
+ * @lastmodified 2026-01-16T00:00:00Z
  *
  * Features: Type-safe IPC bridge, contextBridge API exposure
  * Main APIs: window.api with typed methods for all IPC channels
@@ -28,6 +28,8 @@ import type {
   ScheduleDTO,
   UpdateScheduleDTO,
   SettingsDTO,
+  LLMConfigDTO,
+  ConnectionTestResultDTO,
 } from '../shared/types/ipc'
 
 // -----------------------------------------------------------------------------
@@ -118,6 +120,9 @@ const api = {
 
     set: (data: Partial<SettingsDTO>): Promise<SettingsDTO> =>
       ipcRenderer.invoke('settings:set', data),
+
+    testConnection: (config: LLMConfigDTO): Promise<ConnectionTestResultDTO> =>
+      ipcRenderer.invoke('settings:testConnection', config),
   },
 }
 

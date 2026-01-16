@@ -1,14 +1,38 @@
 /**
  * @fileoverview CSS Module styles for the Settings page
- * @lastmodified 2026-01-16T00:00:00Z
+ * @lastmodified 2026-01-16T21:00:00Z
  *
- * Features: Form styling, section layout, theme toggle buttons
- * Patterns: Card-based sections, consistent form field styling
+ * Features: Form styling, section layout, theme toggle buttons, connection testing
+ * Patterns: Card-based sections, consistent form field styling, WCAG 2.5.5 touch targets, sticky save on mobile
  */
 
 .settingsPage {
   max-width: 700px;
   margin: 0 auto;
+}
+
+/* Loading State */
+.loadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  padding: var(--space-3xl);
+  color: var(--color-text-secondary);
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Header */
@@ -80,9 +104,41 @@
   color: var(--color-text-muted);
 }
 
-/* Test Button */
+/* Test Button and Connection Section */
 .testButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.buttonSpinner {
+  animation: spin 1s linear infinite;
+}
+
+.connectionSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
   margin-top: var(--space-md);
+}
+
+.connectionResult {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+}
+
+.connectionSuccess {
+  background-color: var(--color-success-light);
+  color: var(--color-success);
+}
+
+.connectionError {
+  background-color: var(--color-error-light);
+  color: var(--color-error);
 }
 
 /* Theme Options */
@@ -102,6 +158,8 @@
   border: 2px solid var(--color-border);
   border-radius: var(--radius-md);
   cursor: pointer;
+  min-height: 80px; /* Touch target - WCAG 2.5.5 */
+  min-width: 80px;
   transition:
     border-color var(--transition-fast),
     background-color var(--transition-fast);
@@ -154,14 +212,26 @@
 }
 
 .saveMessage {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
   font-size: var(--font-size-sm);
   color: var(--color-success);
+}
+
+.saveMessageError {
+  color: var(--color-error);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .settingsPage {
     padding: 0;
+    padding-bottom: 100px; /* Space for sticky save section */
+  }
+
+  .section {
+    border-radius: var(--radius-md);
   }
 
   .themeOptions {
@@ -173,12 +243,58 @@
     min-width: 80px;
   }
 
+  .input,
+  .select {
+    max-width: none; /* Full width inputs on mobile */
+  }
+
+  .testButton {
+    min-height: 48px; /* Touch target */
+    padding: var(--space-sm) var(--space-lg);
+  }
+
+  /* Sticky save section for easy access on mobile */
   .saveSection {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
     flex-direction: column;
     align-items: stretch;
+    background-color: var(--color-background);
+    border-top: 1px solid var(--color-border);
+    padding: var(--space-md) var(--space-lg);
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    gap: var(--space-sm);
+  }
+
+  .saveSection button {
+    width: 100%;
+    min-height: 48px; /* Touch target */
+    font-size: var(--font-size-base);
+    order: 1; /* Button first for prominence */
   }
 
   .saveMessage {
     text-align: center;
+    order: 2; /* Message below button */
+    margin-top: var(--space-xs);
+  }
+}
+
+/* Dark mode sticky section adjustment */
+[data-theme='dark'] .saveSection {
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+  .header h1 {
+    font-size: var(--font-size-xl);
+  }
+
+  .sectionTitle {
+    font-size: var(--font-size-base);
   }
 }

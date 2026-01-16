@@ -1,16 +1,18 @@
 /**
  * @fileoverview Concepts management page for viewing and adding learning concepts
- * @lastmodified 2026-01-16T00:00:00Z
+ * @lastmodified 2026-01-16T19:00:00Z
  *
- * Features: Concept list display, CRUD operations via preload API, search/filter
- * Main APIs: window.api.concepts for data operations
- * Constraints: Requires preload script to expose window.api
- * Patterns: List view with modal form for create/edit
+ * Features: Concept list display, CRUD operations via preload API, search/filter, accessible modal, custom delete confirmation
+ * Main APIs: useElectronAPI hook for safe API access
+ * Constraints: Requires preload script (useElectronAPI provides error handling)
+ * Patterns: List view with modal form for create/edit, hook-based API access, Lucide React icons, WCAG 2.1 AA compliant
  */
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { Search, BookPlus, X } from 'lucide-react'
 
 import styles from './ConceptsPage.module.css'
+import { useElectronAPI } from '../hooks/useElectronAPI'
 
 import type { ConceptDTO, CreateConceptDTO, UpdateConceptDTO } from '../../shared/types/ipc'
 
@@ -24,10 +26,20 @@ interface ConceptFormData {
 }
 
 /**
+ * Delete confirmation state structure
+ * Used for custom confirmation modal instead of native confirm()
+ */
+interface DeleteConfirmation {
+  id: string
+  name: string
+}
+
+/**
  * Concepts management page component
  * Displays list of concepts with options to add, view, and manage
  */
 function ConceptsPage(): React.JSX.Element {
+  const api = useElectronAPI()
   const [searchQuery, setSearchQuery] = useState('')
   const [concepts, setConcepts] = useState<ConceptDTO[]>([])
   const [selectedConcept, setSelectedConcept] = useState<ConceptDTO | null>(null)
@@ -37,6 +49,13 @@ function ConceptsPage(): React.JSX.Element {
   const [formData, setFormData] = useState<ConceptFormData>({ name: '', definition: '', facts: [] })
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [deleteConfirmation, setDeleteConfirmation] = useState<DeleteConfirmation | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
+
+  // Refs for focus management in modal
+  const modalRef = useRef<HTMLDivElement>(null)
+  const previousFocusRef = useRef<HTMLElement | null>(null)
+  const firstFocusableRef = useRef<HTMLInputElement>(null)
 
   const hasConcepts = concepts.length > 0
 
@@ -47,10 +66,7 @@ function ConceptsPage(): React.JSX.Element {
     try {
       setIsLoading(true)
       setError(null)
-      if (!window.api) {
-        throw new Error('API not available')
-      }
-      const data = await window.api.concepts.getAll()
+      const data = await api.concepts.getAll()
       setConcepts(data)
     } catch (err) {
       console.error('Failed to fetch concepts:', err)
@@ -58,7 +74,7 @@ function ConceptsPage(): React.JSX.Element {
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [api])
 
   /**
    * Load concepts on mount
@@ -78,8 +94,10 @@ function ConceptsPage(): React.JSX.Element {
 
   /**
    * Open form for creating a new concept
+   * Saves previous focus for restoration when modal closes
    */
   const handleAddConcept = (): void => {
+    previousFocusRef.current = document.activeElement as HTMLElement
     setFormMode('create')
     setSelectedConcept(null)
     setFormData({ name: '', definition: '', facts: [] })
@@ -89,8 +107,10 @@ function ConceptsPage(): React.JSX.Element {
 
   /**
    * Open form for editing an existing concept
+   * Saves previous focus for restoration when modal closes
    */
   const handleEditConcept = (concept: ConceptDTO): void => {
+    previousFocusRef.current = document.activeElement as HTMLElement
     setFormMode('edit')
     setSelectedConcept(concept)
     setFormData({
@@ -104,13 +124,60 @@ function ConceptsPage(): React.JSX.Element {
 
   /**
    * Close the form modal
+   * Restores focus to the element that opened the modal
    */
   const handleCloseForm = (): void => {
     setIsFormOpen(false)
     setSelectedConcept(null)
     setFormData({ name: '', definition: '', facts: [] })
     setError(null)
+    // Restore focus to the element that opened the modal
+    previousFocusRef.current?.focus()
   }
+
+  /**
+   * Focus trap for modal - keeps focus within modal when open
+   */
+  useEffect(() => {
+    if (!isFormOpen || !modalRef.current) return
+
+    // Focus the first input when modal opens
+    const timer = setTimeout(() => {
+      firstFocusableRef.current?.focus()
+    }, 0)
+
+    const handleKeyDown = (e: KeyboardEvent): void => {
+      if (e.key === 'Escape') {
+        handleCloseForm()
+        return
+      }
+
+      if (e.key !== 'Tab' || !modalRef.current) return
+
+      const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
+      )
+      const firstElement = focusableElements[0]
+      const lastElement = focusableElements[focusableElements.length - 1]
+
+      // Shift+Tab from first element -> go to last element
+      if (e.shiftKey && document.activeElement === firstElement) {
+        e.preventDefault()
+        lastElement?.focus()
+      }
+      // Tab from last element -> go to first element
+      else if (!e.shiftKey && document.activeElement === lastElement) {
+        e.preventDefault()
+        firstElement?.focus()
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      clearTimeout(timer)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isFormOpen])
 
   /**
    * Add a new empty fact field
@@ -159,10 +226,7 @@ function ConceptsPage(): React.JSX.Element {
     try {
       setIsSaving(true)
       setError(null)
-      if (!window.api) {
-        throw new Error('API not available')
-      }
-      const newConcept = await window.api.concepts.create(data)
+      const newConcept = await api.concepts.create(data)
       setConcepts((prev) => [...prev, newConcept])
       handleCloseForm()
     } catch (err) {
@@ -180,10 +244,7 @@ function ConceptsPage(): React.JSX.Element {
     try {
       setIsSaving(true)
       setError(null)
-      if (!window.api) {
-        throw new Error('API not available')
-      }
-      const updatedConcept = await window.api.concepts.update(data)
+      const updatedConcept = await api.concepts.update(data)
       setConcepts((prev) =>
         prev.map((c) => (c.id === updatedConcept.id ? updatedConcept : c))
       )
@@ -197,23 +258,39 @@ function ConceptsPage(): React.JSX.Element {
   }
 
   /**
-   * Delete a concept via API
+   * Show delete confirmation modal for a concept
    */
-  const handleDelete = async (id: string): Promise<void> => {
-    if (!confirm('Are you sure you want to delete this concept?')) {
-      return
-    }
+  const handleDeleteClick = (concept: ConceptDTO): void => {
+    previousFocusRef.current = document.activeElement as HTMLElement
+    setDeleteConfirmation({ id: concept.id, name: concept.name })
+  }
+
+  /**
+   * Close the delete confirmation modal
+   */
+  const handleCancelDelete = (): void => {
+    setDeleteConfirmation(null)
+    previousFocusRef.current?.focus()
+  }
+
+  /**
+   * Confirm and execute concept deletion via API
+   */
+  const handleConfirmDelete = async (): Promise<void> => {
+    if (!deleteConfirmation) return
 
     try {
+      setIsDeleting(true)
       setError(null)
-      if (!window.api) {
-        throw new Error('API not available')
-      }
-      await window.api.concepts.delete(id)
-      setConcepts((prev) => prev.filter((c) => c.id !== id))
+      await api.concepts.delete(deleteConfirmation.id)
+      setConcepts((prev) => prev.filter((c) => c.id !== deleteConfirmation.id))
+      setDeleteConfirmation(null)
+      previousFocusRef.current?.focus()
     } catch (err) {
       console.error('Failed to delete concept:', err)
       setError('Failed to delete concept. Please try again.')
+    } finally {
+      setIsDeleting(false)
     }
   }
 
@@ -299,7 +376,9 @@ function ConceptsPage(): React.JSX.Element {
       {/* Search Bar */}
       <div className={styles.searchSection}>
         <div className={styles.searchInputWrapper}>
-          <span className={styles.searchIcon}>S</span>
+          <span className={styles.searchIcon}>
+            <Search size={18} />
+          </span>
           <input
             type="text"
             placeholder="Search concepts..."
@@ -314,15 +393,21 @@ function ConceptsPage(): React.JSX.Element {
               onClick={() => setSearchQuery('')}
               aria-label="Clear search"
             >
-              x
+              <X size={16} />
             </button>
           )}
         </div>
       </div>
 
-      {/* Loading State */}
+      {/* Loading State - announced via aria-live */}
       {isLoading && (
-        <div className={styles.loadingState}>
+        <div
+          className={styles.loadingState}
+          role="status"
+          aria-live="polite"
+          aria-busy="true"
+        >
+          <div className="spinner" aria-hidden="true" />
           <p>Loading concepts...</p>
         </div>
       )}
@@ -346,7 +431,7 @@ function ConceptsPage(): React.JSX.Element {
                   <button
                     type="button"
                     className={styles.deleteButton}
-                    onClick={() => void handleDelete(concept.id)}
+                    onClick={() => handleDeleteClick(concept)}
                     aria-label={`Delete ${concept.name}`}
                   >
                     Delete
@@ -374,7 +459,9 @@ function ConceptsPage(): React.JSX.Element {
       {/* Empty State */}
       {!isLoading && !hasConcepts && (
         <div className={styles.emptyState}>
-          <div className={styles.emptyIcon}>C</div>
+          <div className={styles.emptyIcon}>
+            <BookPlus size={48} strokeWidth={1.5} />
+          </div>
           <h2>No Concepts Yet</h2>
           <p>
             Concepts are topics you want to learn and master. Each concept can have
@@ -415,15 +502,13 @@ function ConceptsPage(): React.JSX.Element {
         <div
           className={styles.modalOverlay}
           onClick={handleCloseForm}
-          onKeyDown={(e) => e.key === 'Escape' && handleCloseForm()}
-          role="button"
-          tabIndex={0}
-          aria-label="Close modal"
+          role="presentation"
+          aria-hidden="true"
         >
           <div
+            ref={modalRef}
             className={styles.modal}
             onClick={(e) => e.stopPropagation()}
-            onKeyDown={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
             aria-labelledby="form-title"
@@ -448,6 +533,7 @@ function ConceptsPage(): React.JSX.Element {
               <div className={styles.formGroup}>
                 <label htmlFor="name">Name *</label>
                 <input
+                  ref={firstFocusableRef}
                   type="text"
                   id="name"
                   name="name"
@@ -455,6 +541,8 @@ function ConceptsPage(): React.JSX.Element {
                   onChange={handleInputChange}
                   placeholder="Enter concept name"
                   required
+                  aria-invalid={error && error.includes('Name') ? 'true' : undefined}
+                  aria-describedby={error && error.includes('Name') ? 'name-error' : undefined}
                 />
               </div>
               <div className={styles.formGroup}>
@@ -509,7 +597,16 @@ function ConceptsPage(): React.JSX.Element {
                   )}
                 </div>
               </div>
-              {error && <p className={styles.formError}>{error}</p>}
+              {error && (
+                <p
+                  id="name-error"
+                  className={styles.formError}
+                  role="alert"
+                  aria-live="assertive"
+                >
+                  {error}
+                </p>
+              )}
               <div className={styles.formActions}>
                 <button
                   type="button"
@@ -524,6 +621,54 @@ function ConceptsPage(): React.JSX.Element {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirmation && (
+        <div
+          className={styles.modalOverlay}
+          onClick={handleCancelDelete}
+          role="presentation"
+          aria-hidden="true"
+        >
+          <div
+            className={styles.confirmationModal}
+            onClick={(e) => e.stopPropagation()}
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="delete-title"
+            aria-describedby="delete-description"
+          >
+            <div className={styles.confirmationIcon} aria-hidden="true">
+              !
+            </div>
+            <h3 id="delete-title" className={styles.confirmationTitle}>
+              Delete Concept?
+            </h3>
+            <p id="delete-description" className={styles.confirmationMessage}>
+              Are you sure you want to delete &ldquo;{deleteConfirmation.name}&rdquo;?
+              This action cannot be undone and will remove all associated flashcards.
+            </p>
+            <div className={styles.confirmationActions}>
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={handleCancelDelete}
+                disabled={isDeleting}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className={`btn-primary ${styles.dangerButton}`}
+                onClick={() => void handleConfirmDelete()}
+                disabled={isDeleting}
+              >
+                {isDeleting ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
           </div>
         </div>
       )}

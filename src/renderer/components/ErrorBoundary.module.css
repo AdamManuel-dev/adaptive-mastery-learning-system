@@ -1,0 +1,60 @@
+/**
+ * @fileoverview CSS Module styles for the ErrorBoundary component
+ * @lastmodified 2026-01-16T19:00:00Z
+ *
+ * Features: Centered error display, visual hierarchy for error information
+ * Patterns: Flexbox centered layout, consistent with application design system
+ */
+
+.errorBoundary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  padding: var(--space-2xl);
+}
+
+.errorContent {
+  text-align: center;
+  max-width: 400px;
+}
+
+.errorIcon {
+  width: 64px;
+  height: 64px;
+  background-color: #fee2e2;
+  color: #991b1b;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 auto var(--space-lg);
+}
+
+.errorTitle {
+  margin-bottom: var(--space-sm);
+  color: var(--color-text-primary);
+}
+
+.errorMessage {
+  color: #991b1b;
+  background-color: #fee2e2;
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  font-family: monospace;
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-md);
+  word-break: break-word;
+}
+
+.errorHint {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.resetButton {
+  min-width: 120px;
+}

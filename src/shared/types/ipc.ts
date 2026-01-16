@@ -1,6 +1,6 @@
 /**
  * @fileoverview IPC channel type definitions for Electron main/renderer communication
- * @lastmodified 2025-01-16T00:00:00Z
+ * @lastmodified 2026-01-16T00:00:00Z
  *
  * Features: Type-safe IPC channels, request/response types, domain DTOs
  * Main APIs: IPCChannels, IPCResult, all DTO types
@@ -206,6 +206,15 @@ export interface SettingsDTO {
   theme: 'light' | 'dark' | 'system'
 }
 
+/**
+ * Result of LLM API connection test
+ */
+export interface ConnectionTestResultDTO {
+  success: boolean
+  message: string
+  latencyMs?: number
+}
+
 // -----------------------------------------------------------------------------
 // IPC Channel Definitions
 // -----------------------------------------------------------------------------
@@ -249,6 +258,7 @@ export interface IPCChannels {
   // Settings operations
   'settings:get': { args: void; result: SettingsDTO }
   'settings:set': { args: Partial<SettingsDTO>; result: SettingsDTO }
+  'settings:testConnection': { args: LLMConfigDTO; result: ConnectionTestResultDTO }
 }
 
 /**

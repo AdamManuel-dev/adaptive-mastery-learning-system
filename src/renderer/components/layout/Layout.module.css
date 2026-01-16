@@ -1,10 +1,37 @@
 /**
  * @fileoverview CSS Module styles for the Layout component
- * @lastmodified 2026-01-16T00:00:00Z
+ * @lastmodified 2026-01-16T21:00:00Z
  *
- * Features: Header styling, navigation styles, responsive layout
- * Patterns: CSS Modules for scoped styling, CSS custom properties for theming
+ * Features: Header styling, navigation styles, responsive layout, skip navigation link
+ * Patterns: CSS Modules for scoped styling, CSS custom properties for theming, WCAG 2.1 AA compliant, WCAG 2.5.5 touch targets
  */
+
+/* Skip link for keyboard accessibility - WCAG 2.4.1 */
+.skipLink {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  top: 0;
+}
+
+.skipLink:focus {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: auto;
+  height: auto;
+  padding: var(--space-md);
+  background-color: var(--color-primary);
+  color: white;
+  z-index: 10000;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 0 0 var(--radius-md) 0;
+  outline: 3px solid var(--color-primary-hover);
+  outline-offset: 2px;
+}
 
 .layout {
   display: flex;
@@ -73,6 +100,7 @@
   color: var(--color-text-secondary);
   text-decoration: none;
   border-radius: var(--radius-md);
+  min-height: 44px; /* WCAG 2.5.5 minimum touch target */
   transition:
     background-color var(--transition-fast),
     color var(--transition-fast);
@@ -147,7 +175,10 @@
   }
 
   .navLink {
-    padding: var(--space-sm);
+    padding: var(--space-md);
+    min-height: 48px; /* Larger touch target on mobile */
+    min-width: 48px;
+    justify-content: center;
   }
 
   .navIcon {
@@ -158,5 +189,24 @@
 
   .main {
     padding: var(--space-md);
+  }
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+  .headerContent {
+    padding: var(--space-sm);
+  }
+
+  .nav {
+    gap: var(--space-xs);
+  }
+
+  .navLink {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .main {
+    padding: var(--space-sm);
   }
 }

@@ -1,9 +1,9 @@
 /**
  * @fileoverview CSS Module styles for the Review page
- * @lastmodified 2026-01-16T00:00:00Z
+ * @lastmodified 2026-01-16T21:00:00Z
  *
- * Features: Card styling, rating buttons, progress indicator, empty state
- * Patterns: Centered card layout, color-coded rating buttons
+ * Features: Card styling, rating buttons, progress indicator, empty state, answer reveal animation
+ * Patterns: Centered card layout, color-coded rating buttons, fade-in slide animation, WCAG 2.5.5 touch targets
  */
 
 .reviewPage {
@@ -134,6 +134,18 @@
 .answerSection {
   padding-top: var(--space-lg);
   border-top: 1px solid var(--color-border);
+  animation: fadeInSlide 0.3s ease-out;
+}
+
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .answerText {
@@ -178,6 +190,8 @@
   gap: var(--space-xs);
   padding: var(--space-md);
   border-radius: var(--radius-md);
+  min-height: 56px; /* Touch target minimum - WCAG 2.5.5 */
+  min-width: 80px;
   transition:
     transform var(--transition-fast),
     box-shadow var(--transition-fast);
@@ -288,16 +302,65 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-sm);
+  }
+
+  .progressInfo {
+    max-width: none;
+  }
+
+  .exitButton {
+    align-self: flex-end;
+    min-height: 44px; /* Touch target - WCAG 2.5.5 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .ratingGrid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr; /* Vertical stack on mobile */
+    gap: var(--space-sm);
+  }
+
+  .ratingButton {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: left;
+    padding: var(--space-md) var(--space-lg);
+    min-height: 64px; /* Larger touch target on mobile */
+    gap: var(--space-md);
+  }
+
+  .ratingLabel {
+    font-weight: 600;
+    min-width: 60px;
+    flex-shrink: 0;
   }
 
   .ratingDescription {
-    display: none;
+    display: block; /* Show descriptions on mobile */
+    font-size: var(--font-size-sm);
+    opacity: 0.9;
+    flex: 1;
+    text-align: left;
+  }
+
+  .keyboardHint {
+    display: none; /* Hide keyboard hints on touch devices */
   }
 
   .cardContent {
     padding: var(--space-lg);
+  }
+
+  .showAnswerButton {
+    min-height: 56px; /* Touch target */
+    font-size: var(--font-size-base);
   }
 
   .emptyActions {
@@ -307,5 +370,47 @@
 
   .emptyActions a {
     text-align: center;
+    min-height: 48px; /* Touch target */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 481px) and (max-width: 768px) {
+  .ratingGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ratingButton {
+    flex-direction: column;
+    text-align: center;
+    min-height: 80px;
+  }
+
+  .ratingLabel {
+    min-width: auto;
+  }
+
+  .ratingDescription {
+    text-align: center;
+  }
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+  .card {
+    border-radius: var(--radius-lg);
+  }
+
+  .cardHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+  }
+
+  .questionText {
+    font-size: var(--font-size-base);
   }
 }

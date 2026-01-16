@@ -1,17 +1,18 @@
 /**
  * @fileoverview Review session page for spaced repetition card review
- * @lastmodified 2026-01-16T00:00:00Z
+ * @lastmodified 2026-01-16T19:00:00Z
  *
- * Features: Card display, show answer toggle, rating buttons, keyboard shortcuts
- * Main APIs: window.api.review for card fetching and submission
+ * Features: Card display, show answer toggle, rating buttons, keyboard shortcuts, accessible loading states, answer reveal animation
+ * Main APIs: useElectronAPI hook for safe API access
  * Constraints: Displays placeholder when no cards are due
- * Patterns: State machine pattern for review flow (question -> answer -> rated)
+ * Patterns: State machine pattern for review flow (question -> answer -> rated), hook-based API access, WCAG 2.1 AA compliant
  */
 
 import { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 
 import styles from './ReviewPage.module.css'
+import { useElectronAPI } from '../hooks/useElectronAPI'
 
 import type {
   ReviewCardDTO,
@@ -19,30 +20,6 @@ import type {
   Rating,
   DueCountDTO,
 } from '../../shared/types/ipc'
-
-/**
- * Type for the review API exposed via preload
- * Note: This matches the API in src/preload/index.ts
- */
-interface ReviewApiType {
-  getNextCard: () => Promise<ReviewCardDTO | null>
-  submit: (data: ReviewSubmitDTO) => Promise<{
-    updatedMastery: unknown
-    updatedSchedule: unknown
-    nextCard: ReviewCardDTO | null
-  }>
-  getDueCount: () => Promise<DueCountDTO>
-}
-
-/**
- * Get the review API from window, with type safety
- * The window.api is exposed by the preload script
- */
-function getReviewApi(): ReviewApiType {
-  // Using type assertion since the actual preload API has these methods
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-  return (window as any).api.review as ReviewApiType
-}
 
 /**
  * Rating option for spaced repetition
@@ -56,20 +33,25 @@ interface RatingOption {
 }
 
 /**
- * Available rating options following SM-2 style ratings
+ * Get rating options with CSS classes
+ * Defined as a function to ensure styles are resolved at runtime
+ * CSS classes are defined in ReviewPage.module.css (ratingAgain, ratingHard, ratingGood, ratingEasy)
  */
-const ratingOptions: RatingOption[] = [
-  { value: 1, label: 'Again', rating: 'again', description: 'Forgot completely', className: styles.ratingAgain ?? '' },
-  { value: 2, label: 'Hard', rating: 'hard', description: 'Remembered with difficulty', className: styles.ratingHard ?? '' },
-  { value: 3, label: 'Good', rating: 'good', description: 'Remembered correctly', className: styles.ratingGood ?? '' },
-  { value: 4, label: 'Easy', rating: 'easy', description: 'Too easy', className: styles.ratingEasy ?? '' },
-]
+function getRatingOptions(): RatingOption[] {
+  return [
+    { value: 1, label: 'Again', rating: 'again', description: 'Forgot completely', className: styles.ratingAgain ?? '' },
+    { value: 2, label: 'Hard', rating: 'hard', description: 'Remembered with difficulty', className: styles.ratingHard ?? '' },
+    { value: 3, label: 'Good', rating: 'good', description: 'Remembered correctly', className: styles.ratingGood ?? '' },
+    { value: 4, label: 'Easy', rating: 'easy', description: 'Too easy', className: styles.ratingEasy ?? '' },
+  ]
+}
 
 /**
  * Map numeric rating (1-4) to Rating type
  */
 function mapRatingToType(value: number): Rating {
-  const option = ratingOptions.find((opt) => opt.value === value)
+  const options = getRatingOptions()
+  const option = options.find((opt) => opt.value === value)
   return option?.rating ?? 'good'
 }
 
@@ -78,6 +60,7 @@ function mapRatingToType(value: number): Rating {
  * Manages the card review session with show/hide answer and rating flow
  */
 function ReviewPage(): React.JSX.Element {
+  const api = useElectronAPI()
   const [showAnswer, setShowAnswer] = useState(false)
   const [currentCard, setCurrentCard] = useState<ReviewCardDTO | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -90,10 +73,9 @@ function ReviewPage(): React.JSX.Element {
     const fetchInitialData = async (): Promise<void> => {
       try {
         setIsLoading(true)
-        const reviewApi = getReviewApi()
         const [card, count] = await Promise.all([
-          reviewApi.getNextCard(),
-          reviewApi.getDueCount(),
+          api.review.getNextCard(),
+          api.review.getDueCount(),
         ])
         setCurrentCard(card)
         setDueCount(count)
@@ -105,7 +87,7 @@ function ReviewPage(): React.JSX.Element {
     }
 
     void fetchInitialData()
-  }, [])
+  }, [api])
 
   const handleShowAnswer = useCallback((): void => {
     setShowAnswer(true)
@@ -127,8 +109,7 @@ function ReviewPage(): React.JSX.Element {
     }
 
     try {
-      const reviewApi = getReviewApi()
-      const result = await reviewApi.submit(submitData)
+      const result = await api.review.submit(submitData)
       setReviewedCount((prev) => prev + 1)
       setCurrentCard(result.nextCard)
       setShowAnswer(false)
@@ -136,7 +117,7 @@ function ReviewPage(): React.JSX.Element {
     } catch (error) {
       console.error('Failed to submit review:', error)
     }
-  }, [currentCard, answerShownAt])
+  }, [api, currentCard, answerShownAt])
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -165,12 +146,17 @@ function ReviewPage(): React.JSX.Element {
   const hasCards = currentCard !== null
   const totalCards = dueCount?.total ?? 0
 
-  // Show loading state while fetching initial data
+  // Show loading state while fetching initial data - announced via aria-live
   if (isLoading) {
     return (
       <div className={styles.reviewPage}>
-        <div className={styles.emptyState}>
-          <div className={styles.emptyIcon}>...</div>
+        <div
+          className={styles.emptyState}
+          role="status"
+          aria-live="polite"
+          aria-busy="true"
+        >
+          <div className="spinner" aria-hidden="true" />
           <h2>Loading Review Session</h2>
           <p>Fetching your cards...</p>
         </div>
@@ -230,20 +216,28 @@ function ReviewPage(): React.JSX.Element {
       <main className={styles.cardContainer}>
         <div className={styles.card}>
           <div className={styles.cardHeader}>
-            <span className={styles.conceptBadge}>{currentCard.concept.name}</span>
-            <span className={styles.typeBadge}>{currentCard.variant.dimension}</span>
+            <span className={styles.conceptBadge}>
+              {currentCard?.concept?.name ?? 'Unknown Concept'}
+            </span>
+            <span className={styles.typeBadge}>
+              {currentCard?.variant?.dimension ?? 'Unknown'}
+            </span>
           </div>
 
           <div className={styles.cardContent}>
             <div className={styles.questionSection}>
               <h3 className={styles.sectionLabel}>Question</h3>
-              <p className={styles.questionText}>{currentCard.variant.front}</p>
+              <p className={styles.questionText}>
+                {currentCard?.variant?.front ?? 'No question available'}
+              </p>
             </div>
 
             {showAnswer && (
               <div className={styles.answerSection}>
                 <h3 className={styles.sectionLabel}>Answer</h3>
-                <p className={styles.answerText}>{currentCard.variant.back}</p>
+                <p className={styles.answerText}>
+                  {currentCard?.variant?.back ?? 'No answer available'}
+                </p>
               </div>
             )}
           </div>
@@ -258,22 +252,27 @@ function ReviewPage(): React.JSX.Element {
               onClick={handleShowAnswer}
             >
               Show Answer
-              <span className={styles.keyboardHint}>(Space)</span>
+              <span className={styles.keyboardHint}>
+                (Press <kbd>Space</kbd>)
+              </span>
             </button>
           ) : (
             <div className={styles.ratingButtons}>
               <p className={styles.ratingPrompt}>How well did you remember?</p>
               <div className={styles.ratingGrid}>
-                {ratingOptions.map((option) => (
+                {getRatingOptions().map((option) => (
                   <button
                     key={option.value}
                     type="button"
                     className={`${styles.ratingButton} ${option.className}`}
                     onClick={() => void handleRating(option.value)}
+                    aria-label={`${option.label}: ${option.description}. Press ${option.value} key`}
                   >
                     <span className={styles.ratingLabel}>{option.label}</span>
                     <span className={styles.ratingDescription}>{option.description}</span>
-                    <span className={styles.keyboardHint}>({option.value})</span>
+                    <span className={styles.keyboardHint}>
+                      (Press <kbd>{option.value}</kbd>)
+                    </span>
                   </button>
                 ))}
               </div>

@@ -2,7 +2,7 @@
  * @fileoverview React 19 application entry point for the Adaptive Mastery Learning System
  * @lastmodified 2026-01-16T00:00:00Z
  *
- * Features: Application bootstrap, StrictMode wrapper, RouterProvider setup
+ * Features: Application bootstrap, StrictMode wrapper, RouterProvider setup, browser mode support
  * Main APIs: ReactDOM.createRoot() for React 19 concurrent rendering
  * Constraints: Requires DOM element with id "root"
  * Patterns: Uses React 19 concurrent features with StrictMode for development checks
@@ -13,6 +13,12 @@ import { createRoot } from 'react-dom/client'
 
 import App from './App'
 import './styles/index.css'
+import { initMockApi } from './mock-api'
+
+// Initialize mock API if running in browser (not Electron)
+if (typeof window !== 'undefined' && !window.api) {
+  initMockApi()
+}
 
 const rootElement = document.getElementById('root')
 

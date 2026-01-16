@@ -1,16 +1,17 @@
 /**
  * @fileoverview Variant editor component for creating and editing card variants
- * @lastmodified 2026-01-16T00:00:00Z
+ * @lastmodified 2026-01-16T18:00:00Z
  *
- * Features: Form for variant CRUD operations, dimension selection, difficulty slider, hints array
- * Main APIs: window.api.variants for data operations
+ * Features: Form for variant CRUD operations, dimension selection, accessible difficulty slider, hints array
+ * Main APIs: useElectronAPI hook for safe API access
  * Constraints: Requires a concept to be selected first
- * Patterns: Controlled form with validation, reusable for create/edit
+ * Patterns: Controlled form with validation, reusable for create/edit, hook-based API access, WCAG 2.1 AA compliant
  */
 
 import { useState, useCallback } from 'react'
 
 import styles from './VariantEditor.module.css'
+import { useElectronAPI } from '../hooks/useElectronAPI'
 
 import type {
   VariantDTO,
@@ -107,6 +108,7 @@ function VariantEditor({
   onSave,
   onCancel,
 }: VariantEditorProps): React.JSX.Element {
+  const api = useElectronAPI()
   const isEditMode = variant !== null
 
   const [formData, setFormData] = useState<VariantFormData>({
@@ -190,10 +192,6 @@ function VariantEditor({
     try {
       setIsSaving(true)
 
-      if (!window.api) {
-        throw new Error('API not available')
-      }
-
       let savedVariant: VariantDTO
 
       if (isEditMode && variant) {
@@ -206,7 +204,7 @@ function VariantEditor({
           back: formData.back.trim(),
           hints: hintsValue,
         }
-        savedVariant = await window.api.variants.update(updateData)
+        savedVariant = await api.variants.update(updateData)
       } else {
         // Create new variant
         const createData: CreateVariantDTO = {
@@ -217,7 +215,7 @@ function VariantEditor({
           back: formData.back.trim(),
           hints: hintsValue,
         }
-        savedVariant = await window.api.variants.create(createData)
+        savedVariant = await api.variants.create(createData)
       }
 
       onSave(savedVariant)
@@ -268,24 +266,29 @@ function VariantEditor({
           </p>
         </div>
 
-        {/* Difficulty Slider */}
+        {/* Difficulty Slider - WCAG 2.1 compliant */}
         <div className={styles.formGroup}>
           <label htmlFor="difficulty">
             Difficulty: <span className={styles.difficultyValue}>{getDifficultyLabel(formData.difficulty)}</span>
           </label>
           <div className={styles.difficultySlider}>
-            <span className={styles.difficultyLabel}>Easy</span>
+            <span className={styles.difficultyLabel} id="difficulty-min">Easy</span>
             <input
               type="range"
               id="difficulty"
               name="difficulty"
-              min="1"
-              max="5"
+              min={1}
+              max={5}
               value={formData.difficulty}
               onChange={handleDifficultyChange}
               className={styles.slider}
+              aria-label="Difficulty level"
+              aria-valuemin={1}
+              aria-valuemax={5}
+              aria-valuenow={formData.difficulty}
+              aria-valuetext={`${getDifficultyLabel(formData.difficulty)}, ${formData.difficulty} out of 5`}
             />
-            <span className={styles.difficultyLabel}>Hard</span>
+            <span className={styles.difficultyLabel} id="difficulty-max">Hard</span>
           </div>
           <div className={styles.difficultyMarkers}>
             {[1, 2, 3, 4, 5].map((level) => (
@@ -310,6 +313,8 @@ function VariantEditor({
             placeholder="Enter the question or prompt shown to the user"
             rows={4}
             required
+            aria-invalid={error?.includes('Question') ? 'true' : undefined}
+            aria-describedby={error?.includes('Question') ? 'variant-form-error' : undefined}
           />
         </div>
 
@@ -324,6 +329,8 @@ function VariantEditor({
             placeholder="Enter the correct answer or explanation"
             rows={4}
             required
+            aria-invalid={error?.includes('Answer') ? 'true' : undefined}
+            aria-describedby={error?.includes('Answer') ? 'variant-form-error' : undefined}
           />
         </div>
 
@@ -371,7 +378,16 @@ function VariantEditor({
         </div>
 
         {/* Error Display */}
-        {error && <p className={styles.formError}>{error}</p>}
+        {error && (
+          <p
+            id="variant-form-error"
+            className={styles.formError}
+            role="alert"
+            aria-live="assertive"
+          >
+            {error}
+          </p>
+        )}
 
         {/* Form Actions */}
         <div className={styles.formActions}>

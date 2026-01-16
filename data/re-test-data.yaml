@@ -1,0 +1,1597 @@
+schema_version: 1
+db:
+  concepts:
+    - id: "concept-001"
+      name: "Ownership in Severalty"
+      definition: "Ownership in severalty is ownership by a single person or entity."
+      facts:
+        - "Corporations are legally treated as a single legal person/entity."
+        - "A single corporation owning property would own it in severalty."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-002"
+      name: "Freehold Estate"
+      definition: "A freehold estate is an interest in land with some degree of ownership for an undetermined (unlimited) time."
+      facts:
+        - "Freehold implies duration is not specifically limited."
+        - "Contrasts with leasehold (fixed term) interests."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-003"
+      name: "NAR Code of Ethics Categories"
+      definition: "The NAR® Code of Ethics is organized into categories of duties owed to different groups."
+      facts:
+        - "Categories include Duties to the Public."
+        - "Categories include Duties to Clients and Customers."
+        - "Categories include Duties to REALTORS®."
+        - "Duties to Lenders is NOT a category."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-004"
+      name: "Texas License Law Objective"
+      definition: "The Texas License Law is designed to protect consumers from incompetent or unethical brokers and salespeople."
+      facts:
+        - "Its purpose is consumer protection, not revenue generation."
+        - "Regulates license-holder conduct and eligibility."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-005"
+      name: "Counteroffer"
+      definition: "A counteroffer is a rejection of an offer made with the simultaneous substitution of a new offer."
+      facts:
+        - "A counteroffer terminates the original offer."
+        - "The new offer can be accepted, rejected, or countered again."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-006"
+      name: "Fair Housing Act: Sexual Orientation & Gender Identity"
+      definition: "Sexual orientation and gender identity are protected under the federal Fair Housing Act (as applied in this test content)."
+      facts:
+        - "Refusing to rent based on transgender status violates the FHA."
+        - "Discrimination can be investigated and enforced through HUD processes."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-007"
+      name: "Hazard Insurance vs Flood Coverage"
+      definition: "Flood damage is generally not covered by standard homeowners (hazard) insurance."
+      facts:
+        - "Flood coverage usually requires a separate flood insurance policy."
+        - "Wind/hail/fire/tree damage are more commonly covered hazards."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-008"
+      name: "Disclosure: Material Defects"
+      definition: "Material defects must be disclosed."
+      facts:
+        - "Protected class status is not a required disclosure."
+        - "Unknown defects are not disclosed if truly unknown."
+        - "Private medical information (e.g., HIV status) is not a required disclosure."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-009"
+      name: "Rectangular Survey System: Township Lines"
+      definition: "In the rectangular survey system, township lines run east-west every 6 miles."
+      facts:
+        - "Range lines run north-south parallel to the meridian."
+        - "Ranges are the vertical columns created by range lines."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-010"
+      name: "TREC Continuing Education Requirements"
+      definition: "The Texas Real Estate Commission determines the topics and number of CE hours required between renewals."
+      facts:
+        - "Licensees must complete required CE within the renewal cycle."
+        - "Requirements are set by the Commission, not brokers or boards."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-011"
+      name: "Texas Broker CE Exemption (Pre-10/31/1991)"
+      definition: "Texas brokers licensed before October 31, 1991 are exempt from continuing education requirements for renewal."
+      facts:
+        - "This is a historical licensing grandfathering rule."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-012"
+      name: "TREC Consumer Protection Notice Posting"
+      definition: "The Consumer Protection Notice (TREC No. CN) must be displayed in places of business maintained by the broker/inspector."
+      facts:
+        - "The notice must be in a prominent/readily noticeable location."
+        - "Referenced forms in this test include CN 1-2 and CN 1-3."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-013"
+      name: "Trade Fixtures"
+      definition: "Trade fixtures are tenant-owned business items intended to be removed at the end of the lease."
+      facts:
+        - "Trade fixtures remain personal property (not landlord-owned fixtures)."
+        - "They must typically be removed by the tenant before lease end."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-014"
+      name: "Equitable Estate"
+      definition: "An equitable estate exists when a buyer has contract-based rights before legal title transfers at closing."
+      facts:
+        - "Seller retains legal title until closing."
+        - "Buyer gains equitable interest upon entering a binding contract."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-015"
+      name: "Fair Housing: Uniform Service"
+      definition: "Using a uniform system that treats everyone fairly helps avoid housing discrimination."
+      facts:
+        - "Fair housing compliance includes consistency of process and communications."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-016"
+      name: "Cooperating Broker Compensation"
+      definition: "The listing broker determines the amount offered to a cooperating broker."
+      facts:
+        - "Compensation offers are typically advertised through MLS/co-op arrangements."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-017"
+      name: "Advising Prospects: Use Market Information"
+      definition: "Agents should base advice on market information rather than protected-class attributes."
+      facts:
+        - "Using disability/race/religion as a basis can violate fair housing laws."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-018"
+      name: "Co-op Ownership Risk"
+      definition: "A key downside of living in a co-op is that one resident’s actions can harm the entire cooperative."
+      facts:
+        - "Co-op owners typically own shares in a corporation that owns the building."
+        - "Nonpayment of obligations can threaten the whole co-op."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-019"
+      name: "Buyer/Seller Disputes vs TREC"
+      definition: "TREC does not handle disputes between buyers and sellers."
+      facts:
+        - "Civil remedies include specific performance, rescission, or damages (depending on contract)."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-020"
+      name: "Exclusive Right-to-Sell Listing"
+      definition: "An exclusive right-to-sell listing pays the broker regardless of who sells the property."
+      facts:
+        - "Even if the seller finds the buyer, the broker still earns compensation."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-021"
+      name: "Fixtures vs Tenant Improvements (Cabinets)"
+      definition: "Installed cabinets are generally fixtures that revert to the landlord at lease expiration."
+      facts:
+        - "Fixtures are personal property that become real property upon attachment."
+        - "Tenant-installed fixtures usually stay unless agreed otherwise."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-022"
+      name: "Intermediary (Texas)"
+      definition: "In Texas, a broker may act as an intermediary when both buyer and seller are clients of the same broker."
+      facts:
+        - "Written consent from both parties is required."
+        - "Broker may appoint separate agents for each side."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-023"
+      name: "Statute of Frauds: Leases"
+      definition: "Leases of one year or longer must be in writing to satisfy the statute of frauds."
+      facts:
+        - "Oral leases may be invalid/unenforceable when term ≥ 1 year."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-024"
+      name: "ECOA"
+      definition: "The Equal Credit Opportunity Act (ECOA) prevents credit/lending discrimination."
+      facts:
+        - "Applies to access to credit (loans, financing)."
+        - "Distinct from housing discrimination rules in rentals/sales."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-025"
+      name: "Chain of Title vs Abstract of Title"
+      definition: "A chain of title is the complete chronological history of ownership transfers."
+      facts:
+        - "An abstract of title is a condensed summary of transfers/encumbrances."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-026"
+      name: "Capital Gains Exclusion (Primary Residence)"
+      definition: "Primary residence gains are excluded up to $250,000 (single) or $500,000 (joint) if qualified."
+      facts:
+        - "Example: $160,000 gain for joint filers may be fully excluded."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-027"
+      name: "Surface Rights"
+      definition: "Surface rights govern the surface area of a parcel and improvements on/attached to it."
+      facts:
+        - "Building a shed is exercising surface rights."
+        - "Mineral extraction rights relate to subsurface rights."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-028"
+      name: "Real Property"
+      definition: "Real property is land + improvements + the bundle of rights."
+      facts:
+        - "Real estate often refers to the physical land/improvements only."
+        - "Personal property is movable and not affixed."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-029"
+      name: "Power of Attorney (Universal Agency)"
+      definition: "A power of attorney grants broad authority and is used with universal agency."
+      facts:
+        - "Universal agency is the broadest agency type."
+        - "Agent can act on behalf of principal under POA scope."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-030"
+      name: "TRELA Protected Classes (Test Content)"
+      definition: "Sexual orientation is not listed as a protected class under TRELA in this test content."
+      facts:
+        - "Familial status, religion, and disability are protected under TRELA."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-031"
+      name: "Mutual Rescission"
+      definition: "Mutual rescission occurs when both parties agree to end an agreement early."
+      facts:
+        - "Applies to agency agreements and contracts when mutually terminated."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-032"
+      name: "Principle of Progression"
+      definition: "Progression means a lower-value property is pulled up in value by higher-value surrounding properties."
+      facts:
+        - "Example: smallest home on an upgraded street appraises higher than similar homes elsewhere."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-033"
+      name: "Asbestos"
+      definition: "Asbestos is a hazardous mineral historically used as insulation."
+      facts:
+        - "Recognized environmental/health hazard in buildings."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-034"
+      name: "Net Operating Income (NOI)"
+      definition: "NOI equals effective gross income minus operating expenses."
+      facts:
+        - "Example: $100,000 EGI - $60,000 expenses = $40,000 NOI."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-035"
+      name: "Flood Zone Determination"
+      definition: "Flood zone status should be verified using up-to-date FEMA flood maps."
+      facts:
+        - "Do not give unsupported opinions about flood likelihood."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-036"
+      name: "Ad Valorem Taxes"
+      definition: "Ad valorem property tax is assessed value multiplied by the county tax rate."
+      facts:
+        - "Example: $290,000 × 2.375% = $6,887.50."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-037"
+      name: "CERCLA and SARA"
+      definition: "CERCLA created the Superfund program; SARA amended CERCLA."
+      facts:
+        - "CERCLA passed in 1980."
+        - "SARA amendments occurred in 1986."
+        - "Addresses hazardous waste sites and spill response."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-038"
+      name: "Lead-Based Paint Disclosure"
+      definition: "Residential property built before 1978 requires lead-based paint disclosure prior to closing."
+      facts:
+        - "1971 homes fall within disclosure requirements."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-039"
+      name: "Fraud"
+      definition: "Fraud is intentional deception to gain something of value or cause damage."
+      facts:
+        - "Different from innocent or negligent misrepresentation."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-040"
+      name: "Lawful Objective (Contract Validity)"
+      definition: "A valid contract must have a lawful objective and cannot require illegal outcomes."
+      facts:
+        - "Illegal purpose can void/defeat enforceability."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-041"
+      name: "Plat"
+      definition: "A plat is a map identifying lots and blocks, often used for subdivisions."
+      facts:
+        - "Used for legal descriptions in platted areas."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-042"
+      name: "Bill of Sale vs Deed"
+      definition: "A bill of sale transfers personal property, while a deed transfers real property."
+      facts:
+        - "Personal property is movable/unattached."
+        - "Real property is land/improvements/rights."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-043"
+      name: "Title Insurance"
+      definition: "Title insurance protects against covered title defects discovered after closing."
+      facts:
+        - "It does not ‘guarantee’ perfection, but insures against specific risks."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-044"
+      name: "RESPA"
+      definition: "RESPA educates consumers and regulates settlement/closing service practices."
+      facts:
+        - "Includes disclosure requirements related to settlement services."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-045"
+      name: "Novation"
+      definition: "A novation substitutes obligations of an original contract with a new contract."
+      facts:
+        - "Can replace parties and/or obligations depending on structure."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-046"
+      name: "Cap Rate"
+      definition: "Capitalization rate (cap rate) is NOI divided by purchase price/value."
+      facts:
+        - "Example: 367,500 / 5,250,000 = 7%."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-047"
+      name: "Fair Housing Act Coverage (Test Content)"
+      definition: "This test content treats the Fair Housing Act as applying to residential transactions."
+      facts:
+        - "Certain owner-occupied room rentals may be exempt under limited conditions."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-048"
+      name: "Ownership Rights Severability"
+      definition: "Subsurface, air, and water rights can be sold separately from surface rights."
+      facts:
+        - "These are components of the ‘bundle of rights’."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-049"
+      name: "Misrepresentation Types"
+      definition: "Innocent misrepresentation occurs when inaccurate information is shared in good faith."
+      facts:
+        - "Negligent misrepresentation violates the duty of reasonable care."
+        - "Fraud requires intent to deceive."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-050"
+      name: "Easement Appurtenant"
+      definition: "An easement appurtenant runs with the land and remains regardless of ownership changes."
+      facts:
+        - "Benefited land = dominant tenement; burdened land = servient tenement."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-051"
+      name: "Vicarious Liability"
+      definition: "Vicarious liability is liability for another person’s actions by law or express agreement."
+      facts:
+        - "Common in employer/employee relationships."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-052"
+      name: "General Warranty Deed"
+      definition: "A general warranty deed includes the full set of implied covenants/warranties."
+      facts:
+        - "Provides broadest warranty protection among common deed types."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-053"
+      name: "Voidable Contract"
+      definition: "A voidable contract is valid but may be rescinded by a protected party (e.g., incompetence)."
+      facts:
+        - "Distinct from void (never valid) and executed/executory."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-054"
+      name: "Alienation Clause (Due-on-Sale)"
+      definition: "An alienation clause requires payoff of the mortgage upon sale/transfer of the property."
+      facts:
+        - "Also called a due-on-sale clause."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-055"
+      name: "E&O Insurance Limits"
+      definition: "E&O insurance may not cover defenses for fair housing violations."
+      facts:
+        - "Often covers negligence/errors, not illegal discrimination."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-056"
+      name: "Eminent Domain"
+      definition: "Eminent domain is the government’s power to take private property for public use (with compensation)."
+      facts:
+        - "Often associated with condemnation proceedings."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-057"
+      name: "Fixture"
+      definition: "A fixture is personal property that becomes real property once permanently attached."
+      facts:
+        - "Attachment affects transfer and ownership rights."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-058"
+      name: "Addendum vs Amendment"
+      definition: "An addendum is attached before signing; an amendment modifies a contract after signing."
+      facts:
+        - "Used to change/add terms at different stages."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-059"
+      name: "Trade Fixtures Removal"
+      definition: "Trade fixtures must be removed and taken by the tenant at lease end."
+      facts:
+        - "They remain personal property of the tenant."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-060"
+      name: "TILA Applicability"
+      definition: "The Truth in Lending Act (TILA) generally applies to consumer credit, not business-purpose loans."
+      facts:
+        - "Consumer lending disclosures are central to TILA."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-061"
+      name: "Gross Lease"
+      definition: "A gross lease is where the tenant pays a flat rent and the landlord pays operating expenses."
+      facts:
+        - "Net leases shift some expenses to the tenant."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-062"
+      name: "Net Listing Conflict"
+      definition: "Net listings are discouraged due to conflicts of interest."
+      facts:
+        - "Broker profit can increase by underselling, creating self-dealing risk."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-063"
+      name: "Secondary Mortgage Market"
+      definition: "The secondary mortgage market is where mortgage notes are bought and sold."
+      facts:
+        - "Primary market is where loans are originated."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-064"
+      name: "Acceleration Clause"
+      definition: "An acceleration clause allows the lender to call the entire loan balance due upon default."
+      facts:
+        - "Often triggered after nonpayment or other default events."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-065"
+      name: "Executory Contract"
+      definition: "An executory contract is one where the terms have not yet been fully performed by both parties."
+      facts:
+        - "Executed contract means fully performed."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-066"
+      name: "Principle of Regression"
+      definition: "Regression means a higher-value home is pulled down in value by lower-value surrounding homes."
+      facts:
+        - "Example: expensive home in cheaper neighborhood appraises below its cost."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-067"
+      name: "Unauthorized Practice of Law (UPL)"
+      definition: "Drafting legal documents transferring real property interests is unauthorized practice of law for brokers."
+      facts:
+        - "Brokers can often fill in blanks on approved promulgated forms."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-068"
+      name: "Sales Comparison Approach"
+      definition: "The sales comparison approach is commonly used for owner-occupied residential appraisals."
+      facts:
+        - "Relies on comparable recent sales."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-069"
+      name: "Rectangular Survey System Basis (Test Content)"
+      definition: "This test content ties the rectangular survey system to latitude/longitude reference."
+      facts:
+        - "Also involves meridians, baselines, township lines, and range lines."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-070"
+      name: "Redlining"
+      definition: "Redlining is the illegal practice of refusing loans/credit based on neighborhood demographics."
+      facts:
+        - "A form of discriminatory lending."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-071"
+      name: "Voluntary Alienation"
+      definition: "Voluntary alienation is transfer of property by sale or gift."
+      facts:
+        - "Distinct from involuntary alienation (foreclosure, eminent domain, etc.)."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-072"
+      name: "Points (Origination Fee)"
+      definition: "An origination fee may be referred to as points."
+      facts:
+        - "Points are typically expressed as a percentage of the loan amount."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-073"
+      name: "Statute of Limitations"
+      definition: "A statute of limitations sets a time limit for bringing legal claims."
+      facts:
+        - "Claims filed too late can be barred."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-074"
+      name: "Statute of Frauds: Real Estate"
+      definition: "Contracts for the sale of real estate must be in writing to be enforceable."
+      facts:
+        - "Verbal agreements for sale typically fail statute of frauds requirements."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-075"
+      name: "Fair Housing: Illegal Client Instruction"
+      definition: "If a client instructs discrimination, the license holder must refuse and explain illegality."
+      facts:
+        - "Obedience does not require following illegal instructions."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-076"
+      name: "Fair Housing: Senior Housing Exception (Test Content)"
+      definition: "Senior housing may lawfully restrict children under specific qualifying rules."
+      facts:
+        - "Other discrimination scenarios listed would violate fair housing law."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-077"
+      name: "Consideration"
+      definition: "Consideration is something of value exchanged between parties in a contract."
+      facts:
+        - "A pure gift lacks consideration."
+        - "Service-for-item is valid consideration."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-078"
+      name: "Contingency"
+      definition: "A contingency is a contract condition that must be satisfied for performance to proceed."
+      facts:
+        - "Common example: financing contingency (loan approval)."
+      created_at: null
+      updated_at: null
+
+    - id: "concept-079"
+      name: "Area Calculation"
+      definition: "Area of a rectangle/square equals length multiplied by width."
+      facts:
+        - "10 ft × 10 ft = 100 sq ft."
+      created_at: null
+      updated_at: null
+
+  variants:
+    # --- Each quiz question becomes a Variant linked to its Concept ---
+
+    - id: "variant-001"
+      concept_id: "concept-001"
+      dimension: "Definition Recall"
+      difficulty: 1
+      front: "A corporation has what type of ownership?"
+      back: "ownership in severalty"
+      hints:
+        - "Think: single owner vs multiple owners."
+        - "Corporations count as a single legal entity."
+      last_shown_at: null
+
+    - id: "variant-002"
+      concept_id: "concept-002"
+      dimension: "Definition Recall"
+      difficulty: 2
+      front: "When land is described as a freehold estate, it means that the individual with interest:"
+      back: "has some degree of ownership for an undetermined or unspecified (and therefore unlimited) time"
+      hints:
+        - "Freehold ≠ fixed term."
+        - "Duration is not limited by a specific end date."
+      last_shown_at: null
+
+    - id: "variant-003"
+      concept_id: "concept-003"
+      dimension: "Discrimination"
+      difficulty: 2
+      front: "Which of the following is NOT a category of the NAR® Code of Ethics?"
+      back: "Duties to Lenders"
+      hints:
+        - "The Code groups duties by who REALTORS® owe duties to."
+        - "Lenders aren’t a named category."
+      last_shown_at: null
+
+    - id: "variant-004"
+      concept_id: "concept-004"
+      dimension: "Definition Recall"
+      difficulty: 2
+      front: "What is one of the major objectives of the Texas License Law?"
+      back: "to protect consumers from incompetent or unethical brokers and salespeople"
+      hints:
+        - "Think consumer protection."
+        - "Not about state revenue or marketing."
+      last_shown_at: null
+
+    - id: "variant-005"
+      concept_id: "concept-001"
+      dimension: "Definition Recall"
+      difficulty: 1
+      front: "What kind of ownership is ownership by a single person or entity?"
+      back: "ownership in severalty"
+      hints:
+        - "Single owner form."
+        - "Not joint tenancy or tenancy in common."
+      last_shown_at: null
+
+    - id: "variant-006"
+      concept_id: "concept-005"
+      dimension: "Definition Recall"
+      difficulty: 2
+      front: "What is the term for a rejection of an offer to buy or sell made with the simultaneous substitution of a new offer?"
+      back: "counteroffer"
+      hints:
+        - "It replaces the original offer."
+        - "Original offer is not still open."
+      last_shown_at: null
+
+    - id: "variant-007"
+      concept_id: "concept-006"
+      dimension: "Scenario Application"
+      difficulty: 3
+      front: "Ashley is transgender. Ray refused to rent to her on that basis. Has Ray violated the federal Fair Housing Act?"
+      back: "Yes. Sexual orientation and gender identity are protected classes under the Fair Housing Act."
+      hints:
+        - "Discrimination based on protected class is prohibited."
+        - "Gender identity is treated as protected here."
+      last_shown_at: null
+
+    - id: "variant-008"
+      concept_id: "concept-007"
+      dimension: "Example Classification"
+      difficulty: 2
+      front: "Which of these events is least likely to be covered by standard hazard (homeowners) insurance?"
+      back: "Jason's basement flooded in a hurricane."
+      hints:
+        - "Standard policies usually exclude one big category."
+        - "Flooding is typically separate coverage."
+      last_shown_at: null
+
+    - id: "variant-009"
+      concept_id: "concept-008"
+      dimension: "Definition Recall"
+      difficulty: 2
+      front: "Which of these should always be disclosed?"
+      back: "material defects"
+      hints:
+        - "Think: what would affect value/safety/decision-making?"
+        - "Defects that a reasonable buyer would care about."
+      last_shown_at: null
+
+    - id: "variant-010"
+      concept_id: "concept-009"
+      dimension: "Definition Recall"
+      difficulty: 3
+      front: "In a rectangular survey system, a line that runs east-west every 6 miles is called a:"
+      back: "township line"
+      hints:
+        - "Township lines run east-west."
+        - "Range lines run north-south."
+      last_shown_at: null
+
+    - id: "variant-011"
+      concept_id: "concept-010"
+      dimension: "Definition Recall"
+      difficulty: 2
+      front: "Who determines continuing education topics and hours required between license renewals?"
+      back: "the Texas Real Estate Commission"
+      hints:
+        - "The regulator sets CE requirements."
+        - "Not the broker or the licensee."
+      last_shown_at: null
+
+    - id: "variant-012"
+      concept_id: "concept-011"
+      dimension: "Definition Recall"
+      difficulty: 3
+      front: "What is a significant difference between Texas brokers licensed before and after October 31, 1991?"
+      back: "A Texas broker licensed before October 31, 1991, is exempt from continuing education requirements for license renewal."
+      hints:
+        - "This is a grandfathering rule."
+        - "It’s about CE, not fees or dues."
+      last_shown_at: null
+
+    - id: "variant-013"
+      concept_id: "concept-012"
+      dimension: "Definition Recall"
+      difficulty: 3
+      front: "According to The Canons of Professional Ethics, which form must be displayed in each place of business?"
+      back: "Consumer Protection Notice TREC No. CN 1-2"
+      hints:
+        - "It’s a required posted notice."
+        - "Not IABS (that’s given to consumers)."
+      last_shown_at: null
+
+    - id: "variant-014"
+      concept_id: "concept-013"
+      dimension: "Definition Recall"
+      difficulty: 2
+      front: "Why are trade fixtures considered personal property?"
+      back: "Trade fixtures are items that a tenant uses in their business that will be removed at the end of the lease."
+      hints:
+        - "Business-use items by a tenant."
+        - "Intended to be removed when leaving."
+      last_shown_at: null
+
+    - id: "variant-015"
+      concept_id: "concept-014"
+      dimension: "Scenario Application"
+      difficulty: 3
+      front: "Buyer is in contract but has not yet closed. What type of estate does the buyer now have?"
+      back: "equitable estate"
+      hints:
+        - "Contract creates an ownership-like interest."
+        - "Legal title hasn’t transferred yet."
+      last_shown_at: null
+
+    - id: "variant-016"
+      concept_id: "concept-015"
+      dimension: "Scenario Application"
+      difficulty: 2
+      front: "Treating everyone fairly is a good way to:"
+      back: "avoid housing discrimination"
+      hints:
+        - "Uniform service reduces bias risk."
+        - "Fair housing loves consistency."
+      last_shown_at: null
+
+    - id: "variant-017"
+      concept_id: "concept-016"
+      dimension: "Definition Recall"
+      difficulty: 2
+      front: "Who determines the amount a cooperating broker will be compensated?"
+      back: "the listing broker"
+      hints:
+        - "Offer of compensation is set by one party."
+        - "Not the buyer’s agent."
+      last_shown_at: null
+
+    - id: "variant-018"
+      concept_id: "concept-017"
+      dimension: "Scenario Application"
+      difficulty: 2
+      front: "What should agents use as a basis for advising a prospect?"
+      back: "market information"
+      hints:
+        - "Avoid protected-class factors."
+        - "Use objective data."
+      last_shown_at: null
+
+    - id: "variant-019"
+      concept_id: "concept-018"
+      dimension: "Definition Recall"
+      difficulty: 3
+      front: "Which of the following is a downside to living in a co-op?"
+      back: "one resident's actions can harm the entire cooperative"
+      hints:
+        - "Residents own shares."
+        - "Shared financial risk is the key issue."
+      last_shown_at: null
+
+    - id: "variant-020"
+      concept_id: "concept-019"
+      dimension: "Scenario Application"
+      difficulty: 4
+      front: "Sellers back out before closing. Clients have all options EXCEPT:"
+      back: "filing a formal complaint with TREC"
+      hints:
+        - "TREC doesn’t resolve buyer/seller contract disputes."
+        - "Think civil remedies instead."
+      last_shown_at: null
+
+    - id: "variant-021"
+      concept_id: "concept-020"
+      dimension: "Definition Recall"
+      difficulty: 2
+      front: "What is unique about an exclusive right-to-sell listing agreement?"
+      back: "The broker gets compensation regardless of who sells the property."
+      hints:
+        - "Even if seller finds buyer."
+        - "Broker is protected contractually."
+      last_shown_at: null
+
+    - id: "variant-022"
+      concept_id: "concept-021"
+      dimension: "Scenario Application"
+      difficulty: 3
+      front: "If a tenant installs new kitchen cabinets, they would:"
+      back: "belong to the landlord upon expiration of the lease"
+      hints:
+        - "Cabinets are typically fixtures."
+        - "Fixtures revert to the property owner."
+      last_shown_at: null
+
+    - id: "variant-023"
+      concept_id: "concept-022"
+      dimension: "Scenario Application"
+      difficulty: 3
+      front: "When might a broker act as an intermediary in Texas?"
+      back: "when both the seller and the buyer are clients of the same broker"
+      hints:
+        - "Both sides are clients of the broker."
+        - "Written consent required."
+      last_shown_at: null
+
+    - id: "variant-024"
+      concept_id: "concept-023"
+      dimension: "Definition Recall"
+      difficulty: 2
+      front: "Lease is for 2 years. For validity under statute of frauds, it must be:"
+      back: "in writing"
+      hints:
+        - "1 year or more triggers writing requirement."
+        - "Oral lease won’t satisfy statute."
+      last_shown_at: null
+
+    - id: "variant-025"
+      concept_id: "concept-024"
+      dimension: "Definition Recall"
+      difficulty: 2
+      front: "What was the purpose of ECOA?"
+      back: "to reduce credit discrimination"
+      hints:
+        - "It’s a credit law."
+        - "Think lending/financing."
+      last_shown_at: null
+
+    - id: "variant-026"
+      concept_id: "concept-025"
+      dimension: "Discrimination"
+      difficulty: 3
+      front: "What is a chain of title?"
+      back: "the entire chronological record of a property’s ownership"
+      hints:
+        - "Complete history."
+        - "Abstract is the condensed version."
+      last_shown_at: null
+
+    - id: "variant-027"
+      concept_id: "concept-022"
+      dimension: "Scenario Application"
+      difficulty: 3
+      front: "Broker has one agent for buyer and one for seller in the same transaction. Broker is:"
+      back: "acting as an intermediary"
+      hints:
+        - "Texas intermediary structure."
+        - "Not ‘dual agency’ in the classic sense."
+      last_shown_at: null
+
+    - id: "variant-028"
+      concept_id: "concept-026"
+      dimension: "Scenario Application"
+      difficulty: 3
+      front: "Married couple bought for $130,000 and sold for $290,000 as primary residence. Capital gains tax owed?"
+      back: "$0"
+      hints:
+        - "Gain is $160,000."
+        - "Exclusion is up to $500,000 for joint filers."
+      last_shown_at: null
+
+    - id: "variant-029"
+      concept_id: "concept-020"
+      dimension: "Definition Recall"
+      difficulty: 2
+      front: "What is an exclusive right to sell listing agreement?"
+      back: "an exclusive agreement in which the listing broker receives a commission if the property is sold even if the seller brings the buyer"
+      hints:
+        - "Broker gets paid regardless."
+        - "Seller bringing buyer does not remove commission."
+      last_shown_at: null
+
+    - id: "variant-030"
+      concept_id: "concept-027"
+      dimension: "Example Classification"
+      difficulty: 2
+      front: "Which of these illustrates a person exercising their surface rights?"
+      back: "Lena builds a yoga shed in her back yard."
+      hints:
+        - "Surface rights relate to surface use and improvements."
+        - "Not mineral extraction or lake recreation."
+      last_shown_at: null
+
+    - id: "variant-031"
+      concept_id: "concept-028"
+      dimension: "Definition Recall"
+      difficulty: 1
+      front: "Which term refers to the land, improvements, and the bundle of rights?"
+      back: "real property"
+      hints:
+        - "Includes the ‘bundle of rights’."
+        - "More than just the dirt + house."
+      last_shown_at: null
+
+    - id: "variant-032"
+      concept_id: "concept-029"
+      dimension: "Definition Recall"
+      difficulty: 2
+      front: "What legal instrument is used in conjunction with universal agency?"
+      back: "power of attorney"
+      hints:
+        - "Grants broad authority."
+        - "Used to let agent act for principal."
+      last_shown_at: null
+
+    - id: "variant-033"
+      concept_id: "concept-030"
+      dimension: "Discrimination"
+      difficulty: 3
+      front: "Which attribute is NOT a protected class under TRELA (per this test content)?"
+      back: "sexual orientation"
+      hints:
+        - "Familial status, religion, disability are protected."
+        - "This one is not listed in TRELA here."
+      last_shown_at: null
+
+    # --- “TextEdit highlighted” add-on set ---
+    - id: "variant-034"
+      concept_id: "concept-031"
+      dimension: "Definition Recall"
+      difficulty: 2
+      front: "Both parties involved in an agency agreement agree to end the agreement early. What is this called?"
+      back: "mutual rescission"
+      hints:
+        - "Mutual = both agree."
+        - "Rescission = end/undo the agreement."
+      last_shown_at: null
+
+    - id: "variant-035"
+      concept_id: "concept-032"
+      dimension: "Scenario Application"
+      difficulty: 3
+      front: "Smallest shabbiest home on upgraded street appraises higher than similar home elsewhere. What principle explains this?"
+      back: "principle of progression"
+      hints:
+        - "Lower-value pulled up by surroundings."
+        - "Opposite of regression."
+      last_shown_at: null
+
+    - id: "variant-036"
+      concept_id: "concept-026"
+      dimension: "Scenario Application"
+      difficulty: 3
+      front: "Homeowner sells primary residence for a profit of $185,000. How much capital gains tax will she pay?"
+      back: "None. Homeowners are exempt from capital gains up to $250,000 per person every two years."
+      hints:
+        - "Compare gain to exclusion limit."
+        - "Single filer exclusion is $250k."
+      last_shown_at: null
+
+    - id: "variant-037"
+      concept_id: "concept-033"
+      dimension: "Definition Recall"
+      difficulty: 2
+      front: "Asbestos is a mineral used for many years as:"
+      back: "insulation"
+      hints:
+        - "It’s a classic hazard in older buildings."
+        - "Often found in insulation materials."
+      last_shown_at: null
+
+    - id: "variant-038"
+      concept_id: "concept-034"
+      dimension: "Scenario Application"
+      difficulty: 2
+      front: "Effective gross income $100,000; operating expenses $60,000. What is NOI?"
+      back: "$40,000"
+      hints:
+        - "NOI = income - operating expenses."
+        - "100k - 60k."
+      last_shown_at: null
+
+    - id: "variant-039"
+      concept_id: "concept-035"
+      dimension: "Scenario Application"
+      difficulty: 2
+      front: "Buyer asks if property is in a flood zone. What should you do?"
+      back: "Direct the buyer to obtain an up-to-date flood map from FEMA."
+      hints:
+        - "Use authoritative map source."
+        - "Avoid guessing."
+      last_shown_at: null
+
+    - id: "variant-040"
+      concept_id: "concept-036"
+      dimension: "Scenario Application"
+      difficulty: 3
+      front: "Assessed value $290,000 and tax rate 2.375%. What ad valorem tax is owed?"
+      back: "$6,887.50"
+      hints:
+        - "Tax = assessed value × rate."
+        - "2.375% = 0.02375."
+      last_shown_at: null
+
+    - id: "variant-041"
+      concept_id: "concept-037"
+      dimension: "Definition Recall"
+      difficulty: 3
+      front: "Which federal law amended CERCLA?"
+      back: "Superfund Amendments and Reauthorization Act (SARA)"
+      hints:
+        - "SARA = the CERCLA amendment."
+        - "Think Superfund updates."
+      last_shown_at: null
+
+    - id: "variant-042"
+      concept_id: "concept-037"
+      dimension: "Definition Recall"
+      difficulty: 3
+      front: "CERCLA was passed in 1980 to:"
+      back: "establish a Superfund to clean up uncontrolled hazardous waste sites and to respond to spills"
+      hints:
+        - "It’s about hazardous waste cleanup."
+        - "Superfund program origin."
+      last_shown_at: null
+
+    - id: "variant-043"
+      concept_id: "concept-038"
+      dimension: "Scenario Application"
+      difficulty: 3
+      front: "House built in 1971 with original paint/windows/flooring. What is required from listing agent?"
+      back: "The agent needs to furnish the buyers with a Lead-Based Paint Disclosure PRIOR to closing."
+      hints:
+        - "Built before 1978 triggers disclosure."
+        - "Must happen before closing."
+      last_shown_at: null
+
+    - id: "variant-044"
+      concept_id: "concept-039"
+      dimension: "Definition Recall"
+      difficulty: 2
+      front: "Deliberate deception with intent to gain value or cause damage is called:"
+      back: "fraud"
+      hints:
+        - "Requires intent."
+        - "More serious than innocent mistake."
+      last_shown_at: null
+
+    - id: "variant-045"
+      concept_id: "concept-040"
+      dimension: "Definition Recall"
+      difficulty: 2
+      front: "Which element of a valid contract means it cannot require illegal activities or outcomes?"
+      back: "lawful objective"
+      hints:
+        - "Contract purpose must be legal."
+        - "Illegal objective defeats validity."
+      last_shown_at: null
+
+    - id: "variant-046"
+      concept_id: "concept-041"
+      dimension: "Definition Recall"
+      difficulty: 2
+      front: "Surveyor/developer map identifying lots and blocks is a:"
+      back: "plat"
+      hints:
+        - "Subdivisions use these."
+        - "Lots + blocks map."
+      last_shown_at: null
+
+    - id: "variant-047"
+      concept_id: "concept-042"
+      dimension: "Discrimination"
+      difficulty: 2
+      front: "Personal property MUST be transferred via:"
+      back: "bill of sale"
+      hints:
+        - "Deed is for real property."
+        - "Bill of sale is for movable items."
+      last_shown_at: null
+
+    - id: "variant-048"
+      concept_id: "concept-043"
+      dimension: "Definition Recall"
+      difficulty: 3
+      front: "What does a standard title insurance policy do?"
+      back: "protects against defects discovered in the title after closing"
+      hints:
+        - "It’s insurance against covered defects."
+        - "Not a history document."
+      last_shown_at: null
+
+    - id: "variant-049"
+      concept_id: "concept-044"
+      dimension: "Definition Recall"
+      difficulty: 3
+      front: "What is the purpose of RESPA?"
+      back: "educate consumers about closing and settlement services"
+      hints:
+        - "Settlement/closing focused."
+        - "Consumer disclosures and protections."
+      last_shown_at: null
+
+    - id: "variant-050"
+      concept_id: "concept-045"
+      dimension: "Definition Recall"
+      difficulty: 3
+      front: "A new contract substituting the obligations of an original contract is a:"
+      back: "novation"
+      hints:
+        - "Substitutes obligations."
+        - "Creates a new agreement replacing old."
+      last_shown_at: null
+
+    - id: "variant-051"
+      concept_id: "concept-046"
+      dimension: "Scenario Application"
+      difficulty: 3
+      front: "Hans bought for $5,250,000. NOI $367,500. What cap rate?"
+      back: "7%"
+      hints:
+        - "Cap rate = NOI / value."
+        - "367,500 / 5,250,000."
+      last_shown_at: null
+
+    - id: "variant-052"
+      concept_id: "concept-048"
+      dimension: "Definition Recall"
+      difficulty: 3
+      front: "Which ownership rights can be sold separately from surface rights?"
+      back: "subsurface, air, and water rights"
+      hints:
+        - "Bundle of rights can be severed."
+        - "Not limited to just one category."
+      last_shown_at: null
+
+    - id: "variant-053"
+      concept_id: "concept-049"
+      dimension: "Scenario Application"
+      difficulty: 4
+      front: "Agent repeats seller's claim of no termites; buyer later finds infestation. What did the agent commit?"
+      back: "innocent misrepresentation"
+      hints:
+        - "No intent to deceive."
+        - "Relayed incorrect info in good faith."
+      last_shown_at: null
+
+    - id: "variant-054"
+      concept_id: "concept-050"
+      dimension: "Definition Recall"
+      difficulty: 3
+      front: "Which easement is attached to the land regardless of owner?"
+      back: "easement appurtenant"
+      hints:
+        - "Runs with the land."
+        - "Not personal to one individual."
+      last_shown_at: null
+
+    - id: "variant-055"
+      concept_id: "concept-051"
+      dimension: "Definition Recall"
+      difficulty: 3
+      front: "Liability for others by mandate of law or express agreement is called:"
+      back: "vicarious liability"
+      hints:
+        - "Responsibility for another’s actions."
+        - "Common in agency/employment contexts."
+      last_shown_at: null
+
+    - id: "variant-056"
+      concept_id: "concept-052"
+      dimension: "Definition Recall"
+      difficulty: 3
+      front: "Which type of deed includes the five implied warranties?"
+      back: "general warranty deed"
+      hints:
+        - "Broadest warranties."
+        - "Covers more than special warranty."
+      last_shown_at: null
+
+    - id: "variant-057"
+      concept_id: "concept-053"
+      dimension: "Definition Recall"
+      difficulty: 3
+      front: "A potentially valid contract where one party can rescind is called:"
+      back: "voidable"
+      hints:
+        - "Valid unless rescinded."
+        - "Not automatically void."
+      last_shown_at: null
+
+    - id: "variant-058"
+      concept_id: "concept-054"
+      dimension: "Definition Recall"
+      difficulty: 3
+      front: "An alienation clause requires borrower to:"
+      back: "pay the mortgage debt in its entirety upon the property being sold"
+      hints:
+        - "Due-on-sale concept."
+        - "Triggered by transfer."
+      last_shown_at: null
+
+    - id: "variant-059"
+      concept_id: "concept-055"
+      dimension: "Definition Recall"
+      difficulty: 4
+      front: "How does E&O affect defendants in fair housing cases?"
+      back: "E&O may not cover any defense for a fair housing violation."
+      hints:
+        - "Illegality vs negligence."
+        - "Coverage often excludes discrimination."
+      last_shown_at: null
+
+    - id: "variant-060"
+      concept_id: "concept-056"
+      dimension: "Definition Recall"
+      difficulty: 3
+      front: "What is eminent domain?"
+      back: "The power of the government to seize a citizen's private property without consent of the owner."
+      hints:
+        - "Government taking."
+        - "Public use concept."
+      last_shown_at: null
+
+    - id: "variant-061"
+      concept_id: "concept-057"
+      dimension: "Definition Recall"
+      difficulty: 2
+      front: "When personal property becomes permanently attached to real estate, it becomes a:"
+      back: "fixture"
+      hints:
+        - "Attachment changes classification."
+        - "Movable → part of real property."
+      last_shown_at: null
+
+    - id: "variant-062"
+      concept_id: "concept-058"
+      dimension: "Discrimination"
+      difficulty: 3
+      front: "What is attached to an original contract before it is signed?"
+      back: "addendum"
+      hints:
+        - "Before signing = addendum."
+        - "After signing = amendment."
+      last_shown_at: null
+
+    - id: "variant-063"
+      concept_id: "concept-059"
+      dimension: "Scenario Application"
+      difficulty: 3
+      front: "Tenant has trade fixtures in a bakery. At lease end, what must they do?"
+      back: "remove them and take them when moving out"
+      hints:
+        - "Trade fixtures remain tenant property."
+        - "They must be removed."
+      last_shown_at: null
+
+    - id: "variant-064"
+      concept_id: "concept-060"
+      dimension: "Definition Recall"
+      difficulty: 3
+      front: "TILA does NOT apply to which type of loan?"
+      back: "business loans"
+      hints:
+        - "TILA = consumer credit law."
+        - "Business-purpose is excluded."
+      last_shown_at: null
+
+    - id: "variant-065"
+      concept_id: "concept-061"
+      dimension: "Definition Recall"
+      difficulty: 2
+      front: "Tenant pays flat rent; landlord pays operating expenses. What kind of lease?"
+      back: "gross lease"
+      hints:
+        - "All-in rent style."
+        - "Landlord handles expenses."
+      last_shown_at: null
+
+    - id: "variant-066"
+      concept_id: "concept-062"
+      dimension: "Discrimination"
+      difficulty: 4
+      front: "Which listing agreement is discouraged due to conflict of interest?"
+      back: "net listing"
+      hints:
+        - "Broker profit can increase by lowering sale price."
+        - "Incentive misalignment."
+      last_shown_at: null
+
+    - id: "variant-067"
+      concept_id: "concept-063"
+      dimension: "Definition Recall"
+      difficulty: 3
+      front: "What happens in the secondary mortgage market?"
+      back: "Mortgage notes made in the primary market are bought and sold."
+      hints:
+        - "Primary = origination."
+        - "Secondary = trading existing mortgages."
+      last_shown_at: null
+
+    - id: "variant-068"
+      concept_id: "concept-064"
+      dimension: "Definition Recall"
+      difficulty: 3
+      front: "If borrower is behind, the acceleration clause lets lender:"
+      back: "call the entire loan balance due immediately"
+      hints:
+        - "Triggered by default."
+        - "Entire balance becomes due."
+      last_shown_at: null
+
+    - id: "variant-069"
+      concept_id: "concept-065"
+      dimension: "Definition Recall"
+      difficulty: 2
+      front: "When the terms of a contract have not been fully performed, the contract is:"
+      back: "executory"
+      hints:
+        - "Not fully completed."
+        - "Executed = completed."
+      last_shown_at: null
+
+    - id: "variant-070"
+      concept_id: "concept-066"
+      dimension: "Scenario Application"
+      difficulty: 3
+      front: "New $350,000 home in $200,000 neighborhood sells for less than price. What principle explains this?"
+      back: "principle of regression"
+      hints:
+        - "Higher-value pulled down."
+        - "Neighborhood values influence subject value."
+      last_shown_at: null
+
+    - id: "variant-071"
+      concept_id: "concept-067"
+      dimension: "Discrimination"
+      difficulty: 4
+      front: "Which action would be unauthorized practice of law by a broker?"
+      back: "drafting a legal document that transfers an interest in real property"
+      hints:
+        - "Transfer instruments = lawyer work."
+        - "Brokers can fill blanks on approved forms, not draft deeds."
+      last_shown_at: null
+
+    - id: "variant-072"
+      concept_id: "concept-068"
+      dimension: "Definition Recall"
+      difficulty: 2
+      front: "Which appraisal method is most common for owner-occupied residential homes?"
+      back: "sales comparison approach"
+      hints:
+        - "Uses comps."
+        - "Most common for single-family."
+      last_shown_at: null
+
+    - id: "variant-073"
+      concept_id: "concept-070"
+      dimension: "Scenario Application"
+      difficulty: 3
+      front: "Bank refuses mortgages in historically Black area. This practice is:"
+      back: "redlining, and it's illegal"
+      hints:
+        - "Discriminatory lending by geography."
+        - "Illegal practice."
+      last_shown_at: null
+
+    - id: "variant-074"
+      concept_id: "concept-071"
+      dimension: "Definition Recall"
+      difficulty: 2
+      front: "Transfer of property by sale or gift is called:"
+      back: "voluntary alienation"
+      hints:
+        - "Voluntary = owner chooses."
+        - "Not forced (involuntary)."
+      last_shown_at: null
+
+    - id: "variant-075"
+      concept_id: "concept-072"
+      dimension: "Definition Recall"
+      difficulty: 2
+      front: "Origination fee is also called:"
+      back: "points"
+      hints:
+        - "Upfront loan fee term."
+        - "Often expressed as % of loan."
+      last_shown_at: null
+
+    - id: "variant-076"
+      concept_id: "concept-073"
+      dimension: "Definition Recall"
+      difficulty: 2
+      front: "Too many years passed to sue. This is an example of:"
+      back: "statute of limitations"
+      hints:
+        - "Time limit for legal action."
+        - "Late claims are barred."
+      last_shown_at: null
+
+    - id: "variant-077"
+      concept_id: "concept-074"
+      dimension: "Scenario Application"
+      difficulty: 2
+      front: "Verbal agreement to sell a house cannot be enforced because it did not meet:"
+      back: "statute of frauds"
+      hints:
+        - "Real estate sale contracts must be written."
+        - "Oral agreement fails enforceability."
+      last_shown_at: null
+
+    - id: "variant-078"
+      concept_id: "concept-075"
+      dimension: "Scenario Application"
+      difficulty: 3
+      front: "Client instructs you to discriminate against a protected class. What should you do?"
+      back: "advise the client they cannot legally discriminate against certain groups"
+      hints:
+        - "You cannot follow illegal instructions."
+        - "Explain fair housing requirements."
+      last_shown_at: null
+
+    - id: "variant-079"
+      concept_id: "concept-076"
+      dimension: "Example Classification"
+      difficulty: 3
+      front: "Which scenario does NOT violate fair housing law (per this test content)?"
+      back: "Advertise senior citizen community with the phrase \"no children allowed.\""
+      hints:
+        - "Senior housing can have limited exceptions."
+        - "Others listed are discriminatory without exception."
+      last_shown_at: null
+
+    - id: "variant-080"
+      concept_id: "concept-077"
+      dimension: "Discrimination"
+      difficulty: 3
+      front: "Which example lacks consideration?"
+      back: "a mother gifting her daughter a new car"
+      hints:
+        - "Gifts have no exchange."
+        - "Consideration requires value on both sides."
+      last_shown_at: null
+
+    - id: "variant-081"
+      concept_id: "concept-078"
+      dimension: "Scenario Application"
+      difficulty: 2
+      front: "Offer to buy a condo only if bank approves the loan. The contract must contain a:"
+      back: "contingency"
+      hints:
+        - "Condition must be satisfied."
+        - "Financing approval is a common contingency."
+      last_shown_at: null
+
+    - id: "variant-082"
+      concept_id: "concept-079"
+      dimension: "Definition Recall"
+      difficulty: 1
+      front: "A square bedroom measures 10 feet by 10 feet. What is the area?"
+      back: "100 square feet"
+      hints:
+        - "Area = length × width."
+        - "10 × 10."
+      last_shown_at: null
+
+  mastery:
+    - dimension: "Definition Recall"
+      accuracy_ewma: 0.0
+      speed_ewma: 0.0
+      recent_count: 0
+    - dimension: "Paraphrase Recognition"
+      accuracy_ewma: 0.0
+      speed_ewma: 0.0
+      recent_count: 0
+    - dimension: "Example Classification"
+      accuracy_ewma: 0.0
+      speed_ewma: 0.0
+      recent_count: 0
+    - dimension: "Scenario Application"
+      accuracy_ewma: 0.0
+      speed_ewma: 0.0
+      recent_count: 0
+    - dimension: "Discrimination"
+      accuracy_ewma: 0.0
+      speed_ewma: 0.0
+      recent_count: 0
+    - dimension: "Cloze Fill"
+      accuracy_ewma: 0.0
+      speed_ewma: 0.0
+      recent_count: 0
+
+  schedule: []
+  events: []

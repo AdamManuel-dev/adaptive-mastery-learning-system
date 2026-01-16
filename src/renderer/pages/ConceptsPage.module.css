@@ -1,9 +1,9 @@
 /**
  * @fileoverview CSS Module styles for the Concepts page
- * @lastmodified 2026-01-16T00:00:00Z
+ * @lastmodified 2026-01-16T21:00:00Z
  *
- * Features: Concept cards grid, search styling, empty state, mastery indicators
- * Patterns: CSS Grid for responsive layout, data attributes for mastery colors
+ * Features: Concept cards grid, search styling, empty state, mastery indicators, delete confirmation modal
+ * Patterns: CSS Grid for responsive layout, data attributes for mastery colors, centered modal with danger styling, WCAG 2.5.5 touch targets
  */
 
 .conceptsPage {
@@ -35,6 +35,7 @@
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-lg);
+  min-height: 44px; /* WCAG 2.5.5 minimum touch target */
 }
 
 .addIcon {
@@ -73,8 +74,8 @@
   right: var(--space-sm);
   top: 50%;
   transform: translateY(-50%);
-  width: 24px;
-  height: 24px;
+  width: 44px; /* WCAG 2.5.5 minimum touch target */
+  height: 44px;
   padding: 0;
   background-color: var(--color-surface);
   color: var(--color-text-muted);
@@ -309,6 +310,11 @@
   border-radius: var(--radius-sm);
   border: 1px solid transparent;
   cursor: pointer;
+  min-height: 44px; /* WCAG 2.5.5 minimum touch target */
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   transition: all var(--transition-fast);
 }
 
@@ -382,6 +388,11 @@
   font-size: var(--font-size-lg);
   line-height: 1;
   border-radius: var(--radius-sm);
+  width: 44px; /* WCAG 2.5.5 minimum touch target */
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .closeButton:hover {
@@ -469,6 +480,7 @@
   border: 1px solid var(--color-primary);
   border-radius: var(--radius-sm);
   cursor: pointer;
+  min-height: 44px; /* WCAG 2.5.5 minimum touch target */
   transition: all var(--transition-fast);
 }
 
@@ -531,8 +543,8 @@
 }
 
 .removeFactButton {
-  width: 28px;
-  height: 28px;
+  width: 44px; /* WCAG 2.5.5 minimum touch target */
+  height: 44px;
   padding: 0;
   background-color: transparent;
   color: var(--color-text-muted);
@@ -554,6 +566,82 @@
   border-color: #fecaca;
 }
 
+/* Delete Confirmation Modal */
+.confirmationModal {
+  background-color: var(--color-background);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 400px;
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  animation: fadeInScale 0.2s ease-out;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.confirmationIcon {
+  width: 56px;
+  height: 56px;
+  background-color: #fee2e2;
+  color: #991b1b;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 auto var(--space-lg);
+}
+
+.confirmationTitle {
+  margin: 0 0 var(--space-sm);
+  font-size: var(--font-size-lg);
+  color: var(--color-text-primary);
+}
+
+.confirmationMessage {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  margin: 0 0 var(--space-xl);
+  line-height: 1.5;
+}
+
+.confirmationActions {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-md);
+}
+
+.confirmationActions button {
+  min-width: 100px;
+  padding: var(--space-sm) var(--space-lg);
+}
+
+.dangerButton {
+  background-color: #dc2626 !important;
+  border-color: #dc2626 !important;
+}
+
+.dangerButton:hover:not(:disabled) {
+  background-color: #b91c1c !important;
+  border-color: #b91c1c !important;
+}
+
+.dangerButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .header {
@@ -571,5 +659,18 @@
 
   .searchInputWrapper {
     max-width: none;
+  }
+
+  .confirmationModal {
+    margin: var(--space-lg);
+    max-width: calc(100% - var(--space-lg) * 2);
+  }
+
+  .confirmationActions {
+    flex-direction: column-reverse;
+  }
+
+  .confirmationActions button {
+    width: 100%;
   }
 }

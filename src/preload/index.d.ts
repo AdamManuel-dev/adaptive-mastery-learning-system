@@ -1,6 +1,6 @@
 /**
  * @fileoverview TypeScript declarations for window.api exposed by preload
- * @lastmodified 2025-01-16T00:00:00Z
+ * @lastmodified 2026-01-16T00:00:00Z
  *
  * Features: Type declarations for renderer-accessible API
  * Main APIs: window.api, window.electron
@@ -25,6 +25,8 @@ import type {
   ScheduleDTO,
   UpdateScheduleDTO,
   SettingsDTO,
+  LLMConfigDTO,
+  ConnectionTestResultDTO,
 } from '../shared/types/ipc'
 import type { ElectronAPI } from '@electron-toolkit/preload'
 
@@ -98,6 +100,8 @@ interface SettingsAPI {
   get(): Promise<SettingsDTO>
   /** Update settings */
   set(data: Partial<SettingsDTO>): Promise<SettingsDTO>
+  /** Test LLM API connection */
+  testConnection(config: LLMConfigDTO): Promise<ConnectionTestResultDTO>
 }
 
 /**

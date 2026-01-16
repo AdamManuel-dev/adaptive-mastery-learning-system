@@ -1,22 +1,20 @@
 /**
  * @fileoverview Dashboard page showing mastery overview and quick actions
- * @lastmodified 2026-01-16T00:00:00Z
+ * @lastmodified 2026-01-16T19:00:00Z
  *
- * Features: Mastery overview cards, due cards count, start review button, dimension skill bars
- * Main APIs: window.api.mastery, window.api.review, window.api.concepts
- * Constraints: Requires preload API to be available
- * Patterns: Card-based layout with clear visual hierarchy
+ * Features: Mastery overview cards, due cards count, start review button, dimension skill bars, accessible loading states
+ * Main APIs: useElectronAPI hook for safe API access
+ * Constraints: Requires preload API to be available (useElectronAPI provides error handling)
+ * Patterns: Card-based layout with clear visual hierarchy, hook-based API access, WCAG 2.1 AA compliant
  */
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 
 import styles from './DashboardPage.module.css'
+import { useElectronAPI } from '../hooks/useElectronAPI'
 
 import type { ConceptDTO, DueCountDTO, MasteryProfileDTO, Dimension } from '../../shared/types/ipc'
-
-// Import preload types for window.api
-import '../../preload/index.d'
 
 /**
  * Human-readable labels for dimension types
@@ -35,38 +33,43 @@ const DIMENSION_LABELS: Record<Dimension, string> = {
  * Provides overview of learning progress and quick access to review sessions
  */
 function DashboardPage(): React.JSX.Element {
+  const api = useElectronAPI()
   const [masteryProfile, setMasteryProfile] = useState<MasteryProfileDTO | null>(null)
   const [dueCount, setDueCount] = useState<DueCountDTO | null>(null)
   const [concepts, setConcepts] = useState<ConceptDTO[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    async function fetchDashboardData(): Promise<void> {
-      try {
-        setIsLoading(true)
-        setError(null)
+  /**
+   * Fetch dashboard data from API
+   * Extracted as callback for reuse in initial load and retry
+   */
+  const fetchDashboardData = useCallback(async (): Promise<void> => {
+    try {
+      setIsLoading(true)
+      setError(null)
 
-        const [profileResult, dueResult, conceptsResult] = await Promise.all([
-          window.api.mastery.getProfile(),
-          window.api.review.getDueCount(),
-          window.api.concepts.getAll(),
-        ])
+      const [profileResult, dueResult, conceptsResult] = await Promise.all([
+        api.mastery.getProfile(),
+        api.review.getDueCount(),
+        api.concepts.getAll(),
+      ])
 
-        setMasteryProfile(profileResult)
-        setDueCount(dueResult)
-        setConcepts(conceptsResult)
-      } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to load dashboard data'
-        setError(message)
-        console.error('Dashboard data fetch error:', err)
-      } finally {
-        setIsLoading(false)
-      }
+      setMasteryProfile(profileResult)
+      setDueCount(dueResult)
+      setConcepts(conceptsResult)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to load dashboard data'
+      setError(message)
+      console.error('Dashboard data fetch error:', err)
+    } finally {
+      setIsLoading(false)
     }
+  }, [api])
 
+  useEffect(() => {
     void fetchDashboardData()
-  }, [])
+  }, [fetchDashboardData])
 
   const totalConcepts = concepts.length
   const dueForReview = dueCount?.total ?? 0
@@ -80,8 +83,13 @@ function DashboardPage(): React.JSX.Element {
           <h1>Dashboard</h1>
           <p className={styles.subtitle}>Loading your learning progress...</p>
         </header>
-        <div className={styles.loadingState}>
-          <div className={styles.loadingSpinner} />
+        <div
+          className={styles.loadingState}
+          role="status"
+          aria-live="polite"
+          aria-busy="true"
+        >
+          <div className={styles.loadingSpinner} aria-hidden="true" />
           <p>Fetching data...</p>
         </div>
       </div>
@@ -95,9 +103,13 @@ function DashboardPage(): React.JSX.Element {
           <h1>Dashboard</h1>
           <p className={styles.subtitle}>Track your learning progress and mastery</p>
         </header>
-        <div className={styles.errorState}>
+        <div className={styles.errorState} role="alert">
           <p>Error: {error}</p>
-          <button onClick={() => window.location.reload()} className="btn-secondary">
+          <button
+            type="button"
+            onClick={() => void fetchDashboardData()}
+            className="btn-secondary"
+          >
             Retry
           </button>
         </div>
@@ -192,7 +204,8 @@ function DashboardPage(): React.JSX.Element {
             {masteryProfile.dimensions.map((dimension) => {
               const isWeakest = dimension.dimension === masteryProfile.weakestDimension
               const isStrongest = dimension.dimension === masteryProfile.strongestDimension
-              const masteryPercent = Math.round(dimension.accuracyEwma * 100)
+              // Clamp to 0-100 range in case of invalid data
+              const masteryPercent = Math.min(100, Math.max(0, Math.round(dimension.accuracyEwma * 100)))
 
               return (
                 <div
@@ -223,16 +236,12 @@ function DashboardPage(): React.JSX.Element {
         </section>
       )}
 
-      {/* Recent Activity */}
-      <section className={styles.activitySection}>
-        <h2>Recent Activity</h2>
-        <div className={styles.emptyState}>
-          <p>No recent activity yet.</p>
-          <p className={styles.emptyStateHint}>
-            Complete reviews and add concepts to see your activity here.
-          </p>
-        </div>
-      </section>
+      {/*
+        TODO: Implement activity tracking feature
+        The Recent Activity section has been removed until activity tracking
+        is implemented in the backend. This would show review history,
+        concept additions, and mastery milestones.
+      */}
     </div>
   )
 }
