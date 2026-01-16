@@ -1,15 +1,18 @@
 /**
  * @fileoverview IPC handlers for concept operations
- * @lastmodified 2025-01-16T00:00:00Z
+ * @lastmodified 2026-01-16T00:00:00Z
  *
- * Features: CRUD operations for concepts
+ * Features: CRUD operations for concepts with facts array support
  * Main APIs: registerConceptHandlers()
- * Constraints: Stub implementations until repository is connected
+ * Constraints: Connected to ConceptRepository for persistent storage
  * Patterns: Handler registration with error handling wrapper
  */
 
 import { registerHandler, IPCError } from './index'
+import { ConceptRepository } from '../infrastructure/database/repositories/concept.repository'
+import { asConceptId } from '../../shared/types/branded'
 
+import type { Concept } from '../../shared/types/core'
 import type {
   ConceptDTO,
   CreateConceptDTO,
@@ -17,10 +20,22 @@ import type {
 } from '../../shared/types/ipc'
 
 // -----------------------------------------------------------------------------
-// Stub Data (to be replaced with repository calls)
+// Mappers
 // -----------------------------------------------------------------------------
 
-const stubConcepts: ConceptDTO[] = []
+/**
+ * Maps a domain Concept to a ConceptDTO for IPC transfer
+ */
+function conceptToDTO(concept: Concept): ConceptDTO {
+  return {
+    id: concept.id,
+    name: concept.name,
+    definition: concept.definition ?? null,
+    facts: [...concept.facts],
+    createdAt: concept.createdAt.toISOString(),
+    updatedAt: concept.updatedAt.toISOString(),
+  }
+}
 
 // -----------------------------------------------------------------------------
 // Handlers
@@ -32,72 +47,78 @@ const stubConcepts: ConceptDTO[] = []
 export function registerConceptHandlers(): void {
   // Get all concepts
   registerHandler('concepts:getAll', () => {
-    // TODO: Replace with repository call
-    // return conceptRepository.findAll()
-    return stubConcepts
+    const concepts = ConceptRepository.findAll()
+    return concepts.map(conceptToDTO)
   })
 
   // Get concept by ID
   registerHandler('concepts:getById', (_event, id) => {
-    // TODO: Replace with repository call
-    // return conceptRepository.findById(id)
-    return stubConcepts.find((c) => c.id === id) ?? null
+    const concept = ConceptRepository.findById(asConceptId(id))
+    return concept ? conceptToDTO(concept) : null
   })
 
   // Create a new concept
   registerHandler('concepts:create', (_event, data: CreateConceptDTO) => {
-    // TODO: Replace with repository call
-    // return conceptRepository.create(data)
-
-    const now = new Date().toISOString()
-    const concept: ConceptDTO = {
-      id: crypto.randomUUID(),
-      name: data.name,
-      definition: data.definition ?? null,
-      createdAt: now,
-      updatedAt: now,
+    try {
+      const concept = ConceptRepository.create({
+        name: data.name,
+        definition: data.definition ?? '',
+        facts: data.facts ?? [],
+      })
+      return conceptToDTO(concept)
+    } catch (error) {
+      const err = error as Error
+      if (err.message.includes('already exists')) {
+        throw new IPCError('ALREADY_EXISTS', err.message)
+      }
+      throw new IPCError('INTERNAL_ERROR', 'Failed to create concept')
     }
-
-    stubConcepts.push(concept)
-    return concept
   })
 
   // Update an existing concept
   registerHandler('concepts:update', (_event, data: UpdateConceptDTO) => {
-    // TODO: Replace with repository call
-    // return conceptRepository.update(data)
+    try {
+      // Build update data object with mutable fields
+      const updateData: {
+        name?: string
+        definition?: string
+        facts?: string[]
+      } = {}
 
-    const index = stubConcepts.findIndex((c) => c.id === data.id)
-    if (index === -1) {
-      throw new IPCError('NOT_FOUND', `Concept with id ${data.id} not found`)
+      if (data.name !== undefined) {
+        updateData.name = data.name
+      }
+      if (data.definition !== undefined) {
+        updateData.definition = data.definition
+      }
+      if (data.facts !== undefined) {
+        updateData.facts = data.facts
+      }
+
+      const concept = ConceptRepository.update(asConceptId(data.id), updateData)
+      return conceptToDTO(concept)
+    } catch (error) {
+      const err = error as Error
+      if (err.message.includes('not found')) {
+        throw new IPCError('NOT_FOUND', `Concept with id ${data.id} not found`)
+      }
+      if (err.message.includes('already exists')) {
+        throw new IPCError('ALREADY_EXISTS', err.message)
+      }
+      throw new IPCError('INTERNAL_ERROR', 'Failed to update concept')
     }
-
-    const existing = stubConcepts[index]
-    if (!existing) {
-      throw new IPCError('NOT_FOUND', `Concept with id ${data.id} not found`)
-    }
-
-    const updated: ConceptDTO = {
-      ...existing,
-      name: data.name ?? existing.name,
-      definition: data.definition ?? existing.definition,
-      updatedAt: new Date().toISOString(),
-    }
-
-    stubConcepts[index] = updated
-    return updated
   })
 
   // Delete a concept
   registerHandler('concepts:delete', (_event, id) => {
-    // TODO: Replace with repository call
-    // return conceptRepository.delete(id)
-
-    const index = stubConcepts.findIndex((c) => c.id === id)
-    if (index === -1) {
-      throw new IPCError('NOT_FOUND', `Concept with id ${id} not found`)
+    try {
+      ConceptRepository.delete(asConceptId(id))
+    } catch (error) {
+      const err = error as Error
+      if (err.message.includes('not found')) {
+        throw new IPCError('NOT_FOUND', `Concept with id ${id} not found`)
+      }
+      throw new IPCError('INTERNAL_ERROR', 'Failed to delete concept')
     }
-
-    stubConcepts.splice(index, 1)
   })
 }

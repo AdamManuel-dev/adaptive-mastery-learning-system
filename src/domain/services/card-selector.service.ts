@@ -19,9 +19,10 @@
  * - shouldInsertConfidenceCard() - Detect frustration patterns
  */
 
+import { DimensionType } from '../../shared/types/core';
+
 import type {
   DimensionMastery,
-  DimensionType,
   MasteryProfile,
   Variant,
 } from '../../shared/types/core';
@@ -362,4 +363,135 @@ export function enforceSessionDimensionCap(
  */
 export function shouldInsertConfidenceCard(consecutiveFailures: number): boolean {
   return consecutiveFailures >= 3;
+}
+
+/**
+ * Configuration for maintenance rep requirements
+ */
+const MAINTENANCE_REP_CONFIG = {
+  /** Minimum percentage of session that should go to strong dimensions */
+  minPercentage: 0.2,
+  /** Threshold above which a dimension is considered "strong" */
+  strongThreshold: 0.7,
+};
+
+/**
+ * Checks if the session needs maintenance reps for strong dimensions.
+ *
+ * Even when focusing on weak areas, strong dimensions need periodic
+ * review to prevent decay. This function ensures at least 20% of
+ * session cards go to already-mastered dimensions.
+ *
+ * @param sessionDimensions - Dimensions already selected in this session
+ * @param mastery - The learner's full mastery profile
+ * @returns true if a strong dimension should be selected next
+ *
+ * @example
+ * const sessionDimensions = [
+ *   DimensionType.DEFINITION_RECALL,
+ *   DimensionType.DEFINITION_RECALL,
+ *   DimensionType.SCENARIO_APPLICATION,
+ * ];
+ * needsMaintenanceRep(sessionDimensions, masteryProfile)
+ * // Returns: true if strong dimensions are underrepresented
+ */
+export function needsMaintenanceRep(
+  sessionDimensions: DimensionType[],
+  mastery: MasteryProfile
+): boolean {
+  if (sessionDimensions.length < 5) {
+    // Not enough cards yet to determine maintenance needs
+    return false;
+  }
+
+  // Identify strong dimensions (combined score >= 0.7)
+  const strongDimensions = Object.values(DimensionType).filter((dimension) => {
+    const dimensionMastery = mastery[dimension as DimensionType];
+    const combinedScore =
+      0.7 * dimensionMastery.accuracyEwma + 0.3 * dimensionMastery.speedEwma;
+    return combinedScore >= MAINTENANCE_REP_CONFIG.strongThreshold;
+  }) as DimensionType[];
+
+  if (strongDimensions.length === 0) {
+    // No strong dimensions to maintain
+    return false;
+  }
+
+  // Count how many session cards went to strong dimensions
+  const strongDimensionCount = sessionDimensions.filter((d) =>
+    strongDimensions.includes(d)
+  ).length;
+
+  const strongDimensionRatio = strongDimensionCount / sessionDimensions.length;
+
+  // Need maintenance if strong dimensions are underrepresented
+  return strongDimensionRatio < MAINTENANCE_REP_CONFIG.minPercentage;
+}
+
+/**
+ * Gets the list of strong dimensions that need maintenance reps.
+ *
+ * @param mastery - The learner's full mastery profile
+ * @returns Array of strong dimension types
+ */
+export function getStrongDimensions(mastery: MasteryProfile): DimensionType[] {
+  return Object.values(DimensionType).filter((dimension) => {
+    const dimensionMastery = mastery[dimension as DimensionType];
+    const combinedScore =
+      0.7 * dimensionMastery.accuracyEwma + 0.3 * dimensionMastery.speedEwma;
+    return combinedScore >= MAINTENANCE_REP_CONFIG.strongThreshold;
+  }) as DimensionType[];
+}
+
+/**
+ * Selects the next variant with maintenance rep consideration.
+ *
+ * This enhanced selection function first checks if a maintenance rep
+ * is needed for strong dimensions. If so, it biases selection toward
+ * those dimensions. Otherwise, it uses the standard weighted selection.
+ *
+ * @param variants - Available variants for the concept
+ * @param mastery - The learner's mastery profile
+ * @param recentFailures - Count of consecutive recent failures
+ * @param sessionDimensions - Dimensions already selected in this session
+ * @returns Selected variant, or null if no variants available
+ *
+ * @example
+ * const selected = selectVariantWithMaintenance(
+ *   concept.variants,
+ *   userMasteryProfile,
+ *   sessionFailureCount,
+ *   sessionDimensionHistory
+ * );
+ */
+export function selectVariantWithMaintenance(
+  variants: Variant[],
+  mastery: MasteryProfile,
+  recentFailures: number,
+  sessionDimensions: DimensionType[]
+): Variant | null {
+  if (variants.length === 0) {
+    return null;
+  }
+
+  // Check if we need a maintenance rep
+  if (needsMaintenanceRep(sessionDimensions, mastery)) {
+    const strongDimensions = getStrongDimensions(mastery);
+
+    // Filter variants to only strong dimensions
+    const strongVariants = variants.filter((v) =>
+      strongDimensions.includes(v.dimension)
+    );
+
+    if (strongVariants.length > 0) {
+      // Use weighted selection within strong variants
+      const weights = strongVariants.map((variant) =>
+        calculateVariantWeight(variant, mastery, recentFailures)
+      );
+      return weightedRandomSelect(strongVariants, weights);
+    }
+  }
+
+  // Standard weighted selection across all variants
+  return selectVariantForConcept(variants, mastery, recentFailures);
 }

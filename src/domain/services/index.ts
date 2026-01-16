@@ -38,6 +38,9 @@ export {
   selectVariantForConcept,
   enforceSessionDimensionCap,
   shouldInsertConfidenceCard,
+  needsMaintenanceRep,
+  getStrongDimensions,
+  selectVariantWithMaintenance,
 } from './card-selector.service'
 
 // Weakness detector service

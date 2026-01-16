@@ -39,6 +39,7 @@ export interface ConceptDTO {
   id: string
   name: string
   definition: string | null
+  facts: string[]
   createdAt: string
   updatedAt: string
 }
@@ -49,6 +50,7 @@ export interface ConceptDTO {
 export interface CreateConceptDTO {
   name: string
   definition?: string
+  facts?: string[]
 }
 
 /**
@@ -58,6 +60,7 @@ export interface UpdateConceptDTO {
   id: string
   name?: string
   definition?: string
+  facts?: string[]
 }
 
 /**
@@ -70,6 +73,8 @@ export interface VariantDTO {
   difficulty: number
   front: string
   back: string
+  hints: string[]
+  lastShownAt: string | null
   createdAt: string
   updatedAt: string
 }
@@ -83,6 +88,7 @@ export interface CreateVariantDTO {
   difficulty?: number
   front: string
   back: string
+  hints?: string[]
 }
 
 /**
@@ -94,6 +100,7 @@ export interface UpdateVariantDTO {
   difficulty?: number
   front?: string
   back?: string
+  hints?: string[]
 }
 
 /**

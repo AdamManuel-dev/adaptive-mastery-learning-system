@@ -20,6 +20,7 @@ import type { ConceptDTO, CreateConceptDTO, UpdateConceptDTO } from '../../share
 interface ConceptFormData {
   name: string
   definition: string
+  facts: string[]
 }
 
 /**
@@ -33,7 +34,7 @@ function ConceptsPage(): React.JSX.Element {
   const [isLoading, setIsLoading] = useState(true)
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [formMode, setFormMode] = useState<'create' | 'edit'>('create')
-  const [formData, setFormData] = useState<ConceptFormData>({ name: '', definition: '' })
+  const [formData, setFormData] = useState<ConceptFormData>({ name: '', definition: '', facts: [] })
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -81,7 +82,7 @@ function ConceptsPage(): React.JSX.Element {
   const handleAddConcept = (): void => {
     setFormMode('create')
     setSelectedConcept(null)
-    setFormData({ name: '', definition: '' })
+    setFormData({ name: '', definition: '', facts: [] })
     setIsFormOpen(true)
     setError(null)
   }
@@ -95,6 +96,7 @@ function ConceptsPage(): React.JSX.Element {
     setFormData({
       name: concept.name,
       definition: concept.definition ?? '',
+      facts: concept.facts ?? [],
     })
     setIsFormOpen(true)
     setError(null)
@@ -106,8 +108,38 @@ function ConceptsPage(): React.JSX.Element {
   const handleCloseForm = (): void => {
     setIsFormOpen(false)
     setSelectedConcept(null)
-    setFormData({ name: '', definition: '' })
+    setFormData({ name: '', definition: '', facts: [] })
     setError(null)
+  }
+
+  /**
+   * Add a new empty fact field
+   */
+  const handleAddFact = (): void => {
+    setFormData((prev) => ({
+      ...prev,
+      facts: [...prev.facts, ''],
+    }))
+  }
+
+  /**
+   * Remove a fact field by index
+   */
+  const handleRemoveFact = (index: number): void => {
+    setFormData((prev) => ({
+      ...prev,
+      facts: prev.facts.filter((_, i) => i !== index),
+    }))
+  }
+
+  /**
+   * Update a fact field value by index
+   */
+  const handleFactChange = (index: number, value: string): void => {
+    setFormData((prev) => ({
+      ...prev,
+      facts: prev.facts.map((fact, i) => (i === index ? value : fact)),
+    }))
   }
 
   /**
@@ -197,17 +229,25 @@ function ConceptsPage(): React.JSX.Element {
     }
 
     const definitionValue = formData.definition.trim()
+    // Filter out empty facts
+    const factsValue = formData.facts
+      .map((f) => f.trim())
+      .filter((f) => f.length > 0)
 
     if (formMode === 'create') {
       const createData: CreateConceptDTO = { name: formData.name.trim() }
       if (definitionValue) {
         createData.definition = definitionValue
       }
+      if (factsValue.length > 0) {
+        createData.facts = factsValue
+      }
       await handleCreate(createData)
     } else if (selectedConcept) {
       const updateData: UpdateConceptDTO = {
         id: selectedConcept.id,
         name: formData.name.trim(),
+        facts: factsValue,
       }
       if (definitionValue) {
         updateData.definition = definitionValue
@@ -320,6 +360,11 @@ function ConceptsPage(): React.JSX.Element {
                 <span className={styles.metaItem}>
                   Created: {new Date(concept.createdAt).toLocaleDateString()}
                 </span>
+                {concept.facts.length > 0 && (
+                  <span className={styles.metaItem}>
+                    {concept.facts.length} fact{concept.facts.length !== 1 ? 's' : ''}
+                  </span>
+                )}
               </div>
             </div>
           ))}
@@ -422,6 +467,47 @@ function ConceptsPage(): React.JSX.Element {
                   placeholder="Enter concept definition (optional)"
                   rows={4}
                 />
+              </div>
+              <div className={styles.formGroup}>
+                <label className={styles.factsLabel}>
+                  Facts & Key Points
+                  <button
+                    type="button"
+                    className={styles.addFactButton}
+                    onClick={handleAddFact}
+                    aria-label="Add fact"
+                  >
+                    + Add Fact
+                  </button>
+                </label>
+                <div className={styles.factsContainer}>
+                  {formData.facts.length === 0 ? (
+                    <p className={styles.factsEmptyHint}>
+                      Add supporting facts, examples, or key points about this concept.
+                    </p>
+                  ) : (
+                    formData.facts.map((fact, index) => (
+                      <div key={index} className={styles.factRow}>
+                        <span className={styles.factNumber}>{index + 1}</span>
+                        <input
+                          type="text"
+                          value={fact}
+                          onChange={(e) => handleFactChange(index, e.target.value)}
+                          placeholder={`Fact ${index + 1}`}
+                          className={styles.factInput}
+                        />
+                        <button
+                          type="button"
+                          className={styles.removeFactButton}
+                          onClick={() => handleRemoveFact(index)}
+                          aria-label={`Remove fact ${index + 1}`}
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))
+                  )}
+                </div>
               </div>
               {error && <p className={styles.formError}>{error}</p>}
               <div className={styles.formActions}>

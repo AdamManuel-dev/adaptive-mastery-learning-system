@@ -437,29 +437,33 @@
   - Estimate: 4 hours
   - Fields: Text inputs with validation
 
-- [ ] **[P1/M/H]** Add facts array input (add/remove fact fields)
+- [x] **[P1/M/H]** Add facts array input (add/remove fact fields)
   - Dependencies: Concept form
   - Owner: TBD
   - Estimate: 3 hours
   - Acceptance: Dynamic field management
+  - **Completed:** 2026-01-16 - Added facts array management to ConceptsPage.tsx
 
-- [ ] **[P1/M/H]** Create `VariantEditor.tsx` component
+- [x] **[P1/M/H]** Create `VariantEditor.tsx` component
   - Dependencies: React setup
   - Owner: TBD
   - Estimate: 6 hours
   - Acceptance: Can create variants for concept
+  - **Completed:** 2026-01-16 - Created VariantEditor.tsx with full CRUD support
 
-- [ ] **[P1/M/H]** Implement variant form (dimension, difficulty, front, back, hints)
+- [x] **[P1/M/H]** Implement variant form (dimension, difficulty, front, back, hints)
   - Dependencies: VariantEditor component
   - Owner: TBD
   - Estimate: 4 hours
   - Acceptance: Dropdown for dimension, difficulty slider
+  - **Completed:** 2026-01-16 - Form includes dimension dropdown, difficulty slider 1-5
 
-- [ ] **[P2/M/M]** Add hints array input for variants
+- [x] **[P2/M/M]** Add hints array input for variants
   - Dependencies: Variant form
   - Owner: TBD
   - Estimate: 2 hours
   - Acceptance: Can add multiple hints
+  - **Completed:** 2026-01-16 - Progressive hints array with add/remove functionality
 
 - [x] **[P2/M/M]** Implement save/cancel buttons with validation
   - Dependencies: Both editors
@@ -678,11 +682,12 @@
   - Estimate: 3 hours
   - Logic: High accuracy + low speed = fragile
 
-- [ ] **[P1/M/H]** Implement `detectDodgingPattern()` function
+- [x] **[P1/M/H]** Implement `detectDodgingPattern()` function
   - Dependencies: Mastery data
   - Owner: TBD
   - Estimate: 3 hours
   - Logic: Strong definitions, weak everything else
+  - **Completed:** Already implemented in weakness-detector.service.ts
 
 - [x] **[P2/M/M]** Create composite weakness profile
   - Dependencies: All detection functions
@@ -746,11 +751,12 @@
   - Estimate: 4 hours
   - Acceptance: Higher weights = higher probability
 
-- [ ] **[P2/M/M]** Integrate adaptive selection into review flow
+- [x] **[P2/M/M]** Integrate adaptive selection into review flow
   - Dependencies: Review component, selector module
   - Owner: TBD
   - Estimate: 4 hours
   - Acceptance: Review uses weighted selection
+  - **Completed:** 2026-01-16 - review.ipc.ts now uses selectVariantWithMaintenance with session tracking
 
 - [x] **[P2/M/M]** Implement consecutive dimension limiting (max 4 same)
   - Dependencies: Selector module
@@ -772,11 +778,12 @@
   - Estimate: 3 hours
   - Acceptance: Session never exceeds 70% single dimension
 
-- [ ] **[P1/M/H]** Implement maintenance rep requirement (20% strong dimensions)
+- [x] **[P1/M/H]** Implement maintenance rep requirement (20% strong dimensions)
   - Dependencies: Selector module
   - Owner: TBD
   - Estimate: 3 hours
   - Acceptance: Strong dimensions still get practice
+  - **Completed:** 2026-01-16 - needsMaintenanceRep() + selectVariantWithMaintenance() in card-selector.service.ts
 
 - [x] **[P1/M/H]** Implement confidence card insertion after 3 failures
   - Dependencies: Selector module, event history

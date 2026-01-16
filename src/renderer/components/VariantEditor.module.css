@@ -1,0 +1,287 @@
+/**
+ * @fileoverview CSS Module styles for the VariantEditor component
+ * @lastmodified 2026-01-16T00:00:00Z
+ *
+ * Features: Form styling, dimension selector, difficulty slider, hints array
+ * Patterns: Consistent with app design system, responsive layout
+ */
+
+.variantEditor {
+  background-color: var(--color-background);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+/* Header */
+.header {
+  padding: var(--space-lg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.header h2 {
+  margin: 0 0 var(--space-xs) 0;
+  font-size: var(--font-size-xl);
+}
+
+.conceptInfo {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  margin: 0;
+}
+
+.conceptInfo strong {
+  color: var(--color-text-primary);
+}
+
+/* Form */
+.form {
+  padding: var(--space-lg);
+}
+
+.formGroup {
+  margin-bottom: var(--space-lg);
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: var(--space-sm);
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.formGroup input,
+.formGroup textarea,
+.formGroup select {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  transition: border-color var(--transition-fast);
+}
+
+.formGroup input:focus,
+.formGroup textarea:focus,
+.formGroup select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.formGroup textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Dimension Select */
+.dimensionSelect {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L2 4h8z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-md) center;
+  padding-right: calc(var(--space-md) * 2 + 12px);
+}
+
+.dimensionDescription {
+  margin-top: var(--space-xs);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-style: italic;
+}
+
+/* Difficulty Slider */
+.difficultySlider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-sm);
+}
+
+.difficultyLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  min-width: 40px;
+}
+
+.difficultyLabel:first-child {
+  text-align: right;
+}
+
+.slider {
+  flex: 1;
+  height: 8px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(to right, var(--color-success), var(--color-warning), #ef4444);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-background);
+  border: 2px solid var(--color-primary);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+}
+
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-background);
+  border: 2px solid var(--color-primary);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+}
+
+.difficultyValue {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.difficultyMarkers {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 calc(40px + var(--space-md));
+}
+
+.marker {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all var(--transition-fast);
+}
+
+.markerActive {
+  background-color: var(--color-primary);
+  color: white;
+  font-weight: 600;
+}
+
+/* Hints Array */
+.hintsLabel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.addHintButton {
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--font-size-xs);
+  background-color: var(--color-surface);
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.addHintButton:hover {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.hintsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.hintsEmptyHint {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-style: italic;
+  padding: var(--space-md);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-md);
+  text-align: center;
+  margin: 0;
+}
+
+.hintRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.hintNumber {
+  width: 24px;
+  height: 24px;
+  background-color: var(--color-surface);
+  color: var(--color-text-muted);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.hintInput {
+  flex: 1;
+}
+
+.removeHintButton {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background-color: transparent;
+  color: var(--color-text-muted);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-lg);
+  line-height: 1;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.removeHintButton:hover {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border-color: #fecaca;
+}
+
+/* Error Display */
+.formError {
+  color: #991b1b;
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  background-color: #fee2e2;
+  border-radius: var(--radius-sm);
+}
+
+/* Form Actions */
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+}
+
+.formActions button {
+  padding: var(--space-sm) var(--space-lg);
+}
+
+.formActions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
