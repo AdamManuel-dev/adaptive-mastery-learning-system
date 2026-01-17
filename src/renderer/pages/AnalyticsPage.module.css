@@ -1,0 +1,324 @@
+/**
+ * @fileoverview CSS Module styles for the Analytics Dashboard page
+ * @lastmodified 2026-01-16T00:00:00Z
+ *
+ * Features: Responsive grid layout, card components, loading states, error states
+ * Patterns: CSS Grid, CSS custom properties for theming, mobile-first responsive design
+ */
+
+/* ==========================================================================
+   Page Container
+   ========================================================================== */
+
+.analytics {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+/* ==========================================================================
+   Header
+   ========================================================================== */
+
+.header {
+  margin-bottom: var(--space-md);
+}
+
+.header h1 {
+  margin-bottom: var(--space-xs);
+}
+
+.subtitle {
+  color: var(--color-text-secondary);
+  margin: 0;
+  font-size: var(--font-size-base);
+}
+
+/* ==========================================================================
+   Charts Grid Layout
+   ========================================================================== */
+
+.chartsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.row {
+  display: grid;
+  gap: var(--space-lg);
+  grid-template-columns: 1fr;
+}
+
+/* ==========================================================================
+   Chart Card Component
+   ========================================================================== */
+
+.chartCard {
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: box-shadow var(--transition-normal);
+}
+
+.chartCard:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.chartCardHeader {
+  margin-bottom: var(--space-md);
+}
+
+.chartCardTitle {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-xs) 0;
+}
+
+.chartCardDescription {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.chartCardContent {
+  min-height: 200px;
+}
+
+/* ==========================================================================
+   Loading State
+   ========================================================================== */
+
+.chartLoading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: var(--color-text-secondary);
+  gap: var(--space-md);
+}
+
+.loadingSpinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==========================================================================
+   Error State
+   ========================================================================== */
+
+.chartError {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: var(--space-lg);
+  text-align: center;
+  background-color: rgba(239, 68, 68, 0.05);
+  border-radius: var(--radius-md);
+}
+
+.chartErrorTitle {
+  color: var(--color-error);
+  font-weight: 600;
+  margin: 0 0 var(--space-xs) 0;
+}
+
+.chartErrorMessage {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  margin: 0;
+}
+
+/* ==========================================================================
+   Card Width Variations
+   ========================================================================== */
+
+/* Full width cards span the entire row */
+.fullWidthCard {
+  grid-column: 1 / -1;
+}
+
+/* Half width cards take half the row on larger screens */
+.halfWidthCard {
+  /* Default to full width on mobile, modified in media queries */
+}
+
+/* Health score card (1/3 width on desktop) */
+.healthScoreCard {
+  /* Default to full width on mobile, modified in media queries */
+}
+
+/* Mastery radar card (2/3 width on desktop) */
+.masteryRadarCard {
+  /* Default to full width on mobile, modified in media queries */
+}
+
+/* ==========================================================================
+   Responsive Design - Tablet (768px+)
+   ========================================================================== */
+
+@media (min-width: 768px) {
+  .row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Full width cards still span both columns */
+  .fullWidthCard {
+    grid-column: 1 / -1;
+  }
+
+  /* Health score and mastery radar share a row */
+  .healthScoreCard {
+    grid-column: span 1;
+  }
+
+  .masteryRadarCard {
+    grid-column: span 1;
+  }
+
+  /* Half width cards each take one column */
+  .halfWidthCard {
+    grid-column: span 1;
+  }
+
+  .chartCardContent {
+    min-height: 250px;
+  }
+}
+
+/* ==========================================================================
+   Responsive Design - Desktop (1024px+)
+   ========================================================================== */
+
+@media (min-width: 1024px) {
+  .row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Health score takes 1/3 width */
+  .healthScoreCard {
+    grid-column: span 1;
+  }
+
+  /* Mastery radar takes 2/3 width */
+  .masteryRadarCard {
+    grid-column: span 2;
+  }
+
+  /* Full width cards span all 3 columns */
+  .fullWidthCard {
+    grid-column: 1 / -1;
+  }
+
+  /* Half width cards take 1.5 columns each (3/2) */
+  /* Since we can't have 1.5, we use grid-column with calc or adjust */
+  /* We'll use a specific row with 2-column grid for these */
+
+  .chartCardContent {
+    min-height: 300px;
+  }
+}
+
+/* ==========================================================================
+   Responsive Design - Large Desktop (1280px+)
+   ========================================================================== */
+
+@media (min-width: 1280px) {
+  .chartsGrid {
+    gap: var(--space-xl);
+  }
+
+  .chartCard {
+    padding: var(--space-xl);
+  }
+
+  .chartCardContent {
+    min-height: 350px;
+  }
+}
+
+/* ==========================================================================
+   Special Row Handling for Half-Width Cards
+   ========================================================================== */
+
+/* Row 3 should always be 2 columns for the half-width cards */
+.row:nth-child(3) {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media (max-width: 767px) {
+  .row:nth-child(3) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   Accessibility Enhancements
+   ========================================================================== */
+
+/* Focus states for interactive elements */
+.chartCard:focus-within {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .loadingSpinner {
+    animation: none;
+    border-top-color: var(--color-primary);
+    opacity: 0.7;
+  }
+
+  .chartCard {
+    transition: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .chartCard {
+    border-width: 2px;
+  }
+
+  .chartError {
+    border: 2px solid var(--color-error);
+  }
+}
+
+/* ==========================================================================
+   Print Styles
+   ========================================================================== */
+
+@media print {
+  .analytics {
+    gap: 1rem;
+  }
+
+  .chartCard {
+    box-shadow: none;
+    border: 1px solid #ccc;
+    page-break-inside: avoid;
+  }
+
+  .chartLoading,
+  .chartError {
+    display: none;
+  }
+}

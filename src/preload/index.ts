@@ -30,6 +30,10 @@ import type {
   SettingsDTO,
   LLMConfigDTO,
   ConnectionTestResultDTO,
+  MasteryTimelineEntryDTO,
+  ReviewDistributionEntryDTO,
+  ResponseTimeStatsEntryDTO,
+  WeaknessHeatmapEntryDTO,
 } from '../shared/types/ipc'
 
 // -----------------------------------------------------------------------------
@@ -123,6 +127,23 @@ const api = {
 
     testConnection: (config: LLMConfigDTO): Promise<ConnectionTestResultDTO> =>
       ipcRenderer.invoke('settings:testConnection', config),
+  },
+
+  /**
+   * Analytics operations - aggregate data for charts and visualizations
+   */
+  analytics: {
+    getMasteryTimeline: (args: { days: number }): Promise<MasteryTimelineEntryDTO[]> =>
+      ipcRenderer.invoke('analytics:getMasteryTimeline', args),
+
+    getReviewDistribution: (): Promise<ReviewDistributionEntryDTO[]> =>
+      ipcRenderer.invoke('analytics:getReviewDistribution'),
+
+    getResponseTimeStats: (): Promise<ResponseTimeStatsEntryDTO[]> =>
+      ipcRenderer.invoke('analytics:getResponseTimeStats'),
+
+    getWeaknessHeatmap: (args: { days: number }): Promise<WeaknessHeatmapEntryDTO[]> =>
+      ipcRenderer.invoke('analytics:getWeaknessHeatmap', args),
   },
 }
 

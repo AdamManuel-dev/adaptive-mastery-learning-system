@@ -10,6 +10,7 @@
 
 import { ipcMain, type IpcMainInvokeEvent } from 'electron'
 
+import { registerAnalyticsHandlers } from './analytics.ipc'
 import { registerConceptHandlers } from './concept.ipc'
 import { registerMasteryHandlers } from './mastery.ipc'
 import { registerReviewHandlers } from './review.ipc'
@@ -114,6 +115,7 @@ export function registerIPCHandlers(): void {
   console.log('[IPC] Registering handlers...')
 
   // Register domain-specific handlers
+  registerAnalyticsHandlers()
   registerConceptHandlers()
   registerVariantHandlers()
   registerReviewHandlers()

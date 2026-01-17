@@ -19,6 +19,7 @@ import Layout from './components/layout/Layout'
 import { ToastProvider } from './components/Toast'
 import { ThemeProvider } from './contexts/ThemeContext'
 import styles from './components/ErrorBoundary.module.css'
+import AnalyticsPage from './pages/AnalyticsPage'
 import ConceptsPage from './pages/ConceptsPage'
 import DashboardPage from './pages/DashboardPage'
 import ReviewPage from './pages/ReviewPage'
@@ -253,6 +254,66 @@ function SettingsPageWithErrorBoundary(): React.JSX.Element {
 }
 
 /**
+ * Custom error fallback for AnalyticsPage
+ * Provides navigation back to dashboard and retry functionality
+ */
+function AnalyticsPageErrorFallback({
+  error,
+  resetError,
+}: {
+  error: Error
+  resetError: () => void
+}): React.JSX.Element {
+  const navigate = useNavigate()
+
+  function handleGoToDashboard(): void {
+    resetError()
+    navigate('/')
+  }
+
+  return (
+    <div className={styles.errorBoundary} role="alert" aria-labelledby="analytics-error-title">
+      <div className={styles.errorContent}>
+        <div className={styles.errorIcon} aria-hidden="true">
+          !
+        </div>
+        <h2 id="analytics-error-title" className={styles.errorTitle}>
+          Unable to load Analytics
+        </h2>
+        <p className={styles.errorMessage}>{error.message}</p>
+        <p className={styles.errorHint}>
+          There was a problem loading the Analytics page. You can try again or return to the
+          dashboard.
+        </p>
+        <div style={{ display: 'flex', gap: 'var(--space-md)', justifyContent: 'center' }}>
+          <button type="button" className="btn-secondary" onClick={handleGoToDashboard}>
+            Go to Dashboard
+          </button>
+          <button type="button" className="btn-primary" onClick={resetError}>
+            Try again
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Wrapper component for AnalyticsPage with page-specific error boundary
+ */
+function AnalyticsPageWithErrorBoundary(): React.JSX.Element {
+  return (
+    <ErrorBoundary
+      fallback={(error, resetError) => (
+        <AnalyticsPageErrorFallback error={error} resetError={resetError} />
+      )}
+    >
+      <AnalyticsPage />
+    </ErrorBoundary>
+  )
+}
+
+/**
  * Application router configuration
  * Defines all available routes with Layout as the parent wrapper
  * Uses hash router for Electron file:// protocol compatibility
@@ -269,6 +330,10 @@ const router = createHashRouter([
       {
         path: 'review',
         element: <ReviewPageWithErrorBoundary />,
+      },
+      {
+        path: 'analytics',
+        element: <AnalyticsPageWithErrorBoundary />,
       },
       {
         path: 'concepts',

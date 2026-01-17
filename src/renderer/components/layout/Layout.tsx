@@ -9,7 +9,7 @@
  */
 
 import { NavLink, Outlet } from 'react-router-dom'
-import { Brain, LayoutDashboard, BookOpen, Folder, Settings } from 'lucide-react'
+import { Brain, LayoutDashboard, BookOpen, BarChart3, Folder, Settings } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 import styles from './Layout.module.css'
@@ -29,6 +29,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { to: '/', label: 'Dashboard', Icon: LayoutDashboard },
   { to: '/review', label: 'Review', Icon: BookOpen },
+  { to: '/analytics', label: 'Analytics', Icon: BarChart3 },
   { to: '/concepts', label: 'Concepts', Icon: Folder },
   { to: '/settings', label: 'Settings', Icon: Settings },
 ]

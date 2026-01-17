@@ -216,6 +216,63 @@ export interface ConnectionTestResultDTO {
 }
 
 // -----------------------------------------------------------------------------
+// Analytics DTOs
+// -----------------------------------------------------------------------------
+
+/**
+ * Daily mastery snapshot for a single dimension
+ */
+export interface DimensionMasterySnapshotDTO {
+  accuracy: number
+  speed: number
+  combined: number
+}
+
+/**
+ * Daily mastery data across all dimensions for timeline charts
+ */
+export interface MasteryTimelineEntryDTO {
+  date: string
+  dimensions: Record<Dimension, DimensionMasterySnapshotDTO>
+}
+
+/**
+ * Review count distribution by result type for a dimension
+ */
+export interface ReviewDistributionEntryDTO {
+  dimension: Dimension
+  again: number
+  hard: number
+  good: number
+  easy: number
+}
+
+/**
+ * Response time statistics for a difficulty level
+ */
+export interface ResponseTimeStatsEntryDTO {
+  difficulty: number
+  min: number
+  max: number
+  avg: number
+  median: number
+  count: number
+}
+
+/**
+ * Weakness severity classification
+ */
+export type WeaknessSeverity = 'none' | 'mild' | 'moderate' | 'critical'
+
+/**
+ * Daily weakness severity per dimension for heatmap visualization
+ */
+export interface WeaknessHeatmapEntryDTO {
+  date: string
+  dimensions: Record<Dimension, WeaknessSeverity>
+}
+
+// -----------------------------------------------------------------------------
 // IPC Channel Definitions
 // -----------------------------------------------------------------------------
 
@@ -259,6 +316,24 @@ export interface IPCChannels {
   'settings:get': { args: void; result: SettingsDTO }
   'settings:set': { args: Partial<SettingsDTO>; result: SettingsDTO }
   'settings:testConnection': { args: LLMConfigDTO; result: ConnectionTestResultDTO }
+
+  // Analytics operations
+  'analytics:getMasteryTimeline': {
+    args: { days: number }
+    result: MasteryTimelineEntryDTO[]
+  }
+  'analytics:getReviewDistribution': {
+    args: void
+    result: ReviewDistributionEntryDTO[]
+  }
+  'analytics:getResponseTimeStats': {
+    args: void
+    result: ResponseTimeStatsEntryDTO[]
+  }
+  'analytics:getWeaknessHeatmap': {
+    args: { days: number }
+    result: WeaknessHeatmapEntryDTO[]
+  }
 }
 
 /**
