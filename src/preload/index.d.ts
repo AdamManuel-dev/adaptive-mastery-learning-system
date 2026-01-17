@@ -1,9 +1,9 @@
 /**
  * @fileoverview TypeScript declarations for window.api exposed by preload
- * @lastmodified 2026-01-16T00:00:00Z
+ * @lastmodified 2026-01-17T00:42:25Z
  *
  * Features: Type declarations for renderer-accessible API
- * Main APIs: window.api, window.electron
+ * Main APIs: window.api, window.electron, AnalyticsAPI
  * Constraints: Must match preload/index.ts API structure exactly
  * Patterns: Interface augmentation of Window global
  */
@@ -27,6 +27,10 @@ import type {
   SettingsDTO,
   LLMConfigDTO,
   ConnectionTestResultDTO,
+  MasteryTimelineEntryDTO,
+  ReviewDistributionEntryDTO,
+  ResponseTimeStatsEntryDTO,
+  WeaknessHeatmapEntryDTO,
 } from '../shared/types/ipc'
 import type { ElectronAPI } from '@electron-toolkit/preload'
 
@@ -105,6 +109,20 @@ interface SettingsAPI {
 }
 
 /**
+ * API for analytics operations
+ */
+interface AnalyticsAPI {
+  /** Get mastery timeline data for the last N days */
+  getMasteryTimeline(args: { days: number }): Promise<MasteryTimelineEntryDTO[]>
+  /** Get review distribution statistics */
+  getReviewDistribution(): Promise<ReviewDistributionEntryDTO[]>
+  /** Get response time statistics */
+  getResponseTimeStats(): Promise<ResponseTimeStatsEntryDTO[]>
+  /** Get weakness heatmap data for the last N days */
+  getWeaknessHeatmap(args: { days: number }): Promise<WeaknessHeatmapEntryDTO[]>
+}
+
+/**
  * The complete API object exposed to the renderer
  */
 interface AppAPI {
@@ -114,6 +132,7 @@ interface AppAPI {
   mastery: MasteryAPI
   schedule: ScheduleAPI
   settings: SettingsAPI
+  analytics: AnalyticsAPI
 }
 
 declare global {

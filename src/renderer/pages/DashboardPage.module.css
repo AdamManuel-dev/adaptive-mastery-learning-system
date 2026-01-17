@@ -1,9 +1,9 @@
 /**
  * @fileoverview CSS Module styles for the Dashboard page
- * @lastmodified 2026-01-16T21:21:33Z
+ * @lastmodified 2026-01-17T00:42:25Z
  *
- * Features: Stats grid, action cards, progress visualization, activity list, interactive focus area alert
- * Patterns: CSS Grid for responsive layout, CSS custom properties for theming
+ * Features: Stats grid, action cards, progress visualization, activity list, interactive focus area alert, accessible button sizing
+ * Patterns: CSS Grid for responsive layout, CSS custom properties for theming, WCAG 2.5.5 touch targets
  */
 
 .dashboard {
@@ -91,9 +91,14 @@
 }
 
 .actionButton {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   text-decoration: none;
   font-weight: 500;
+  min-height: 44px; /* WCAG 2.5.5 minimum touch target */
+  min-width: 44px;
+  padding: var(--space-sm) var(--space-lg);
 }
 
 .emptyMessage {
@@ -426,5 +431,9 @@
 
   .actionsSection {
     grid-template-columns: 1fr;
+  }
+
+  .actionButton {
+    min-height: 48px; /* Larger touch target on mobile */
   }
 }
