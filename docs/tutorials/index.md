@@ -16,6 +16,9 @@ Start Here
 [Understanding Mastery] --> 20 min, interpret dashboard, identify weaknesses
     |
     v
+[Building Your First Deck] --> 45 min, create deck, add variants, see adaptation
+    |
+    v
 [Coming Soon: Advanced Topics]
 ```
 
@@ -29,6 +32,7 @@ Start Here
 |----------|------|-------------------|
 | [Getting Started](./getting-started.md) | 30 min | Install the app, create your first concept, complete a review session, see mastery scores update |
 | [Understanding Your Mastery Profile](./understanding-mastery.md) | 20 min | Read dimension bars, identify weak areas, practice targeted review |
+| [Building Your First Deck](./building-your-first-deck.md) | 45 min | Create related concepts, add multi-dimension variants, experience adaptive selection |
 
 ### Prerequisites
 
@@ -65,6 +69,7 @@ If you're new to the system, follow the tutorials in order:
 
 1. **Getting Started** - Essential foundation
 2. **Understanding Mastery** - Core concepts for effective learning
+3. **Building Your First Deck** - Practical deck creation and adaptive experience
 
 ### Jump to a Specific Topic
 
@@ -85,10 +90,12 @@ Stop at these points to confirm you're on track before proceeding.
 By completing all tutorials, you will have:
 
 - A working installation of the Adaptive Mastery Learning System
-- At least 4 concepts with card variants
+- At least 5 concepts organized into a coherent study deck
+- Card variants across multiple cognitive dimensions
 - Experience with the complete review flow
 - Understanding of the six cognitive dimensions
 - Ability to interpret and act on your mastery profile
+- First-hand experience with adaptive card selection
 
 ---
 

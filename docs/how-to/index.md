@@ -74,6 +74,33 @@ Task-oriented guides for the Adaptive Mastery Learning System. Find solutions to
 
 ---
 
+## Analytics
+
+| Task | Guide |
+|------|-------|
+| Navigate to analytics | [Using Analytics](./using-analytics.md#navigate-to-the-analytics-dashboard) |
+| Interpret health score | [Using Analytics](./using-analytics.md#interpret-the-health-score-gauge) |
+| Analyze dimension mastery | [Using Analytics](./using-analytics.md#analyze-dimension-mastery-with-the-radar-chart) |
+| Track progress over time | [Using Analytics](./using-analytics.md#track-progress-over-time) |
+| Analyze review distribution | [Using Analytics](./using-analytics.md#analyze-review-distribution) |
+| Evaluate response time | [Using Analytics](./using-analytics.md#evaluate-response-time) |
+| Identify weakness patterns | [Using Analytics](./using-analytics.md#identify-weakness-patterns-with-the-heatmap) |
+
+---
+
+## Open-Response Questions
+
+| Task | Guide |
+|------|-------|
+| Answer open-response questions | [Open-Response Questions](./open-response-questions.md#answer-an-open-response-question) |
+| Interpret evaluation scores | [Open-Response Questions](./open-response-questions.md#interpret-evaluation-scores) |
+| Learn from key points | [Open-Response Questions](./open-response-questions.md#learn-from-key-points-feedback) |
+| Study model answers | [Open-Response Questions](./open-response-questions.md#study-the-model-answer) |
+| Configure LLM | [Open-Response Questions](./open-response-questions.md#configure-llm-for-evaluation) |
+| Troubleshoot evaluation | [Open-Response Questions](./open-response-questions.md#troubleshoot-evaluation-errors) |
+
+---
+
 ## Notifications & Feedback
 
 | Task | Guide |

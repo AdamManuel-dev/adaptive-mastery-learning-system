@@ -86,6 +86,8 @@ Traditional spaced repetition systems (like Anki) treat all correct answers equa
 - **Keyboard-first design** - Full keyboard navigation with Space and 1-4 rating shortcuts
 - **Accessible by default** - WCAG 2.1 AA compliant with screen reader support
 - **Graceful error handling** - Error boundaries and toast notifications for clear feedback
+- **Open-response questions** - LLM-evaluated free-form answers with detailed feedback
+- **Analytics dashboard** - 6 interactive visualizations for tracking progress
 
 Learn more in [Six Dimensions Explanation](explanation/six-dimensions.md)
 
@@ -99,6 +101,7 @@ Learn more in [Six Dimensions Explanation](explanation/six-dimensions.md)
 
 - [Getting Started](tutorials/getting-started.md) - Install, create first concept, complete first review
 - [Understanding Your Mastery Profile](tutorials/understanding-mastery.md) - Interpret dashboard, identify weaknesses
+- [Building Your First Deck](tutorials/building-your-first-deck.md) - Create related concepts, multi-dimension variants
 
 ### 📗 [How-to Guides](how-to/)
 
@@ -109,6 +112,8 @@ Learn more in [Six Dimensions Explanation](explanation/six-dimensions.md)
 - [Working with Variants](how-to/working-with-variants.md)
 - [Managing Mastery Scores](how-to/managing-mastery.md)
 - [Using Keyboard Shortcuts](how-to/using-keyboard-shortcuts.md)
+- [Using Analytics Dashboard](how-to/using-analytics.md)
+- [Open-Response Questions](how-to/open-response-questions.md)
 - [Handling Errors](how-to/handling-errors.md)
 - [Using Notifications](how-to/using-notifications.md)
 - [Troubleshooting](how-to/troubleshooting.md)
@@ -122,6 +127,7 @@ Learn more in [Six Dimensions Explanation](explanation/six-dimensions.md)
 - [IPC API](reference/ipc-api.md) - Channels, types, error codes
 - [Configuration](reference/configuration.md) - Settings, defaults, environment variables
 - [Type Definitions](reference/types.md) - Core types, DTOs, constants
+- [LLM Evaluation API](reference/llm-evaluation-api.md) - Open-response evaluation endpoint
 - [Accessibility](reference/accessibility.md) - WCAG compliance, keyboard shortcuts, screen reader support
 
 ### 📙 [Explanation](explanation/)
@@ -134,6 +140,7 @@ Learn more in [Six Dimensions Explanation](explanation/six-dimensions.md)
 - [Six Dimensions](explanation/six-dimensions.md) - Cognitive framework research
 - [DDD Patterns](explanation/ddd-patterns.md) - Aggregate roots, value objects, ports
 - [Technology Choices](explanation/technology-choices.md) - Electron, SQLite, Jotai, MUI
+- [Analytics Deep Dive](explanation/analytics-deep-dive.md) - Chart algorithms and interpretation
 
 ---
 
@@ -187,5 +194,5 @@ See the [Diátaxis website](https://diataxis.fr/) for detailed guidance.
 ---
 
 **Version:** 1.0.0
-**Last Updated:** 2025-01-16
+**Last Updated:** 2026-01-20
 **Documentation Framework:** [Diátaxis](https://diataxis.fr/)

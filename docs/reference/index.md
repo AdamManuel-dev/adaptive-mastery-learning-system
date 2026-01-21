@@ -99,6 +99,22 @@ TypeScript type and interface specifications.
 
 ---
 
+### [LLM Evaluation API](./llm-evaluation-api.md)
+
+LLM-based open-response evaluation specifications.
+
+| Section | Contents |
+|---------|----------|
+| IPC Channel | evaluation:evaluate endpoint |
+| Request Types | EvaluationRequest, EvaluationRubric |
+| Response Types | LLMEvaluationResult |
+| Configuration | LLMConfig, environment variables |
+| Error Types | LLMConfigurationError, LLMAPIError, LLMRateLimitError |
+| Retry Behavior | Automatic retry with exponential backoff |
+| Integration | ReviewPage, OpenResponseCard usage |
+
+---
+
 ### [Accessibility](./accessibility.md)
 
 Accessibility features and WCAG compliance specifications.

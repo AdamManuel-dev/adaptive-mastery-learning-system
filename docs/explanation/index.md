@@ -110,6 +110,22 @@ Examines each technology decision:
 
 ---
 
+### [Analytics Deep Dive](./analytics-deep-dive.md)
+
+**How do the analytics visualizations work?**
+
+Explores the algorithms and design decisions behind each chart:
+- Health Score Gauge calculation and thresholds
+- Mastery Radar Chart and the illusion of knowing
+- Progress Timeline patterns and interpretation
+- Review Distribution and quality indicators
+- Response Time analysis and automaticity
+- Weakness Heatmap temporal patterns
+
+*Read this to understand what the charts reveal about your learning.*
+
+---
+
 ## Reading Path
 
 For new contributors or those seeking deep understanding, a recommended reading order:
@@ -119,7 +135,8 @@ For new contributors or those seeking deep understanding, a recommended reading 
 3. **[Six Dimensions](./six-dimensions.md)** - The core pedagogical insight
 4. **[Mastery Algorithm](./mastery-algorithm.md)** - How learning is measured
 5. **[Adaptive Selection](./adaptive-selection.md)** - How cards are chosen
-6. **[DDD Patterns](./ddd-patterns.md)** - Deep dive into domain modeling
+6. **[Analytics Deep Dive](./analytics-deep-dive.md)** - Understanding the visualizations
+7. **[DDD Patterns](./ddd-patterns.md)** - Deep dive into domain modeling
 
 Each document is self-contained, but they build on each other conceptually.
 
