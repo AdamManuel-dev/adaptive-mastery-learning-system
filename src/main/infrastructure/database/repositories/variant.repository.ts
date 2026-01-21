@@ -16,7 +16,7 @@ import { getDatabase } from '../connection';
 import { DatabaseError } from '../errors';
 
 import type { ConceptId, VariantId } from '../../../../shared/types/branded';
-import type { DifficultyLevel, Variant } from '../../../../shared/types/core';
+import type { DifficultyLevel, EvaluationRubric, QuestionType, Variant } from '../../../../shared/types/core';
 
 
 /** Raw database row for variants table */
@@ -29,13 +29,25 @@ interface VariantRow {
   back: string;
   hints: string;
   last_shown_at: string | null;
+  question_type: string;
+  rubric: string | null;
+  max_length: number | null;
 }
 
 /**
  * Maps a database row to a Variant domain entity
  */
 function rowToVariant(row: VariantRow): Variant {
-  return {
+  let rubric: EvaluationRubric | undefined;
+  if (row.rubric) {
+    try {
+      rubric = JSON.parse(row.rubric) as EvaluationRubric;
+    } catch {
+      rubric = undefined;
+    }
+  }
+
+  const baseVariant = {
     id: asVariantId(row.id),
     conceptId: asConceptId(row.concept_id),
     dimension: row.dimension as DimensionType,
@@ -44,6 +56,14 @@ function rowToVariant(row: VariantRow): Variant {
     back: row.back,
     hints: JSON.parse(row.hints) as string[],
     lastShownAt: row.last_shown_at ? new Date(row.last_shown_at) : null,
+    questionType: (row.question_type ?? 'flashcard') as QuestionType,
+  };
+
+  // Use conditional spreading to avoid exactOptionalPropertyTypes violations
+  return {
+    ...baseVariant,
+    ...(rubric !== undefined && { rubric }),
+    ...(row.max_length !== null && { maxLength: row.max_length }),
   };
 }
 
@@ -64,7 +84,8 @@ export const VariantRepository = {
     const db = getDatabase();
     const row = db
       .prepare<[string], VariantRow>(
-        `SELECT id, concept_id, dimension, difficulty, front, back, hints, last_shown_at
+        `SELECT id, concept_id, dimension, difficulty, front, back, hints, last_shown_at,
+                question_type, rubric, max_length
          FROM variants
          WHERE id = ?`
       )
@@ -83,7 +104,8 @@ export const VariantRepository = {
     const db = getDatabase();
     const rows = db
       .prepare<[string], VariantRow>(
-        `SELECT id, concept_id, dimension, difficulty, front, back, hints, last_shown_at
+        `SELECT id, concept_id, dimension, difficulty, front, back, hints, last_shown_at,
+                question_type, rubric, max_length
          FROM variants
          WHERE concept_id = ?
          ORDER BY dimension, difficulty`
@@ -106,8 +128,9 @@ export const VariantRepository = {
 
     try {
       db.prepare(
-        `INSERT INTO variants (id, concept_id, dimension, difficulty, front, back, hints, last_shown_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+        `INSERT INTO variants (id, concept_id, dimension, difficulty, front, back, hints, last_shown_at,
+                               question_type, rubric, max_length)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
       ).run(
         id,
         variant.conceptId,
@@ -116,10 +139,13 @@ export const VariantRepository = {
         variant.front,
         variant.back,
         JSON.stringify(variant.hints),
-        variant.lastShownAt?.toISOString() ?? null
+        variant.lastShownAt?.toISOString() ?? null,
+        variant.questionType ?? 'flashcard',
+        variant.rubric ? JSON.stringify(variant.rubric) : null,
+        variant.maxLength ?? null
       );
 
-      return {
+      const baseResult = {
         id: asVariantId(id),
         conceptId: variant.conceptId,
         dimension: variant.dimension,
@@ -128,6 +154,14 @@ export const VariantRepository = {
         back: variant.back,
         hints: [...variant.hints],
         lastShownAt: variant.lastShownAt,
+        questionType: variant.questionType ?? 'flashcard',
+      };
+
+      // Use conditional spreading to avoid exactOptionalPropertyTypes violations
+      return {
+        ...baseResult,
+        ...(variant.rubric !== undefined && { rubric: variant.rubric }),
+        ...(variant.maxLength !== undefined && { maxLength: variant.maxLength }),
       };
     } catch (error) {
       const err = error as Error;
@@ -169,11 +203,15 @@ export const VariantRepository = {
       back: data.back ?? existing.back,
       hints: data.hints ?? existing.hints,
       lastShownAt: data.lastShownAt !== undefined ? data.lastShownAt : existing.lastShownAt,
+      questionType: data.questionType ?? existing.questionType,
+      rubric: data.rubric !== undefined ? data.rubric : existing.rubric,
+      maxLength: data.maxLength !== undefined ? data.maxLength : existing.maxLength,
     };
 
     db.prepare(
       `UPDATE variants
-       SET dimension = ?, difficulty = ?, front = ?, back = ?, hints = ?, last_shown_at = ?
+       SET dimension = ?, difficulty = ?, front = ?, back = ?, hints = ?, last_shown_at = ?,
+           question_type = ?, rubric = ?, max_length = ?
        WHERE id = ?`
     ).run(
       updated.dimension,
@@ -182,10 +220,13 @@ export const VariantRepository = {
       updated.back,
       JSON.stringify(updated.hints),
       updated.lastShownAt?.toISOString() ?? null,
+      updated.questionType,
+      updated.rubric ? JSON.stringify(updated.rubric) : null,
+      updated.maxLength ?? null,
       id
     );
 
-    return {
+    const baseResult = {
       id,
       conceptId: existing.conceptId,
       dimension: updated.dimension,
@@ -194,6 +235,14 @@ export const VariantRepository = {
       back: updated.back,
       hints: [...updated.hints],
       lastShownAt: updated.lastShownAt,
+      questionType: updated.questionType,
+    };
+
+    // Use conditional spreading to avoid exactOptionalPropertyTypes violations
+    return {
+      ...baseResult,
+      ...(updated.rubric !== undefined && { rubric: updated.rubric }),
+      ...(updated.maxLength !== undefined && { maxLength: updated.maxLength }),
     };
   },
 

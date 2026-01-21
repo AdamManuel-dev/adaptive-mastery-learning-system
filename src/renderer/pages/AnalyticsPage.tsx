@@ -105,15 +105,13 @@ function ChartCard({
   children,
   className,
 }: ChartCardProps): React.JSX.Element {
-  const cardClasses = className !== undefined && className !== ''
-    ? `${styles.chartCard} ${className}`
-    : styles.chartCard
+  const cardClasses = [styles.chartCard, className].filter(Boolean).join(' ')
 
   return (
     <article className={cardClasses}>
       <header className={styles.chartCardHeader}>
         <h2 className={styles.chartCardTitle}>{title}</h2>
-        {description !== undefined && description !== '' && (
+        {description && (
           <p className={styles.chartCardDescription}>{description}</p>
         )}
       </header>

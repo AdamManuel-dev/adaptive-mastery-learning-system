@@ -28,6 +28,16 @@ export type Dimension =
  */
 export type Rating = 'again' | 'hard' | 'good' | 'easy'
 
+/**
+ * Question type for card variants
+ */
+export type QuestionType =
+  | 'flashcard'
+  | 'multiple_choice'
+  | 'multi_select'
+  | 'true_false'
+  | 'open_response'
+
 // -----------------------------------------------------------------------------
 // Data Transfer Objects (DTOs)
 // -----------------------------------------------------------------------------
@@ -77,6 +87,12 @@ export interface VariantDTO {
   lastShownAt: string | null
   createdAt: string
   updatedAt: string
+  /** Question type - defaults to 'flashcard' for backward compatibility */
+  questionType: QuestionType
+  /** Evaluation rubric for open response questions (JSON) */
+  rubric?: EvaluationRubric
+  /** Maximum character length for open response answers */
+  maxLength?: number
 }
 
 /**
@@ -89,6 +105,12 @@ export interface CreateVariantDTO {
   front: string
   back: string
   hints?: string[]
+  /** Question type - defaults to 'flashcard' if not provided */
+  questionType?: QuestionType
+  /** Evaluation rubric for open response questions */
+  rubric?: EvaluationRubric
+  /** Maximum character length for open response answers */
+  maxLength?: number
 }
 
 /**
@@ -101,6 +123,12 @@ export interface UpdateVariantDTO {
   front?: string
   back?: string
   hints?: string[]
+  /** Question type */
+  questionType?: QuestionType
+  /** Evaluation rubric for open response questions */
+  rubric?: EvaluationRubric
+  /** Maximum character length for open response answers */
+  maxLength?: number
 }
 
 /**
@@ -161,6 +189,10 @@ export interface ReviewSubmitDTO {
   dimension: Dimension
   rating: Rating
   timeMs: number
+  /** Selected answer indices for multiple choice / multi-select questions */
+  selectedAnswerIndices?: number[]
+  /** User's typed response for open response questions */
+  userResponse?: string
 }
 
 /**
@@ -170,6 +202,16 @@ export interface ReviewResultDTO {
   updatedMastery: MasteryDTO
   updatedSchedule: ScheduleDTO
   nextCard: ReviewCardDTO | null
+  /** Whether the answer was correct (for objective question types) */
+  wasCorrect?: boolean
+  /** Correct answer indices (for multiple choice / multi-select) */
+  correctAnswers?: number[]
+  /** Partial score for multi-select (0.0 to 1.0) */
+  partialScore?: number
+  /** Explanation of the correct answer */
+  explanation?: string
+  /** LLM evaluation result for open response questions */
+  evaluation?: LLMEvaluationResult
 }
 
 /**
@@ -273,6 +315,60 @@ export interface WeaknessHeatmapEntryDTO {
 }
 
 // -----------------------------------------------------------------------------
+// Open Response Evaluation Types
+// -----------------------------------------------------------------------------
+
+/**
+ * Rubric for LLM evaluation of open responses
+ */
+export interface EvaluationRubric {
+  /** Key points that should be mentioned in a good answer */
+  keyPoints: string[]
+  /** Alternative acceptable phrasings */
+  acceptableVariations?: string[]
+  /** Instructions for how to award partial credit */
+  partialCreditCriteria?: string
+}
+
+/**
+ * Result from LLM evaluation of an open response
+ */
+export interface LLMEvaluationResult {
+  /** Overall score from 0.0 to 1.0 */
+  score: number
+  /** Human-readable feedback for the user */
+  feedback: string
+  /** Which key points from the rubric were covered */
+  keyPointsCovered: string[]
+  /** Which key points from the rubric were missed */
+  keyPointsMissed: string[]
+  /** LLM's confidence in the evaluation (0.0 to 1.0) */
+  confidence: number
+  /** Suggested user rating based on the score */
+  suggestedRating: Rating
+  /** Whether the response demonstrated understanding of the concept */
+  demonstratesUnderstanding: boolean
+}
+
+/**
+ * Request to evaluate an open response answer
+ */
+export interface EvaluationRequest {
+  /** The question that was asked */
+  question: string
+  /** The model/reference answer for comparison */
+  modelAnswer: string
+  /** The user's response to evaluate */
+  userResponse: string
+  /** Evaluation rubric with key points (optional) */
+  rubric?: EvaluationRubric
+  /** The concept name being tested */
+  conceptName: string
+  /** The cognitive dimension being tested */
+  dimension: Dimension
+}
+
+// -----------------------------------------------------------------------------
 // IPC Channel Definitions
 // -----------------------------------------------------------------------------
 
@@ -334,6 +430,9 @@ export interface IPCChannels {
     args: { days: number }
     result: WeaknessHeatmapEntryDTO[]
   }
+
+  // Evaluation operations (for open response LLM evaluation)
+  'evaluation:evaluate': { args: EvaluationRequest; result: LLMEvaluationResult }
 }
 
 /**

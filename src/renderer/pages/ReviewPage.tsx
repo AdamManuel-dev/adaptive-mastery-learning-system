@@ -1,8 +1,9 @@
 /**
  * @fileoverview Review session page for spaced repetition card review
- * @lastmodified 2026-01-16T19:00:00Z
+ * @lastmodified 2026-01-20T00:00:00Z
  *
- * Features: Card display, show answer toggle, rating buttons, keyboard shortcuts, accessible loading states, answer reveal animation
+ * Features: Card display, show answer toggle, rating buttons, keyboard shortcuts, accessible loading states,
+ *           answer reveal animation, open response with LLM evaluation
  * Main APIs: useElectronAPI hook for safe API access
  * Constraints: Displays placeholder when no cards are due
  * Patterns: State machine pattern for review flow (question -> answer -> rated), hook-based API access, WCAG 2.1 AA compliant
@@ -12,6 +13,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 
 import styles from './ReviewPage.module.css'
+import { OpenResponseCard } from '../components/review/OpenResponseCard'
 import { useElectronAPI } from '../hooks/useElectronAPI'
 
 import type {
@@ -19,6 +21,7 @@ import type {
   ReviewSubmitDTO,
   Rating,
   DueCountDTO,
+  LLMEvaluationResult,
 } from '../../shared/types/ipc'
 
 /**
@@ -67,6 +70,10 @@ function ReviewPage(): React.JSX.Element {
   const [answerShownAt, setAnswerShownAt] = useState<number>(0)
   const [dueCount, setDueCount] = useState<DueCountDTO | null>(null)
   const [reviewedCount, setReviewedCount] = useState(0)
+  // Open response evaluation state
+  const [isEvaluating, setIsEvaluating] = useState(false)
+  const [evaluationResult, setEvaluationResult] = useState<LLMEvaluationResult | null>(null)
+  const [responseStartTime, setResponseStartTime] = useState<number>(0)
 
   // Fetch the first card on mount
   useEffect(() => {
@@ -79,6 +86,10 @@ function ReviewPage(): React.JSX.Element {
         ])
         setCurrentCard(card)
         setDueCount(count)
+        // Start timing for open response questions
+        if (card?.variant?.questionType === 'open_response') {
+          setResponseStartTime(Date.now())
+        }
       } catch (error) {
         console.error('Failed to fetch initial review data:', error)
       } finally {
@@ -119,6 +130,50 @@ function ReviewPage(): React.JSX.Element {
     }
   }, [api, currentCard, answerShownAt])
 
+  /**
+   * Handle open response submission with LLM evaluation
+   */
+  const handleOpenResponseSubmit = useCallback(async (userResponse: string): Promise<void> => {
+    if (!currentCard) return
+
+    const timeMs = responseStartTime > 0 ? Date.now() - responseStartTime : 0
+    setIsEvaluating(true)
+
+    const submitData: ReviewSubmitDTO = {
+      variantId: currentCard.variant.id,
+      conceptId: currentCard.concept.id,
+      dimension: currentCard.variant.dimension,
+      rating: 'good', // Placeholder - will be overridden by evaluation
+      timeMs,
+      userResponse,
+    }
+
+    try {
+      const result = await api.review.submit(submitData)
+      setEvaluationResult(result.evaluation ?? null)
+      // Don't advance automatically - wait for user to review feedback
+    } catch (error) {
+      console.error('Failed to submit open response:', error)
+      setIsEvaluating(false)
+    }
+  }, [api, currentCard, responseStartTime])
+
+  /**
+   * Handle continuing to next card after viewing evaluation
+   */
+  const handleContinueAfterEvaluation = useCallback(async (): Promise<void> => {
+    try {
+      const nextCard = await api.review.getNextCard()
+      setReviewedCount((prev) => prev + 1)
+      setCurrentCard(nextCard)
+      setEvaluationResult(null)
+      setIsEvaluating(false)
+      setResponseStartTime(Date.now())
+    } catch (error) {
+      console.error('Failed to get next card:', error)
+    }
+  }, [api])
+
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent): void => {
@@ -127,10 +182,18 @@ function ReviewPage(): React.JSX.Element {
         return
       }
 
-      if (event.code === 'Space' && !showAnswer && currentCard) {
+      // Handle open response continuation with Space
+      if (event.code === 'Space' && evaluationResult && currentCard) {
+        event.preventDefault()
+        void handleContinueAfterEvaluation()
+        return
+      }
+
+      // Handle regular flashcard flow
+      if (event.code === 'Space' && !showAnswer && currentCard && currentCard.variant.questionType !== 'open_response') {
         event.preventDefault()
         handleShowAnswer()
-      } else if (showAnswer && currentCard) {
+      } else if (showAnswer && currentCard && currentCard.variant.questionType !== 'open_response') {
         const key = event.key
         if (key >= '1' && key <= '4') {
           event.preventDefault()
@@ -141,7 +204,7 @@ function ReviewPage(): React.JSX.Element {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [showAnswer, currentCard, handleShowAnswer, handleRating])
+  }, [showAnswer, currentCard, handleShowAnswer, handleRating, evaluationResult, handleContinueAfterEvaluation])
 
   const hasCards = currentCard !== null
   const totalCards = dueCount?.total ?? 0
@@ -220,65 +283,85 @@ function ReviewPage(): React.JSX.Element {
               {currentCard?.concept?.name ?? 'Unknown Concept'}
             </span>
             <span className={styles.typeBadge}>
-              {currentCard?.variant?.dimension ?? 'Unknown'}
+              {currentCard?.variant?.questionType === 'open_response'
+                ? 'Open Response'
+                : currentCard?.variant?.dimension ?? 'Unknown'}
             </span>
           </div>
 
           <div className={styles.cardContent}>
-            <div className={styles.questionSection}>
-              <h3 className={styles.sectionLabel}>Question</h3>
-              <p className={styles.questionText}>
-                {currentCard?.variant?.front ?? 'No question available'}
-              </p>
-            </div>
+            {/* Open Response Card */}
+            {currentCard?.variant?.questionType === 'open_response' ? (
+              <OpenResponseCard
+                question={currentCard.variant.front}
+                maxLength={currentCard.variant.maxLength}
+                onSubmit={handleOpenResponseSubmit}
+                evaluation={evaluationResult || undefined}
+                modelAnswer={evaluationResult ? currentCard.variant.back : undefined}
+                isEvaluating={isEvaluating}
+                onContinue={evaluationResult ? (() => { void handleContinueAfterEvaluation() }) : undefined}
+              />
+            ) : (
+              /* Standard Flashcard */
+              <>
+                <div className={styles.questionSection}>
+                  <h3 className={styles.sectionLabel}>Question</h3>
+                  <p className={styles.questionText}>
+                    {currentCard?.variant?.front ?? 'No question available'}
+                  </p>
+                </div>
 
-            {showAnswer && (
-              <div className={styles.answerSection}>
-                <h3 className={styles.sectionLabel}>Answer</h3>
-                <p className={styles.answerText}>
-                  {currentCard?.variant?.back ?? 'No answer available'}
-                </p>
-              </div>
+                {showAnswer && (
+                    <div className={styles.answerSection}>
+                      <h3 className={styles.sectionLabel}>Answer</h3>
+                      <p className={styles.answerText}>
+                        {currentCard?.variant?.back ?? 'No answer available'}
+                      </p>
+                    </div>
+                  )}
+              </>
             )}
           </div>
         </div>
 
-        {/* Actions */}
-        <div className={styles.actions}>
-          {!showAnswer ? (
-            <button
-              type="button"
-              className={`btn-primary ${styles.showAnswerButton}`}
-              onClick={handleShowAnswer}
-            >
-              Show Answer
-              <span className={styles.keyboardHint}>
-                (Press <kbd>Space</kbd>)
-              </span>
-            </button>
-          ) : (
-            <div className={styles.ratingButtons}>
-              <p className={styles.ratingPrompt}>How well did you remember?</p>
-              <div className={styles.ratingGrid}>
-                {getRatingOptions().map((option) => (
-                  <button
-                    key={option.value}
-                    type="button"
-                    className={`${styles.ratingButton} ${option.className}`}
-                    onClick={() => void handleRating(option.value)}
-                    aria-label={`${option.label}: ${option.description}. Press ${option.value} key`}
-                  >
-                    <span className={styles.ratingLabel}>{option.label}</span>
-                    <span className={styles.ratingDescription}>{option.description}</span>
-                    <span className={styles.keyboardHint}>
-                      (Press <kbd>{option.value}</kbd>)
-                    </span>
-                  </button>
-                ))}
+        {/* Actions - only for non-open-response cards */}
+        {currentCard?.variant?.questionType !== 'open_response' && (
+          <div className={styles.actions}>
+            {!showAnswer ? (
+              <button
+                type="button"
+                className={`btn-primary ${styles.showAnswerButton}`}
+                onClick={handleShowAnswer}
+              >
+                Show Answer
+                <span className={styles.keyboardHint}>
+                  (Press <kbd>Space</kbd>)
+                </span>
+              </button>
+            ) : (
+              <div className={styles.ratingButtons}>
+                <p className={styles.ratingPrompt}>How well did you remember?</p>
+                <div className={styles.ratingGrid}>
+                  {getRatingOptions().map((option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      className={`${styles.ratingButton} ${option.className}`}
+                      onClick={() => void handleRating(option.value)}
+                      aria-label={`${option.label}: ${option.description}. Press ${option.value} key`}
+                    >
+                      <span className={styles.ratingLabel}>{option.label}</span>
+                      <span className={styles.ratingDescription}>{option.description}</span>
+                      <span className={styles.keyboardHint}>
+                        (Press <kbd>{option.value}</kbd>)
+                      </span>
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </main>
     </div>
   )

@@ -309,7 +309,8 @@ export class OpenAIGenerator implements LLMGateway {
     if (error instanceof OpenAI.APIError) {
       // Rate limiting
       if (error.status === 429) {
-        const retryAfterHeader = error.headers?.['retry-after'];
+        const headers = error.headers as Record<string, string> | undefined;
+        const retryAfterHeader = headers?.['retry-after'];
         const retryAfterMs =
           typeof retryAfterHeader === 'string'
             ? parseInt(retryAfterHeader, 10) * 1000
@@ -331,10 +332,11 @@ export class OpenAIGenerator implements LLMGateway {
       }
 
       // Other API errors
+      const statusCode = typeof error.status === 'number' ? error.status : undefined;
       throw new LLMAPIError(
         error.message,
         'openai',
-        { cause: error, statusCode: error.status }
+        { cause: error, statusCode }
       );
     }
 

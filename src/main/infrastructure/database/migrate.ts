@@ -10,6 +10,7 @@
 
 import { MigrationError } from './errors';
 import { migration as initialSchemaMigration } from './migrations/001_initial_schema';
+import { migration as openResponseMigration } from './migrations/002_open_response';
 
 import type Database from 'better-sqlite3';
 
@@ -89,6 +90,7 @@ function executeMigration(db: Database.Database, migration: Migration): void {
 function loadMigrations(): Migration[] {
   const migrations: Migration[] = [
     initialSchemaMigration,
+    openResponseMigration,
   ];
 
   // Sort by name to ensure consistent ordering

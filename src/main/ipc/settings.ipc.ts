@@ -176,8 +176,11 @@ async function testLLMConnection(config: LLMConfigDTO): Promise<{
         testUrl = config.baseUrl ?? 'http://localhost:11434/api/tags'
         break
 
-      default:
-        return { success: false, message: `Unknown provider: ${config.provider}` }
+      default: {
+        // Exhaustive check - this should never execute if all providers are handled
+        const _exhaustiveCheck: never = config.provider
+        return { success: false, message: `Unknown provider: ${String(_exhaustiveCheck)}` }
+      }
     }
 
     // Make the test request

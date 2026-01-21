@@ -8,9 +8,9 @@
  * Patterns: Card-based layout with clear visual hierarchy, hook-based API access, WCAG 2.1 AA compliant
  */
 
+import { AlertCircle, CheckCircle, ChevronRight } from 'lucide-react'
 import { useEffect, useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
-import { AlertCircle, CheckCircle, ChevronRight } from 'lucide-react'
 
 import styles from './DashboardPage.module.css'
 import { useElectronAPI } from '../hooks/useElectronAPI'

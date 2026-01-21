@@ -8,9 +8,10 @@
  * Patterns: Handler registration with error handling wrapper
  */
 
-import { registerHandler, IPCError } from './index'
-import { ConceptRepository } from '../infrastructure/database/repositories/concept.repository'
 import { asConceptId } from '../../shared/types/branded'
+import { ConceptRepository } from '../infrastructure/database/repositories/concept.repository'
+
+import { registerHandler, IPCError } from './index'
 
 import type { Concept } from '../../shared/types/core'
 import type {

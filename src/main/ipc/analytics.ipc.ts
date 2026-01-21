@@ -8,8 +8,9 @@
  * Patterns: Handler registration with error handling wrapper, aggregation helpers
  */
 
-import { registerHandler } from './index'
 import { EventRepository } from '../infrastructure/database/repositories/event.repository'
+
+import { registerHandler } from './index'
 
 import type { ReviewEvent, ReviewResultType, DifficultyLevel } from '../../shared/types/core'
 import type { Dimension } from '../../shared/types/ipc'
@@ -92,6 +93,9 @@ const TARGET_TIMES_BY_DIFFICULTY: Record<DifficultyLevel, number> = {
 
 /** EWMA alpha for smoothing (matches mastery calculation) */
 const EWMA_ALPHA = 0.3
+
+/** Maximum number of events to retrieve for analytics calculations */
+const MAX_EVENTS_FOR_ANALYSIS = 10000
 
 // -----------------------------------------------------------------------------
 // Aggregation Helpers
@@ -295,7 +299,7 @@ function filterEventsByDays(events: ReviewEvent[], days: number): ReviewEvent[] 
  */
 function getMasteryTimeline(days: number): MasteryTimelineEntry[] {
   // Fetch all events (we need historical context for EWMA)
-  const allEvents = EventRepository.findRecent(10000)
+  const allEvents = EventRepository.findRecent(MAX_EVENTS_FOR_ANALYSIS)
   const recentEvents = filterEventsByDays(allEvents, days)
 
   const dateRange = generateDateRange(days)
@@ -354,7 +358,7 @@ function getMasteryTimeline(days: number): MasteryTimelineEntry[] {
  * Counts reviews by result type for each dimension
  */
 function getReviewDistribution(): ReviewDistributionEntry[] {
-  const allEvents = EventRepository.findRecent(10000)
+  const allEvents = EventRepository.findRecent(MAX_EVENTS_FOR_ANALYSIS)
   const eventsByDim = groupByDimension(allEvents)
 
   return ALL_DIMENSIONS.map((dimension) => {
@@ -382,7 +386,7 @@ function getReviewDistribution(): ReviewDistributionEntry[] {
  * Calculates response time statistics per difficulty level
  */
 function getResponseTimeStats(): ResponseTimeStatsEntry[] {
-  const allEvents = EventRepository.findRecent(10000)
+  const allEvents = EventRepository.findRecent(MAX_EVENTS_FOR_ANALYSIS)
   const eventsByDifficulty = groupByDifficulty(allEvents)
 
   const stats: ResponseTimeStatsEntry[] = []

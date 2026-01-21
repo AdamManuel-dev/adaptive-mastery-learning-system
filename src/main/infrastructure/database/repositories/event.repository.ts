@@ -30,13 +30,17 @@ interface EventRow {
   time_ms: number;
   hints_used: number;
   created_at: string;
+  user_response: string | null;
+  llm_score: number | null;
+  llm_feedback: string | null;
+  evaluation_confidence: number | null;
 }
 
 /**
  * Maps a database row to a ReviewEvent domain entity
  */
 function rowToEvent(row: EventRow): ReviewEvent {
-  return {
+  const baseEvent = {
     id: asEventId(row.id),
     conceptId: asConceptId(row.concept_id),
     variantId: asVariantId(row.variant_id),
@@ -46,6 +50,15 @@ function rowToEvent(row: EventRow): ReviewEvent {
     timeMs: row.time_ms,
     hintsUsed: row.hints_used,
     createdAt: new Date(row.created_at),
+  };
+
+  // Use conditional spreading to avoid exactOptionalPropertyTypes violations
+  return {
+    ...baseEvent,
+    ...(row.user_response !== null && { userResponse: row.user_response }),
+    ...(row.llm_score !== null && { llmScore: row.llm_score }),
+    ...(row.llm_feedback !== null && { llmFeedback: row.llm_feedback }),
+    ...(row.evaluation_confidence !== null && { evaluationConfidence: row.evaluation_confidence }),
   };
 }
 
@@ -70,8 +83,9 @@ export const EventRepository = {
 
     try {
       db.prepare(
-        `INSERT INTO events (id, concept_id, variant_id, dimension, difficulty, result, time_ms, hints_used, created_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
+        `INSERT INTO events (id, concept_id, variant_id, dimension, difficulty, result, time_ms, hints_used, created_at,
+                             user_response, llm_score, llm_feedback, evaluation_confidence)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
       ).run(
         id,
         event.conceptId,
@@ -81,10 +95,14 @@ export const EventRepository = {
         event.result,
         event.timeMs,
         event.hintsUsed,
-        now
+        now,
+        event.userResponse ?? null,
+        event.llmScore ?? null,
+        event.llmFeedback ?? null,
+        event.evaluationConfidence ?? null
       );
 
-      return {
+      const baseEvent = {
         id: asEventId(id),
         conceptId: event.conceptId,
         variantId: event.variantId,
@@ -94,6 +112,15 @@ export const EventRepository = {
         timeMs: event.timeMs,
         hintsUsed: event.hintsUsed,
         createdAt: new Date(now),
+      };
+
+      // Use conditional spreading to avoid exactOptionalPropertyTypes violations
+      return {
+        ...baseEvent,
+        ...(event.userResponse !== undefined && { userResponse: event.userResponse }),
+        ...(event.llmScore !== undefined && { llmScore: event.llmScore }),
+        ...(event.llmFeedback !== undefined && { llmFeedback: event.llmFeedback }),
+        ...(event.evaluationConfidence !== undefined && { evaluationConfidence: event.evaluationConfidence }),
       };
     } catch (error) {
       const err = error as Error;
@@ -123,12 +150,14 @@ export const EventRepository = {
   findByConceptId(conceptId: ConceptId, limit?: number): ReviewEvent[] {
     const db = getDatabase();
     const sql = limit
-      ? `SELECT id, concept_id, variant_id, dimension, difficulty, result, time_ms, hints_used, created_at
+      ? `SELECT id, concept_id, variant_id, dimension, difficulty, result, time_ms, hints_used, created_at,
+                user_response, llm_score, llm_feedback, evaluation_confidence
          FROM events
          WHERE concept_id = ?
          ORDER BY created_at DESC
          LIMIT ?`
-      : `SELECT id, concept_id, variant_id, dimension, difficulty, result, time_ms, hints_used, created_at
+      : `SELECT id, concept_id, variant_id, dimension, difficulty, result, time_ms, hints_used, created_at,
+                user_response, llm_score, llm_feedback, evaluation_confidence
          FROM events
          WHERE concept_id = ?
          ORDER BY created_at DESC`;
@@ -152,12 +181,14 @@ export const EventRepository = {
   findByDimension(dimension: DimensionType, limit?: number): ReviewEvent[] {
     const db = getDatabase();
     const sql = limit
-      ? `SELECT id, concept_id, variant_id, dimension, difficulty, result, time_ms, hints_used, created_at
+      ? `SELECT id, concept_id, variant_id, dimension, difficulty, result, time_ms, hints_used, created_at,
+                user_response, llm_score, llm_feedback, evaluation_confidence
          FROM events
          WHERE dimension = ?
          ORDER BY created_at DESC
          LIMIT ?`
-      : `SELECT id, concept_id, variant_id, dimension, difficulty, result, time_ms, hints_used, created_at
+      : `SELECT id, concept_id, variant_id, dimension, difficulty, result, time_ms, hints_used, created_at,
+                user_response, llm_score, llm_feedback, evaluation_confidence
          FROM events
          WHERE dimension = ?
          ORDER BY created_at DESC`;
@@ -179,7 +210,8 @@ export const EventRepository = {
     const db = getDatabase();
     const rows = db
       .prepare<[number], EventRow>(
-        `SELECT id, concept_id, variant_id, dimension, difficulty, result, time_ms, hints_used, created_at
+        `SELECT id, concept_id, variant_id, dimension, difficulty, result, time_ms, hints_used, created_at,
+                user_response, llm_score, llm_feedback, evaluation_confidence
          FROM events
          ORDER BY created_at DESC
          LIMIT ?`

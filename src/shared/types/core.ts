@@ -51,6 +51,30 @@ export type ReviewResultType = 'again' | 'hard' | 'good' | 'easy';
 export type DifficultyLevel = 1 | 2 | 3 | 4 | 5;
 
 /**
+ * Question type for card variants.
+ * Determines how the question is presented and evaluated.
+ */
+export type QuestionType =
+  | 'flashcard'
+  | 'multiple_choice'
+  | 'multi_select'
+  | 'true_false'
+  | 'open_response';
+
+/**
+ * Rubric for LLM evaluation of open responses.
+ * Defines the criteria for scoring user answers.
+ */
+export interface EvaluationRubric {
+  /** Key points that should be mentioned in a good answer */
+  readonly keyPoints: readonly string[];
+  /** Alternative acceptable phrasings */
+  readonly acceptableVariations?: readonly string[];
+  /** Instructions for how to award partial credit */
+  readonly partialCreditCriteria?: string;
+}
+
+/**
  * A learning concept that the user wants to master.
  * Serves as the aggregate root containing variants.
  */
@@ -102,6 +126,15 @@ export interface Variant {
 
   /** When this variant was last shown in review (null if never shown) */
   readonly lastShownAt: Date | null;
+
+  /** Question type - defaults to 'flashcard' for backward compatibility */
+  readonly questionType: QuestionType;
+
+  /** Evaluation rubric for open response questions (optional) */
+  readonly rubric?: EvaluationRubric;
+
+  /** Maximum character length for open response answers (optional) */
+  readonly maxLength?: number;
 }
 
 /**
@@ -135,6 +168,18 @@ export interface ReviewEvent {
 
   /** When the review occurred */
   readonly createdAt: Date;
+
+  /** User's typed response for open response questions (optional) */
+  readonly userResponse?: string;
+
+  /** LLM evaluation score 0.0 to 1.0 (optional) */
+  readonly llmScore?: number;
+
+  /** LLM evaluation feedback (optional) */
+  readonly llmFeedback?: string;
+
+  /** LLM evaluation confidence 0.0 to 1.0 (optional) */
+  readonly evaluationConfidence?: number;
 }
 
 /**

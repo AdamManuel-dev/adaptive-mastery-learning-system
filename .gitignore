@@ -6,8 +6,10 @@ node_modules/
 # Build outputs
 dist/
 out/
-build/
 *.tsbuildinfo
+
+# Keep build/ directory for app icons
+# build/
 
 # Environment and secrets
 .env

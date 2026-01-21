@@ -16,11 +16,6 @@ import type {
   VariantDTO,
   CreateVariantDTO,
   UpdateVariantDTO,
-  ReviewCardDTO,
-  ReviewSubmitDTO,
-  ReviewResultDTO,
-  DueCountDTO,
-  MasteryProfileDTO,
   MasteryDTO,
   Dimension,
   ScheduleDTO,
@@ -46,8 +41,8 @@ interface MockData {
 function loadMockData(): MockData {
   try {
     const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored) {
-      return JSON.parse(stored)
+    if (stored !== null && stored !== '') {
+      return JSON.parse(stored) as MockData
     }
   } catch (e) {
     console.warn('Failed to load mock data from localStorage:', e)
@@ -85,6 +80,7 @@ function loadMockData(): MockData {
         lastShownAt: null,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
+        questionType: 'flashcard',
       },
       {
         id: 'v2',
@@ -97,6 +93,7 @@ function loadMockData(): MockData {
         lastShownAt: null,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
+        questionType: 'flashcard',
       },
       {
         id: 'v3',
@@ -109,6 +106,7 @@ function loadMockData(): MockData {
         lastShownAt: null,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
+        questionType: 'flashcard',
       },
     ],
     schedules: [],
@@ -142,7 +140,7 @@ function saveMockData(data: MockData): void {
   }
 }
 
-let mockData = loadMockData()
+const mockData = loadMockData()
 
 // Helper to simulate async operations
 const delay = (ms: number = 10) => new Promise((resolve) => setTimeout(resolve, ms))
@@ -188,13 +186,15 @@ export const mockApi: ApiType = {
 
       mockData.concepts[index] = {
         ...existing,
-        name: data.name,
-        definition: data.definition ?? existing.definition,
-        facts: data.facts ?? existing.facts,
+        ...(data.name !== undefined && { name: data.name }),
+        ...(data.definition !== undefined && { definition: data.definition }),
+        ...(data.facts !== undefined && { facts: data.facts }),
         updatedAt: new Date().toISOString(),
       }
       saveMockData(mockData)
-      return mockData.concepts[index]!
+      const updatedConcept = mockData.concepts[index]
+      if (!updatedConcept) throw new Error('Concept not found after update')
+      return updatedConcept
     },
 
     delete: async (id: string) => {
@@ -215,27 +215,48 @@ export const mockApi: ApiType = {
       await delay()
       const newVariant: VariantDTO = {
         id: Math.random().toString(36).substr(2, 9),
-        ...data,
+        conceptId: data.conceptId,
+        dimension: data.dimension,
+        difficulty: data.difficulty ?? 3,
+        front: data.front,
+        back: data.back,
+        hints: data.hints ?? [],
+        lastShownAt: null,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
+        questionType: data.questionType ?? 'flashcard',
+        ...(data.rubric !== undefined && { rubric: data.rubric }),
+        ...(data.maxLength !== undefined && { maxLength: data.maxLength }),
       }
       mockData.variants.push(newVariant)
       saveMockData(mockData)
       return newVariant
     },
 
-    update: async (data: UpdateVariantDTO) => {
+    update: async (data: UpdateVariantDTO): Promise<VariantDTO> => {
       await delay()
       const index = mockData.variants.findIndex((v) => v.id === data.id)
       if (index === -1) throw new Error('Variant not found')
 
-      mockData.variants[index] = {
-        ...mockData.variants[index],
-        ...data,
+      const existing = mockData.variants[index]
+      if (!existing) throw new Error('Variant not found')
+
+      // Update only the fields that are provided
+      const updatedVariant: VariantDTO = {
+        ...existing,
+        ...(data.dimension !== undefined && { dimension: data.dimension }),
+        ...(data.difficulty !== undefined && { difficulty: data.difficulty }),
+        ...(data.front !== undefined && { front: data.front }),
+        ...(data.back !== undefined && { back: data.back }),
+        ...(data.hints !== undefined && { hints: data.hints }),
+        ...(data.questionType !== undefined && { questionType: data.questionType }),
+        ...(data.rubric !== undefined && { rubric: data.rubric }),
+        ...(data.maxLength !== undefined && { maxLength: data.maxLength }),
         updatedAt: new Date().toISOString(),
       }
+      mockData.variants[index] = updatedVariant
       saveMockData(mockData)
-      return mockData.variants[index]
+      return updatedVariant
     },
 
     delete: async (id: string) => {
@@ -250,9 +271,11 @@ export const mockApi: ApiType = {
       await delay()
       if (mockData.variants.length === 0) return null
 
-      const randomVariant = mockData.variants[Math.floor(Math.random() * mockData.variants.length)]
-      const concept = mockData.concepts.find((c) => c.id === randomVariant.conceptId)
+      const randomIndex = Math.floor(Math.random() * mockData.variants.length)
+      const randomVariant = mockData.variants[randomIndex]
+      if (!randomVariant) return null
 
+      const concept = mockData.concepts.find((c) => c.id === randomVariant.conceptId)
       if (!concept) return null
 
       // Create a mock schedule for this variant
@@ -270,7 +293,7 @@ export const mockApi: ApiType = {
       }
     },
 
-    submit: async (data: ReviewSubmitDTO) => {
+    submit: async (data) => {
       await delay()
 
       // Get the variant to find the dimension
@@ -285,11 +308,19 @@ export const mockApi: ApiType = {
         count: 1,
       }
 
+      // Determine interval based on rating (instead of quality)
+      const ratingToInterval = {
+        again: 0,
+        hard: 1,
+        good: 2,
+        easy: 4,
+      }
+
       // Mock updated schedule
       const updatedSchedule: ScheduleDTO = {
         conceptId: variant.conceptId,
         dueAt: new Date(Date.now() + 86400000).toISOString(), // Tomorrow
-        intervalDays: data.quality >= 3 ? 2 : 1,
+        intervalDays: ratingToInterval[data.rating] ?? 1,
         ease: 2.5,
       }
 
@@ -305,12 +336,17 @@ export const mockApi: ApiType = {
 
     getDueCount: async () => {
       await delay()
+      const variantCount = mockData.variants.length
+      const countPerDimension = Math.floor(variantCount / 6)
       return {
-        total: mockData.variants.length,
+        total: variantCount,
         byDimension: {
-          DEFINITION: Math.floor(mockData.variants.length / 3),
-          APPLICATION: Math.floor(mockData.variants.length / 3),
-          INTEGRATION: Math.floor(mockData.variants.length / 3),
+          definition: countPerDimension,
+          paraphrase: countPerDimension,
+          example: countPerDimension,
+          scenario: countPerDimension,
+          discrimination: countPerDimension,
+          cloze: countPerDimension,
         },
       }
     },
@@ -457,6 +493,77 @@ export const mockApi: ApiType = {
       }
     },
   },
+
+  analytics: {
+    getMasteryTimeline: async (_args: { days: number }) => {
+      await delay()
+      // Return mock timeline data
+      const today = new Date()
+      const entries = []
+      for (let i = 6; i >= 0; i--) {
+        const date = new Date(today)
+        date.setDate(date.getDate() - i)
+        entries.push({
+          date: date.toISOString().split('T')[0]!,
+          dimensions: {
+            definition: { accuracy: 0.8 + Math.random() * 0.1, speed: 0.7 + Math.random() * 0.1, combined: 0.75 + Math.random() * 0.1 },
+            paraphrase: { accuracy: 0.7 + Math.random() * 0.1, speed: 0.8 + Math.random() * 0.1, combined: 0.75 + Math.random() * 0.1 },
+            example: { accuracy: 0.5 + Math.random() * 0.2, speed: 0.6 + Math.random() * 0.1, combined: 0.55 + Math.random() * 0.15 },
+            scenario: { accuracy: 0.7 + Math.random() * 0.1, speed: 0.65 + Math.random() * 0.1, combined: 0.68 + Math.random() * 0.1 },
+            discrimination: { accuracy: 0.9 + Math.random() * 0.05, speed: 0.85 + Math.random() * 0.05, combined: 0.88 + Math.random() * 0.05 },
+            cloze: { accuracy: 0.75 + Math.random() * 0.1, speed: 0.8 + Math.random() * 0.1, combined: 0.78 + Math.random() * 0.1 },
+          },
+        })
+      }
+      return entries
+    },
+
+    getReviewDistribution: async () => {
+      await delay()
+      return [
+        { dimension: 'definition' as Dimension, again: 5, hard: 12, good: 35, easy: 18 },
+        { dimension: 'paraphrase' as Dimension, again: 8, hard: 15, good: 28, easy: 12 },
+        { dimension: 'example' as Dimension, again: 15, hard: 20, good: 18, easy: 5 },
+        { dimension: 'scenario' as Dimension, again: 10, hard: 18, good: 25, easy: 10 },
+        { dimension: 'discrimination' as Dimension, again: 3, hard: 8, good: 40, easy: 25 },
+        { dimension: 'cloze' as Dimension, again: 7, hard: 14, good: 32, easy: 15 },
+      ]
+    },
+
+    getResponseTimeStats: async () => {
+      await delay()
+      return [
+        { difficulty: 1, min: 1000, max: 8000, avg: 3500, median: 3000, count: 50 },
+        { difficulty: 2, min: 2000, max: 12000, avg: 5000, median: 4500, count: 45 },
+        { difficulty: 3, min: 3000, max: 20000, avg: 8000, median: 7000, count: 40 },
+        { difficulty: 4, min: 5000, max: 35000, avg: 15000, median: 12000, count: 30 },
+        { difficulty: 5, min: 8000, max: 60000, avg: 25000, median: 20000, count: 20 },
+      ]
+    },
+
+    getWeaknessHeatmap: async (_args: { days: number }) => {
+      await delay()
+      const today = new Date()
+      const entries = []
+      const severities: Array<'none' | 'mild' | 'moderate' | 'critical'> = ['none', 'mild', 'moderate', 'critical']
+      for (let i = 6; i >= 0; i--) {
+        const date = new Date(today)
+        date.setDate(date.getDate() - i)
+        entries.push({
+          date: date.toISOString().split('T')[0]!,
+          dimensions: {
+            definition: severities[Math.floor(Math.random() * 2)]!,
+            paraphrase: severities[Math.floor(Math.random() * 2)]!,
+            example: severities[Math.floor(Math.random() * 4)]!,
+            scenario: severities[Math.floor(Math.random() * 3)]!,
+            discrimination: 'none' as const,
+            cloze: severities[Math.floor(Math.random() * 2)]!,
+          },
+        })
+      }
+      return entries
+    },
+  },
 }
 
 // -----------------------------------------------------------------------------
@@ -469,12 +576,12 @@ export const mockApi: ApiType = {
  */
 export function initMockApi(): void {
   if (typeof window !== 'undefined') {
-    // @ts-expect-error - Adding mock API to window for browser compatibility
-    window.api = mockApi
+    // Adding mock API to window for browser compatibility
+    const win = window as unknown as { api: typeof mockApi; electron: object }
+    win.api = mockApi
 
     // Mock electron API (minimal implementation)
-    // @ts-expect-error - Adding mock electron API
-    window.electron = {
+    win.electron = {
       process: {
         platform: 'darwin',
         versions: {
@@ -482,10 +589,13 @@ export function initMockApi(): void {
           chrome: '120.0.0',
           electron: '28.0.0',
         },
+        env: {},
       },
     }
 
-    console.log('🌐 Mock API initialized for browser development')
-    console.log('💾 Data persists in localStorage - clear it to reset')
+    // eslint-disable-next-line no-console
+    console.log('Mock API initialized for browser development')
+    // eslint-disable-next-line no-console
+    console.log('Data persists in localStorage - clear it to reset')
   }
 }

@@ -2,13 +2,14 @@
  * @fileoverview Seed data functions for initializing the database
  * @lastmodified 2026-01-16T00:00:00Z
  *
- * Features: Initial mastery dimension records, sample concept data
- * Main APIs: seedMasteryDimensions(), seedSampleData()
+ * Features: Initial mastery dimension records, sample concept data, YAML import
+ * Main APIs: seedMasteryDimensions(), seedSampleData(), seedFromYAML(), seedAll()
  * Constraints: Idempotent - safe to run multiple times
  * Patterns: Uses INSERT OR IGNORE for safe re-seeding
  */
 
 import { getDatabase } from './connection';
+import { loadDefaultTestData, loadYAMLData } from './yaml-loader';
 
 import type Database from 'better-sqlite3';
 
@@ -216,12 +217,48 @@ export function seedSampleData(db?: Database.Database): void {
 }
 
 /**
+ * Seeds data from a YAML file
+ *
+ * Loads concepts, variants, mastery records, and schedule entries from a YAML file.
+ * Useful for importing structured flashcard data.
+ *
+ * @param filePath - Path to the YAML file
+ * @param db - Optional database instance (uses singleton if not provided)
+ * @returns Summary of imported records
+ */
+export function seedFromYAML(
+  filePath: string,
+  db?: Database.Database
+): { concepts: number; variants: number; mastery: number; schedule: number } {
+  const database = db ?? getDatabase();
+  return loadYAMLData(filePath, database);
+}
+
+/**
+ * Seeds from the default test data YAML (data/re-test-data.yaml)
+ *
+ * Loads the bundled real estate exam study data as initial content.
+ *
+ * @param db - Optional database instance (uses singleton if not provided)
+ * @returns Summary of imported records
+ */
+export function seedDefaultData(
+  db?: Database.Database
+): { concepts: number; variants: number; mastery: number; schedule: number } {
+  const database = db ?? getDatabase();
+  return loadDefaultTestData(database);
+}
+
+/**
  * Runs all seed functions to initialize a fresh database
+ *
+ * Initializes mastery dimensions and loads the default test data YAML.
  *
  * @param db - Optional database instance (uses singleton if not provided)
  */
 export function seedAll(db?: Database.Database): void {
   const database = db ?? getDatabase();
   seedMasteryDimensions(database);
-  seedSampleData(database);
+  // Load default YAML data instead of sample data
+  seedDefaultData(database);
 }

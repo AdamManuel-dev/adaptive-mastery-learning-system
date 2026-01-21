@@ -47,3 +47,18 @@ export {
   SYSTEM_PROMPT,
   VARIANT_OUTPUT_SCHEMA,
 } from './prompts';
+
+// Evaluation prompts and utilities
+export {
+  buildEvaluationPrompt,
+  EVALUATION_SYSTEM_PROMPT,
+  OPEN_RESPONSE_GENERATION_PROMPT,
+} from './evaluation-prompts';
+
+// Evaluator implementations
+export {
+  createEvaluatorFromEnv,
+  createOpenAIEvaluator,
+  OpenAIEvaluator,
+  type LLMEvaluator,
+} from './evaluator';

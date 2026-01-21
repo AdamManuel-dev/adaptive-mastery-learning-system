@@ -12,7 +12,7 @@ export default defineConfig({
       },
     },
     build: {
-      outDir: 'out/main',
+      outDir: 'dist/main',
       rollupOptions: {
         input: {
           index: resolve(__dirname, 'src/main/index.ts'),
@@ -23,7 +23,7 @@ export default defineConfig({
   preload: {
     plugins: [externalizeDepsPlugin()],
     build: {
-      outDir: 'out/preload',
+      outDir: 'dist/preload',
       rollupOptions: {
         input: {
           index: resolve(__dirname, 'src/preload/index.ts'),
@@ -40,7 +40,7 @@ export default defineConfig({
       },
     },
     build: {
-      outDir: 'out/renderer',
+      outDir: 'dist/renderer',
       rollupOptions: {
         input: {
           index: resolve(__dirname, 'src/renderer/index.html'),

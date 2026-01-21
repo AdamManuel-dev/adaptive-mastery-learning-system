@@ -15,10 +15,10 @@
 import { createHashRouter, RouterProvider, useNavigate } from 'react-router-dom'
 
 import ErrorBoundary from './components/ErrorBoundary'
+import styles from './components/ErrorBoundary.module.css'
 import Layout from './components/layout/Layout'
 import { ToastProvider } from './components/Toast'
 import { ThemeProvider } from './contexts/ThemeContext'
-import styles from './components/ErrorBoundary.module.css'
 import AnalyticsPage from './pages/AnalyticsPage'
 import ConceptsPage from './pages/ConceptsPage'
 import DashboardPage from './pages/DashboardPage'
@@ -40,7 +40,7 @@ function ConceptsPageErrorFallback({
 
   function handleGoToDashboard(): void {
     resetError()
-    navigate('/')
+    void navigate('/')
   }
 
   return (
@@ -100,7 +100,7 @@ function ReviewPageErrorFallback({
 
   function handleGoToDashboard(): void {
     resetError()
-    navigate('/')
+    void navigate('/')
   }
 
   return (
@@ -208,7 +208,7 @@ function SettingsPageErrorFallback({
 
   function handleGoToDashboard(): void {
     resetError()
-    navigate('/')
+    void navigate('/')
   }
 
   return (
@@ -268,7 +268,7 @@ function AnalyticsPageErrorFallback({
 
   function handleGoToDashboard(): void {
     resetError()
-    navigate('/')
+    void navigate('/')
   }
 
   return (

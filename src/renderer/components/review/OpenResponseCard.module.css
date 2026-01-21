@@ -1,0 +1,364 @@
+/**
+ * @fileoverview CSS Module styles for the OpenResponseCard component
+ * @lastmodified 2026-01-20T00:00:00Z
+ *
+ * Features: Text input styling, evaluation display, score visualization,
+ *           key points chips, responsive design, loading states
+ * Patterns: Color-coded feedback, WCAG 2.5.5 touch targets, accessible focus states
+ */
+
+.openResponseCard {
+  width: 100%;
+}
+
+/* Question Section */
+.questionSection {
+  margin-bottom: var(--space-lg);
+}
+
+.sectionLabel {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-sm);
+}
+
+.questionText {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Input Section */
+.inputSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.inputLabel {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.responseInput {
+  width: 100%;
+  min-height: 120px;
+  padding: var(--space-md);
+  font-size: var(--font-size-base);
+  font-family: inherit;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  background-color: var(--color-background);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  resize: vertical;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.responseInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.responseInput:disabled {
+  background-color: var(--color-surface);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.inputError {
+  border-color: var(--color-error);
+}
+
+.inputError:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+/* Character Count */
+.characterCount {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  text-align: right;
+}
+
+.countError {
+  color: var(--color-error);
+  font-weight: 500;
+}
+
+/* Submit Button */
+.submitButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  width: 100%;
+  padding: var(--space-md) var(--space-lg);
+  font-size: var(--font-size-base);
+  min-height: 56px; /* Touch target - WCAG 2.5.5 */
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.loadingSpinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.keyboardHint {
+  font-size: var(--font-size-xs);
+  opacity: 0.7;
+  margin-left: var(--space-xs);
+}
+
+.keyboardHint kbd {
+  display: inline-block;
+  padding: 2px 6px;
+  font-family: inherit;
+  font-size: var(--font-size-xs);
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-sm);
+}
+
+/* Evaluation Section */
+.evaluationSection {
+  animation: fadeInSlide 0.3s ease-out;
+}
+
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Score Display */
+.scoreSection {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.scoreCircle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.scoreValue {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+}
+
+.scoreGood {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.scorePartial {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.scorePoor {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.scoreBar {
+  flex: 1;
+  height: 12px;
+  background-color: var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.scoreBarFill {
+  height: 100%;
+  border-radius: var(--radius-lg);
+  transition: width 0.5s ease-out;
+}
+
+.scoreBarFill.scoreGood {
+  background-color: #22c55e;
+}
+
+.scoreBarFill.scorePartial {
+  background-color: #f59e0b;
+}
+
+.scoreBarFill.scorePoor {
+  background-color: #ef4444;
+}
+
+/* Feedback Box */
+.feedbackBox {
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-lg);
+}
+
+.feedbackSuccess {
+  background-color: #dcfce7;
+  border-left: 4px solid #22c55e;
+}
+
+.feedbackInfo {
+  background-color: #dbeafe;
+  border-left: 4px solid #3b82f6;
+}
+
+.feedbackText {
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+/* Key Points Section */
+.keyPointsSection {
+  margin-bottom: var(--space-lg);
+}
+
+.keyPointsTitle {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-sm);
+}
+
+.keyPointsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.keyPointCovered,
+.keyPointMissed {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+}
+
+.keyPointCovered {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.keyPointMissed {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.keyPointIcon {
+  font-weight: bold;
+  flex-shrink: 0;
+  width: 20px;
+  text-align: center;
+}
+
+/* Model Answer Section */
+.modelAnswerSection {
+  padding: var(--space-lg);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  margin-bottom: var(--space-lg);
+}
+
+.modelAnswerTitle {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-sm);
+}
+
+.modelAnswerText {
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+/* Confidence Section */
+.confidenceSection {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-lg);
+}
+
+.confidenceLabel {
+  font-weight: 500;
+}
+
+.confidenceValue {
+  color: var(--color-text-secondary);
+}
+
+/* Continue Button */
+.continueButton {
+  width: 100%;
+  padding: var(--space-md) var(--space-lg);
+  font-size: var(--font-size-base);
+  min-height: 56px; /* Touch target - WCAG 2.5.5 */
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .scoreSection {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-md);
+  }
+
+  .scoreCircle {
+    align-self: center;
+  }
+
+  .keyboardHint {
+    display: none;
+  }
+
+  .questionText {
+    font-size: var(--font-size-base);
+  }
+
+  .responseInput {
+    min-height: 100px;
+  }
+}

@@ -8,11 +8,13 @@
  * Patterns: Responsive layout with mobile-friendly navigation, Lucide React icons, WCAG 2.1 AA compliant
  */
 
-import { NavLink, Outlet } from 'react-router-dom'
 import { Brain, LayoutDashboard, BookOpen, BarChart3, Folder, Settings } from 'lucide-react'
-import type { LucideIcon } from 'lucide-react'
+import { NavLink, Outlet } from 'react-router-dom'
 
 import styles from './Layout.module.css'
+
+import type { LucideIcon } from 'lucide-react'
+
 
 /**
  * Navigation link item definition

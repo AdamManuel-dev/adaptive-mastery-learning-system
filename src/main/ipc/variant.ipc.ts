@@ -8,12 +8,13 @@
  * Patterns: Handler registration with error handling wrapper
  */
 
-import { registerHandler, IPCError } from './index'
-import { VariantRepository } from '../infrastructure/database/repositories/variant.repository'
 import { asConceptId, asVariantId } from '../../shared/types/branded'
 import { DimensionType } from '../../shared/types/core'
+import { VariantRepository } from '../infrastructure/database/repositories/variant.repository'
 
-import type { Variant, DifficultyLevel } from '../../shared/types/core'
+import { registerHandler, IPCError } from './index'
+
+import type { Variant, DifficultyLevel, QuestionType, EvaluationRubric } from '../../shared/types/core'
 import type {
   VariantDTO,
   CreateVariantDTO,
@@ -65,7 +66,21 @@ function toDimension(dimensionType: DimensionType): Dimension {
 function variantToDTO(variant: Variant): VariantDTO {
   // For now, use lastShownAt as a proxy for createdAt/updatedAt
   const now = new Date().toISOString()
-  return {
+
+  // Build mapped rubric if present
+  const mappedRubric = variant.rubric
+    ? {
+        keyPoints: [...variant.rubric.keyPoints],
+        ...(variant.rubric.acceptableVariations !== undefined && {
+          acceptableVariations: [...variant.rubric.acceptableVariations],
+        }),
+        ...(variant.rubric.partialCreditCriteria !== undefined && {
+          partialCreditCriteria: variant.rubric.partialCreditCriteria,
+        }),
+      }
+    : undefined
+
+  const baseDTO = {
     id: variant.id,
     conceptId: variant.conceptId,
     dimension: toDimension(variant.dimension),
@@ -76,6 +91,14 @@ function variantToDTO(variant: Variant): VariantDTO {
     lastShownAt: variant.lastShownAt?.toISOString() ?? null,
     createdAt: now,
     updatedAt: now,
+    questionType: variant.questionType,
+  }
+
+  // Use conditional spreading to avoid exactOptionalPropertyTypes violations
+  return {
+    ...baseDTO,
+    ...(mappedRubric !== undefined && { rubric: mappedRubric }),
+    ...(variant.maxLength !== undefined && { maxLength: variant.maxLength }),
   }
 }
 
@@ -96,7 +119,21 @@ export function registerVariantHandlers(): void {
   // Create a new variant
   registerHandler('variants:create', (_event, data: CreateVariantDTO) => {
     try {
-      const variant = VariantRepository.create({
+      // Convert IPC rubric to domain rubric if present
+      const rubric: EvaluationRubric | undefined = data.rubric
+        ? {
+            keyPoints: [...data.rubric.keyPoints],
+            ...(data.rubric.acceptableVariations && {
+              acceptableVariations: [...data.rubric.acceptableVariations],
+            }),
+            ...(data.rubric.partialCreditCriteria && {
+              partialCreditCriteria: data.rubric.partialCreditCriteria,
+            }),
+          }
+        : undefined
+
+      // Build base variant data
+      const baseVariantData = {
         conceptId: asConceptId(data.conceptId),
         dimension: toDimensionType(data.dimension),
         difficulty: (data.difficulty ?? 3) as DifficultyLevel,
@@ -104,6 +141,14 @@ export function registerVariantHandlers(): void {
         back: data.back,
         hints: data.hints ?? [],
         lastShownAt: null,
+        questionType: (data.questionType ?? 'flashcard') as QuestionType,
+      }
+
+      // Use conditional spreading to avoid exactOptionalPropertyTypes violations
+      const variant = VariantRepository.create({
+        ...baseVariantData,
+        ...(rubric !== undefined && { rubric }),
+        ...(data.maxLength !== undefined && { maxLength: data.maxLength }),
       })
       return variantToDTO(variant)
     } catch (error) {
@@ -125,6 +170,9 @@ export function registerVariantHandlers(): void {
         front?: string
         back?: string
         hints?: string[]
+        questionType?: QuestionType
+        rubric?: EvaluationRubric
+        maxLength?: number
       } = {}
 
       if (data.dimension !== undefined) {
@@ -141,6 +189,23 @@ export function registerVariantHandlers(): void {
       }
       if (data.hints !== undefined) {
         updateData.hints = data.hints
+      }
+      if (data.questionType !== undefined) {
+        updateData.questionType = data.questionType as QuestionType
+      }
+      if (data.rubric !== undefined) {
+        updateData.rubric = {
+          keyPoints: [...data.rubric.keyPoints],
+          ...(data.rubric.acceptableVariations && {
+            acceptableVariations: [...data.rubric.acceptableVariations],
+          }),
+          ...(data.rubric.partialCreditCriteria && {
+            partialCreditCriteria: data.rubric.partialCreditCriteria,
+          }),
+        }
+      }
+      if (data.maxLength !== undefined) {
+        updateData.maxLength = data.maxLength
       }
 
       const variant = VariantRepository.update(asVariantId(data.id), updateData)

@@ -12,6 +12,7 @@ import { ipcMain, type IpcMainInvokeEvent } from 'electron'
 
 import { registerAnalyticsHandlers } from './analytics.ipc'
 import { registerConceptHandlers } from './concept.ipc'
+import { registerEvaluationHandlers } from './evaluation.ipc'
 import { registerMasteryHandlers } from './mastery.ipc'
 import { registerReviewHandlers } from './review.ipc'
 import { registerScheduleHandlers } from './schedule.ipc'
@@ -122,6 +123,7 @@ export function registerIPCHandlers(): void {
   registerMasteryHandlers()
   registerScheduleHandlers()
   registerSettingsHandlers()
+  registerEvaluationHandlers()
 
   console.log('[IPC] All handlers registered')
 }

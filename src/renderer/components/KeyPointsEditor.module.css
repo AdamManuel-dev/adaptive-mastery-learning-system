@@ -1,0 +1,177 @@
+/**
+ * @fileoverview CSS Module styles for the KeyPointsEditor component
+ * @lastmodified 2026-01-20T00:00:00Z
+ *
+ * Features: List item styling, action buttons, reorder controls
+ * Patterns: WCAG 2.5.5 touch targets, accessible focus states
+ */
+
+.keyPointsEditor {
+  margin-top: var(--space-sm);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-sm);
+}
+
+.title {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.count {
+  margin-left: var(--space-xs);
+  color: var(--color-text-muted);
+}
+
+.addButton {
+  font-size: var(--font-size-sm);
+  color: var(--color-primary);
+  background: none;
+  border: none;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.addButton:hover:not(:disabled) {
+  background-color: var(--color-primary-light);
+}
+
+.addButton:disabled {
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.emptyText {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  font-style: italic;
+  padding: var(--space-md);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.pointsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.pointItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.pointNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background-color: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.pointInput {
+  flex: 1;
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.pointInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-light);
+}
+
+.pointInput::placeholder {
+  color: var(--color-text-muted);
+}
+
+.pointActions {
+  display: flex;
+  gap: var(--space-xs);
+  flex-shrink: 0;
+}
+
+.moveButton,
+.removeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.moveButton:hover:not(:disabled),
+.removeButton:hover:not(:disabled) {
+  background-color: var(--color-surface);
+  border-color: var(--color-text-muted);
+}
+
+.moveButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.removeButton:hover:not(:disabled) {
+  background-color: #fee2e2;
+  border-color: #ef4444;
+  color: #991b1b;
+}
+
+.helpText {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin-top: var(--space-sm);
+  line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .pointItem {
+    flex-wrap: wrap;
+  }
+
+  .pointInput {
+    flex: 1 1 calc(100% - 40px);
+  }
+
+  .pointActions {
+    margin-left: 40px;
+    margin-top: var(--space-xs);
+  }
+
+  .moveButton,
+  .removeButton {
+    width: 44px;
+    height: 44px; /* Touch target - WCAG 2.5.5 */
+  }
+}

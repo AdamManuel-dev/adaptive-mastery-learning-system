@@ -24,6 +24,27 @@ import {
 import styles from './Toast.module.css'
 
 // -----------------------------------------------------------------------------
+// Constants
+// -----------------------------------------------------------------------------
+
+/** Auto-dismiss delay for toast notifications (ms) */
+const TOAST_AUTO_DISMISS_MS = 3000
+
+/** Animation duration for toast exit transition (ms) */
+const TOAST_EXIT_ANIMATION_MS = 300
+
+/**
+ * Generate a unique ID for toast notifications
+ * Uses crypto.randomUUID when available, falls back to timestamp + random
+ */
+function generateToastId(): string {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return `toast-${crypto.randomUUID()}`
+  }
+  return `toast-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`
+}
+
+// -----------------------------------------------------------------------------
 // Types
 // -----------------------------------------------------------------------------
 
@@ -106,15 +127,15 @@ function ToastItem({ toast, onClose }: ToastItemProps): React.JSX.Element {
     }
   }, [toast.variant])
 
-  // Auto-dismiss after 3 seconds
+  // Auto-dismiss after configured delay
   useEffect(() => {
     const dismissTimer = setTimeout(() => {
       setIsExiting(true)
       // Wait for exit animation before removing
       setTimeout(() => {
         onClose(toast.id)
-      }, 300)
-    }, 3000)
+      }, TOAST_EXIT_ANIMATION_MS)
+    }, TOAST_AUTO_DISMISS_MS)
 
     return () => clearTimeout(dismissTimer)
   }, [toast.id, onClose])
@@ -123,7 +144,7 @@ function ToastItem({ toast, onClose }: ToastItemProps): React.JSX.Element {
     setIsExiting(true)
     setTimeout(() => {
       onClose(toast.id)
-    }, 300)
+    }, TOAST_EXIT_ANIMATION_MS)
   }, [toast.id, onClose])
 
   // Handle keyboard events for accessibility
@@ -183,7 +204,7 @@ function ToastProvider({ children }: ToastProviderProps): React.JSX.Element {
   const [toasts, setToasts] = useState<ToastData[]>([])
 
   const showToast = useCallback((message: string, variant: ToastVariant = 'info') => {
-    const id = `toast-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`
+    const id = generateToastId()
     setToasts((prev) => [...prev, { id, message, variant }])
   }, [])
 

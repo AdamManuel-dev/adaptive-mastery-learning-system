@@ -209,9 +209,9 @@ export function extractJsonArray(response: string): unknown[] | null {
 
   // Try direct parse first
   try {
-    const parsed = JSON.parse(trimmed);
+    const parsed: unknown = JSON.parse(trimmed);
     if (Array.isArray(parsed)) {
-      return parsed;
+      return parsed as unknown[];
     }
   } catch {
     // Continue to fallback strategies
@@ -219,11 +219,11 @@ export function extractJsonArray(response: string): unknown[] | null {
 
   // Try to find JSON array in the response
   const arrayMatch = trimmed.match(/\[[\s\S]*\]/);
-  if (arrayMatch) {
+  if (arrayMatch !== null) {
     try {
-      const parsed = JSON.parse(arrayMatch[0]);
+      const parsed: unknown = JSON.parse(arrayMatch[0]);
       if (Array.isArray(parsed)) {
-        return parsed;
+        return parsed as unknown[];
       }
     } catch {
       // Extraction failed
@@ -232,11 +232,11 @@ export function extractJsonArray(response: string): unknown[] | null {
 
   // Try removing markdown code blocks
   const codeBlockMatch = trimmed.match(/```(?:json)?\s*([\s\S]*?)```/);
-  if (codeBlockMatch && codeBlockMatch[1]) {
+  if (codeBlockMatch !== null && codeBlockMatch[1] !== undefined) {
     try {
-      const parsed = JSON.parse(codeBlockMatch[1].trim());
+      const parsed: unknown = JSON.parse(codeBlockMatch[1].trim());
       if (Array.isArray(parsed)) {
-        return parsed;
+        return parsed as unknown[];
       }
     } catch {
       // Extraction failed

@@ -24,10 +24,11 @@ import {
   MasteryRepository,
   ScheduleRepository,
 } from '../infrastructure/database/repositories'
+import { createEvaluatorFromEnv } from '../infrastructure/llm/evaluator'
 
 import { registerHandler } from './index'
 
-import type { Variant, Concept, ScheduleEntry } from '../../shared/types/core'
+import type { Variant, Concept, ScheduleEntry, QuestionType } from '../../shared/types/core'
 import type {
   ReviewSubmitDTO,
   ReviewResultDTO,
@@ -37,6 +38,8 @@ import type {
   VariantDTO,
   ConceptDTO,
   ScheduleDTO,
+  LLMEvaluationResult,
+  EvaluationRubric,
 } from '../../shared/types/ipc'
 
 // -----------------------------------------------------------------------------
@@ -81,11 +84,38 @@ const CORE_TO_DIMENSION: Record<DimensionType, Dimension> = {
 // -----------------------------------------------------------------------------
 
 /**
+ * Maps core QuestionType to IPC QuestionType (they're the same strings)
+ */
+function mapQuestionType(qt: QuestionType): import('../../shared/types/ipc').QuestionType {
+  return qt as import('../../shared/types/ipc').QuestionType
+}
+
+/**
+ * Maps core EvaluationRubric to IPC EvaluationRubric
+ */
+function mapRubric(rubric?: import('../../shared/types/core').EvaluationRubric): EvaluationRubric | undefined {
+  if (!rubric) return undefined
+
+  const baseRubric = {
+    keyPoints: [...rubric.keyPoints],
+  }
+
+  // Use conditional spreading to avoid exactOptionalPropertyTypes violations
+  return {
+    ...baseRubric,
+    ...(rubric.acceptableVariations !== undefined && { acceptableVariations: [...rubric.acceptableVariations] }),
+    ...(rubric.partialCreditCriteria !== undefined && { partialCreditCriteria: rubric.partialCreditCriteria }),
+  }
+}
+
+/**
  * Converts a domain Variant to a VariantDTO for IPC transport
  */
 function variantToDTO(variant: Variant): VariantDTO {
   const now = new Date().toISOString()
-  return {
+  const mappedRubric = mapRubric(variant.rubric)
+
+  const baseDTO = {
     id: variant.id,
     conceptId: variant.conceptId,
     dimension: CORE_TO_DIMENSION[variant.dimension],
@@ -96,6 +126,14 @@ function variantToDTO(variant: Variant): VariantDTO {
     lastShownAt: variant.lastShownAt?.toISOString() ?? null,
     createdAt: now,
     updatedAt: now,
+    questionType: mapQuestionType(variant.questionType),
+  }
+
+  // Use conditional spreading to avoid exactOptionalPropertyTypes violations
+  return {
+    ...baseDTO,
+    ...(mappedRubric !== undefined && { rubric: mappedRubric }),
+    ...(variant.maxLength !== undefined && { maxLength: variant.maxLength }),
   }
 }
 
@@ -294,7 +332,7 @@ export function registerReviewHandlers(): void {
   })
 
   // Submit a review result
-  registerHandler('review:submit', (_event, data: ReviewSubmitDTO) => {
+  registerHandler('review:submit', async (_event, data: ReviewSubmitDTO) => {
     const conceptId = asConceptId(data.conceptId)
     const variantId = asVariantId(data.variantId)
     const dimension = DIMENSION_TO_CORE[data.dimension]
@@ -311,6 +349,12 @@ export function registerReviewHandlers(): void {
       throw new Error(`Variant ${variantId} not found`)
     }
 
+    // Get the concept for evaluation context
+    const concept = ConceptRepository.findById(conceptId)
+    if (!concept) {
+      throw new Error(`Concept ${conceptId} not found`)
+    }
+
     // Get current mastery for the dimension
     const currentMastery = MasteryRepository.findByDimension(dimension) ?? {
       accuracyEwma: 0.5,
@@ -318,10 +362,44 @@ export function registerReviewHandlers(): void {
       recentCount: 0,
     }
 
+    let evaluation: LLMEvaluationResult | undefined
+    let effectiveRating = data.rating
+
+    // Handle open response evaluation
+    if (variant.questionType === 'open_response' && data.userResponse) {
+      try {
+        const evaluator = createEvaluatorFromEnv()
+
+        const mappedRubric = mapRubric(variant.rubric)
+        const evalRequest = {
+          question: variant.front,
+          modelAnswer: variant.back,
+          userResponse: data.userResponse,
+          conceptName: concept.name,
+          dimension: data.dimension,
+          ...(mappedRubric !== undefined && { rubric: mappedRubric }),
+        }
+
+        const evalResult = await evaluator.evaluateResponse(evalRequest)
+
+        if (evalResult.success) {
+          evaluation = evalResult.value
+          effectiveRating = evaluation.suggestedRating
+        } else {
+          // Fallback to self-report if evaluation fails
+          console.error('LLM evaluation failed:', evalResult.error)
+        }
+      } catch (error) {
+        // Fallback to self-report if evaluator creation fails
+        console.error('Failed to create evaluator:', error)
+      }
+    }
+
     // Update mastery using the calculator service
+    // For open response, we use the evaluated score instead of self-reported rating
     const updatedMastery = MasteryCalculator.updateMastery(
       currentMastery,
-      data.rating,
+      effectiveRating,
       data.timeMs,
       variant.difficulty
     )
@@ -330,31 +408,40 @@ export function registerReviewHandlers(): void {
     MasteryRepository.save(dimension, updatedMastery)
 
     // Calculate and save updated schedule
-    const updatedSchedule = scheduleNextReview(currentSchedule, data.rating)
+    const updatedSchedule = scheduleNextReview(currentSchedule, effectiveRating)
     ScheduleRepository.save(updatedSchedule)
 
-    // Log the review event
-    EventRepository.create({
+    // Log the review event with evaluation data
+    const baseEventData = {
       conceptId,
       variantId,
       dimension,
       difficulty: variant.difficulty,
-      result: data.rating,
+      result: effectiveRating,
       timeMs: data.timeMs,
-      hintsUsed: 0, // Not tracked in ReviewSubmitDTO currently
+      hintsUsed: 0,
+    }
+
+    // Use conditional spreading to avoid exactOptionalPropertyTypes violations
+    EventRepository.create({
+      ...baseEventData,
+      ...(data.userResponse !== undefined && { userResponse: data.userResponse }),
+      ...(evaluation?.score !== undefined && { llmScore: evaluation.score }),
+      ...(evaluation?.feedback !== undefined && { llmFeedback: evaluation.feedback }),
+      ...(evaluation?.confidence !== undefined && { evaluationConfidence: evaluation.confidence }),
     })
 
     // Update variant's lastShownAt
     VariantRepository.updateLastShown(variantId, new Date())
 
     // Record the review result for session tracking (anti-frustration)
-    const wasCorrect = data.rating !== 'again'
+    const wasCorrect = effectiveRating !== 'again'
     recordReviewResult(wasCorrect)
 
     // Get the next card
     const nextCard = getNextCardInternal()
 
-    const result: ReviewResultDTO = {
+    const baseResult = {
       updatedMastery: {
         dimension: data.dimension,
         accuracyEwma: updatedMastery.accuracyEwma,
@@ -363,6 +450,12 @@ export function registerReviewHandlers(): void {
       },
       updatedSchedule: scheduleToDTO(updatedSchedule),
       nextCard,
+    }
+
+    // Use conditional spreading to avoid exactOptionalPropertyTypes violations
+    const result: ReviewResultDTO = {
+      ...baseResult,
+      ...(evaluation !== undefined && { evaluation }),
     }
 
     return result

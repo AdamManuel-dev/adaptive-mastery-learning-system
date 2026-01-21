@@ -1,8 +1,9 @@
 /**
  * @fileoverview Variant editor component for creating and editing card variants
- * @lastmodified 2026-01-16T18:00:00Z
+ * @lastmodified 2026-01-20T00:00:00Z
  *
- * Features: Form for variant CRUD operations, dimension selection, accessible difficulty slider, hints array
+ * Features: Form for variant CRUD operations, dimension selection, accessible difficulty slider, hints array,
+ *           question type selection, open response rubric editor
  * Main APIs: useElectronAPI hook for safe API access
  * Constraints: Requires a concept to be selected first
  * Patterns: Controlled form with validation, reusable for create/edit, hook-based API access, WCAG 2.1 AA compliant
@@ -10,6 +11,7 @@
 
 import { useState, useCallback } from 'react'
 
+import { KeyPointsEditor } from './KeyPointsEditor'
 import styles from './VariantEditor.module.css'
 import { useElectronAPI } from '../hooks/useElectronAPI'
 
@@ -18,6 +20,8 @@ import type {
   CreateVariantDTO,
   UpdateVariantDTO,
   Dimension,
+  QuestionType,
+  EvaluationRubric,
 } from '../../shared/types/ipc'
 
 /**
@@ -66,6 +70,31 @@ const dimensionOptions: DimensionOption[] = [
 ]
 
 /**
+ * Question type option for dropdown selection
+ */
+interface QuestionTypeOption {
+  value: QuestionType
+  label: string
+  description: string
+}
+
+/**
+ * Available question type options
+ */
+const questionTypeOptions: QuestionTypeOption[] = [
+  {
+    value: 'flashcard',
+    label: 'Flashcard',
+    description: 'Traditional flashcard with front/back and self-rating',
+  },
+  {
+    value: 'open_response',
+    label: 'Open Response (LLM-evaluated)',
+    description: 'Free-text answer evaluated by AI for understanding',
+  },
+]
+
+/**
  * Form data structure for create/edit operations
  */
 interface VariantFormData {
@@ -74,6 +103,9 @@ interface VariantFormData {
   front: string
   back: string
   hints: string[]
+  questionType: QuestionType
+  rubric: EvaluationRubric
+  maxLength: number | undefined
 }
 
 /**
@@ -117,6 +149,9 @@ function VariantEditor({
     front: variant?.front ?? '',
     back: variant?.back ?? '',
     hints: variant?.hints ?? [],
+    questionType: variant?.questionType ?? 'flashcard',
+    rubric: variant?.rubric ?? { keyPoints: [] },
+    maxLength: variant?.maxLength,
   })
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -170,6 +205,56 @@ function VariantEditor({
   }, [])
 
   /**
+   * Handle question type change
+   */
+  const handleQuestionTypeChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    const questionType = e.target.value as QuestionType
+    setFormData((prev) => ({
+      ...prev,
+      questionType,
+      // Reset rubric when switching away from open_response
+      rubric: questionType === 'open_response' ? prev.rubric : { keyPoints: [] },
+    }))
+  }, [])
+
+  /**
+   * Handle key points change in rubric
+   */
+  const handleKeyPointsChange = useCallback((keyPoints: string[]) => {
+    setFormData((prev) => ({
+      ...prev,
+      rubric: { ...prev.rubric, keyPoints },
+    }))
+  }, [])
+
+  /**
+   * Handle partial credit criteria change
+   */
+  const handlePartialCreditChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value
+    setFormData((prev) => {
+      const newRubric: EvaluationRubric = {
+        keyPoints: prev.rubric.keyPoints,
+      }
+      if (value.length > 0) {
+        newRubric.partialCreditCriteria = value
+      }
+      return { ...prev, rubric: newRubric }
+    })
+  }, [])
+
+  /**
+   * Handle max length change
+   */
+  const handleMaxLengthChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value ? parseInt(e.target.value, 10) : undefined
+    setFormData((prev) => ({
+      ...prev,
+      maxLength: value && value > 0 ? value : undefined,
+    }))
+  }, [])
+
+  /**
    * Handle form submission
    */
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
@@ -186,8 +271,29 @@ function VariantEditor({
       return
     }
 
+    // Validate open response has at least one key point
+    if (formData.questionType === 'open_response') {
+      const validKeyPoints = formData.rubric.keyPoints.filter((p) => p.trim().length > 0)
+      if (validKeyPoints.length === 0) {
+        setError('Open response questions require at least one key point for evaluation')
+        return
+      }
+    }
+
     // Filter out empty hints
     const hintsValue = formData.hints.map((h) => h.trim()).filter((h) => h.length > 0)
+
+    // Prepare rubric for open response (filter empty key points)
+    let rubricValue: EvaluationRubric | undefined
+    if (formData.questionType === 'open_response') {
+      const rubric: EvaluationRubric = {
+        keyPoints: formData.rubric.keyPoints.filter((p) => p.trim().length > 0),
+      }
+      if (formData.rubric.partialCreditCriteria) {
+        rubric.partialCreditCriteria = formData.rubric.partialCreditCriteria
+      }
+      rubricValue = rubric
+    }
 
     try {
       setIsSaving(true)
@@ -203,6 +309,9 @@ function VariantEditor({
           front: formData.front.trim(),
           back: formData.back.trim(),
           hints: hintsValue,
+          questionType: formData.questionType,
+          ...(rubricValue && { rubric: rubricValue }),
+          ...(formData.maxLength && { maxLength: formData.maxLength }),
         }
         savedVariant = await api.variants.update(updateData)
       } else {
@@ -214,6 +323,9 @@ function VariantEditor({
           front: formData.front.trim(),
           back: formData.back.trim(),
           hints: hintsValue,
+          questionType: formData.questionType,
+          ...(rubricValue && { rubric: rubricValue }),
+          ...(formData.maxLength && { maxLength: formData.maxLength }),
         }
         savedVariant = await api.variants.create(createData)
       }
@@ -245,6 +357,27 @@ function VariantEditor({
       </header>
 
       <form onSubmit={(e) => void handleSubmit(e)} className={styles.form}>
+        {/* Question Type Selection */}
+        <div className={styles.formGroup}>
+          <label htmlFor="questionType">Question Type *</label>
+          <select
+            id="questionType"
+            name="questionType"
+            value={formData.questionType}
+            onChange={handleQuestionTypeChange}
+            className={styles.dimensionSelect}
+          >
+            {questionTypeOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+          <p className={styles.dimensionDescription}>
+            {questionTypeOptions.find((o) => o.value === formData.questionType)?.description}
+          </p>
+        </div>
+
         {/* Dimension Selection */}
         <div className={styles.formGroup}>
           <label htmlFor="dimension">Dimension *</label>
@@ -318,24 +451,82 @@ function VariantEditor({
           />
         </div>
 
-        {/* Answer (Back) */}
+        {/* Answer (Back) / Model Answer */}
         <div className={styles.formGroup}>
-          <label htmlFor="back">Answer (Back) *</label>
+          <label htmlFor="back">
+            {formData.questionType === 'open_response' ? 'Model Answer *' : 'Answer (Back) *'}
+          </label>
           <textarea
             id="back"
             name="back"
             value={formData.back}
             onChange={handleInputChange}
-            placeholder="Enter the correct answer or explanation"
+            placeholder={
+              formData.questionType === 'open_response'
+                ? 'Enter the ideal/reference answer for comparison (2-4 sentences)'
+                : 'Enter the correct answer or explanation'
+            }
             rows={4}
             required
             aria-invalid={error?.includes('Answer') ? 'true' : undefined}
             aria-describedby={error?.includes('Answer') ? 'variant-form-error' : undefined}
           />
+          {formData.questionType === 'open_response' && (
+            <p className={styles.dimensionDescription}>
+              This answer will be used to evaluate student responses and shown after submission.
+            </p>
+          )}
         </div>
 
-        {/* Hints Array */}
+        {/* Open Response: Evaluation Rubric */}
+        {formData.questionType === 'open_response' && (
+          <>
+            <div className={styles.formGroup}>
+              {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+              <label>Evaluation Rubric *</label>
+              <KeyPointsEditor
+                keyPoints={formData.rubric.keyPoints}
+                onChange={handleKeyPointsChange}
+                placeholder="Key concept that should be addressed in the answer"
+              />
+            </div>
+
+            <div className={styles.formGroup}>
+              <label htmlFor="partialCredit">Partial Credit Criteria</label>
+              <textarea
+                id="partialCredit"
+                value={formData.rubric.partialCreditCriteria ?? ''}
+                onChange={handlePartialCreditChange}
+                placeholder="e.g., Give partial credit if student mentions X without explaining Y..."
+                rows={2}
+              />
+              <p className={styles.dimensionDescription}>
+                Instructions for how the AI should award partial credit.
+              </p>
+            </div>
+
+            <div className={styles.formGroup}>
+              <label htmlFor="maxLength">Maximum Response Length</label>
+              <input
+                type="number"
+                id="maxLength"
+                value={formData.maxLength ?? ''}
+                onChange={handleMaxLengthChange}
+                placeholder="500"
+                min={50}
+                max={5000}
+              />
+              <p className={styles.dimensionDescription}>
+                Character limit for student responses (optional, default: unlimited).
+              </p>
+            </div>
+          </>
+        )}
+
+        {/* Hints Array - only for non-open-response */}
+        {formData.questionType !== 'open_response' && (
         <div className={styles.formGroup}>
+          {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
           <label className={styles.hintsLabel}>
             Progressive Hints
             <button
@@ -376,6 +567,7 @@ function VariantEditor({
             )}
           </div>
         </div>
+        )}
 
         {/* Error Display */}
         {error && (

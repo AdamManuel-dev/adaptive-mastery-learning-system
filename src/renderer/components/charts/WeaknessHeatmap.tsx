@@ -10,6 +10,8 @@
 
 import { useEffect, useState, useMemo } from 'react'
 
+import { useElectronAPIOrNull } from '../../hooks/useElectronAPI'
+
 import type {
   WeaknessHeatmapEntryDTO,
   WeaknessSeverity,
@@ -138,7 +140,10 @@ function HeatmapCell({ severity, date, dimension }: HeatmapCellProps): React.JSX
       }}
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
+      onFocus={() => setShowTooltip(true)}
+      onBlur={() => setShowTooltip(false)}
       role="gridcell"
+      tabIndex={0}
       aria-label={`${DIMENSION_FULL_LABELS[dimension]} on ${formatDateLong(date)}: ${SEVERITY_LABELS[severity]} weakness`}
     >
       {showTooltip && (
@@ -234,6 +239,7 @@ function SeverityLegend(): React.JSX.Element {
  * over the last 30 days. Colors indicate severity: green (none) through red (critical).
  */
 function WeaknessHeatmap(): React.JSX.Element {
+  const api = useElectronAPIOrNull()
   const [state, setState] = useState<ChartState>({
     data: null,
     isLoading: true,
@@ -242,7 +248,7 @@ function WeaknessHeatmap(): React.JSX.Element {
 
   useEffect(() => {
     async function fetchData(): Promise<void> {
-      if (!window.api) {
+      if (!api) {
         setState({
           data: null,
           isLoading: false,
@@ -254,25 +260,7 @@ function WeaknessHeatmap(): React.JSX.Element {
       try {
         setState((prev) => ({ ...prev, isLoading: true, error: null }))
 
-        // Call the analytics IPC endpoint
-        const response = await (
-          window as Window & {
-            api: {
-              analytics?: {
-                getWeaknessHeatmap: (args: { days: number }) => Promise<WeaknessHeatmapEntryDTO[]>
-              }
-            }
-          }
-        ).api.analytics?.getWeaknessHeatmap({ days: 30 })
-
-        if (!response) {
-          setState({
-            data: null,
-            isLoading: false,
-            error: 'Analytics API not available',
-          })
-          return
-        }
+        const response = await api.analytics.getWeaknessHeatmap({ days: 30 })
 
         setState({
           data: response,
@@ -292,7 +280,7 @@ function WeaknessHeatmap(): React.JSX.Element {
     }
 
     void fetchData()
-  }, [])
+  }, [api])
 
   // Memoize the sorted data to prevent unnecessary re-renders
   const sortedData = useMemo(() => {

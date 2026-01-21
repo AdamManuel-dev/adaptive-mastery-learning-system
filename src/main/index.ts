@@ -13,6 +13,8 @@ import { join } from 'path'
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import { app, BrowserWindow, shell } from 'electron'
 
+import { closeDatabase, initializeDatabase } from './infrastructure/database/connection'
+import { seedAll } from './infrastructure/database/seed'
 import { registerIPCHandlers } from './ipc'
 
 // -----------------------------------------------------------------------------
@@ -92,8 +94,9 @@ void app.whenReady().then(() => {
   // Register all IPC handlers
   registerIPCHandlers()
 
-  // TODO: Initialize database connection here
-  // await initializeDatabase()
+  // Initialize database and seed with default data
+  initializeDatabase()
+  seedAll()
 
   // Create the main window
   createWindow()
@@ -119,8 +122,7 @@ app.on('window-all-closed', () => {
  * Handle app quit for cleanup
  */
 app.on('before-quit', () => {
-  // TODO: Close database connection here
-  // closeDatabase()
+  closeDatabase()
 })
 
 // -----------------------------------------------------------------------------
