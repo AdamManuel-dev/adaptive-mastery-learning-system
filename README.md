@@ -1,360 +1,216 @@
 # Adaptive Mastery Learning System
 
-**Version:** 1.0.0
-**Status:** In Development
-**Type:** Local-first Electron application
+[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
+[![Electron](https://img.shields.io/badge/Electron-34.0-47848F?logo=electron&logoColor=white)](https://www.electronjs.org/)
+[![React](https://img.shields.io/badge/React-19.0-61DAFB?logo=react&logoColor=white)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
-> A spaced repetition system that goes beyond basic flashcard drilling by detecting which *types* of questions you struggle with and automatically rebalancing practice toward your weaknesses.
+> **Spaced repetition that adapts to *how* you learn, not just *what* you've memorized.**
 
-**📖 [Complete Documentation](./docs/index.md)** | **🚀 [Quick Start Tutorial](./docs/tutorials/getting-started.md)**
+A local-first Electron application that detects which types of questions you struggle with and automatically rebalances practice toward your weaknesses.
 
-## 🎯 Core Innovation
+<p align="center">
+  <img src="docs/assets/dashboard-preview.png" alt="Dashboard Preview" width="700">
+</p>
 
-Unlike traditional SRS systems (like Anki) that treat all correct answers equally, this system tracks your performance across **six cognitive dimensions** and adapts card selection to push you toward genuine mastery.
+## Why This Exists
 
-**The difference:**
-- ❌ Traditional SRS: "You got it right, moving on"
-- ✅ Adaptive Mastery: "You're strong on definitions but weak on application—let's practice scenarios"
+Traditional flashcard apps treat all correct answers equally. Get a definition right? Great, you're done.
 
-## 🧠 Six Cognitive Dimensions
+But real mastery means more than recall. Can you apply the concept? Recognize it in different contexts? Distinguish it from similar ideas?
+
+**This system tracks your performance across six cognitive dimensions** and adapts card selection to push you toward genuine mastery—not just memorization.
+
+| Traditional SRS | Adaptive Mastery |
+|-----------------|------------------|
+| "You got it right, moving on" | "You're strong on definitions but weak on application—let's practice scenarios" |
+
+## Features
+
+### Six Cognitive Dimensions
 
 Every concept is tested across multiple ways of knowing:
 
-| Dimension | Description | Example |
-|-----------|-------------|---------|
-| **Definition Recall** | Term ↔ definition | "What is mitosis?" |
-| **Paraphrase Recognition** | Same meaning, different words | "Which means the same as cell division?" |
-| **Example Classification** | Is this an instance of X? | "Is this an example of mitosis?" |
-| **Scenario Application** | Apply to novel situation | "Given this cell behavior, what process is occurring?" |
-| **Discrimination** | Distinguish similar concepts | "What's the difference between mitosis and meiosis?" |
-| **Cloze Fill** | Fill in the blank | "Mitosis converts ___ into ___" |
+| Dimension | What It Tests | Example |
+|-----------|---------------|---------|
+| **Definition** | Term ↔ meaning | "What is mitosis?" |
+| **Paraphrase** | Recognition in different words | "Which means the same as cell division?" |
+| **Example** | Instance classification | "Is this an example of mitosis?" |
+| **Scenario** | Application to new situations | "Given this cell behavior, what's happening?" |
+| **Discrimination** | Distinguishing similar concepts | "How does mitosis differ from meiosis?" |
+| **Cloze** | Contextual completion | "Mitosis produces ___ identical cells" |
 
-## ✨ Key Features
+### Intelligent Adaptation
 
-### Adaptive Intelligence
-- **Weakness Detection**: Automatically identifies skill gaps (e.g., strong on definitions, weak on scenarios)
-- **Smart Card Selection**: Prioritizes question types you struggle with
-- **Anti-Frustration Rails**: Backs off after repeated failures to prevent burnout
-- **Speed Tracking**: "Correct but slow" = fragile knowledge
+- **Weakness Detection** — Automatically identifies skill gaps across dimensions
+- **Smart Selection** — Prioritizes question types you struggle with
+- **Anti-Frustration** — Backs off after repeated failures to prevent burnout
+- **Speed Tracking** — "Correct but slow" indicates fragile knowledge
 
-### Mastery Tracking
-- **EWMA-based Scoring**: Exponentially-weighted moving averages per dimension
-- **Honest Feedback**: Shows your actual skill profile, not just "cards due"
-- **Trend Analysis**: Track improvement across dimensions over time
+### Analytics Dashboard
+
+Visual tracking of your mastery profile with charts showing:
+- Overall health score
+- Per-dimension mastery radar
+- Progress timeline over 30 days
+- Weakness heatmap
+- Response time analysis
+- Review distribution
 
 ### LLM-Powered Generation
-- **Automatic Variant Creation**: Generates new question types targeting weak areas
-- **Fact-Grounded**: Uses only provided facts to prevent hallucinations
-- **Scaffolded Difficulty**: Progressive complexity ladder for challenging concepts
 
-### Transparency
-- **Selection Reasoning**: "Focus: scenarios (you're strong on definitions)"
-- **Visual Dashboard**: Skill bars showing mastery per dimension
-- **Gap Identification**: Highlights biggest weakness for targeted practice
+Optional AI integration (OpenAI, Anthropic, or local Ollama) for:
+- Automatic question variant generation
+- Open-response evaluation with detailed feedback
+- Fact-grounded content (no hallucinations)
 
-## 🏗️ Technical Architecture
-
-```
-┌─────────────────────────────────────┐
-│  Electron App (Desktop)             │
-├─────────────────────────────────────┤
-│  Review Engine    │  Mastery Calc   │
-│  Card Selector    │  Event Logger   │
-├─────────────────────────────────────┤
-│         SQLite Database             │
-│         (better-sqlite3)            │
-├─────────────────────────────────────┤
-│  Optional: LLM API                  │
-│  (OpenAI/Anthropic/Ollama)          │
-└─────────────────────────────────────┘
-```
-
-### Tech Stack
-- **Frontend**: React with TypeScript
-- **Backend**: Electron main process (Node.js)
-- **Database**: SQLite (local-first, no cloud dependencies)
-- **LLM Integration**: Optional for card generation
-- **SRS Algorithm**: SM-2 with adaptive dimension weighting
-
-## 📊 How It Works
-
-### 1. Review Event Logging
-Every answer records:
-- Dimension tested
-- Result (again/hard/good/easy)
-- Time to answer
-- Hints used
-
-### 2. Mastery Calculation
-```typescript
-// Per dimension EWMA update
-accuracyEwma = (1 - α) * accuracyEwma + α * ratingScore
-speedEwma = (1 - α) * speedEwma + α * speedScore
-mastery = 0.7 * accuracyEwma + 0.3 * speedEwma
-```
-
-### 3. Adaptive Selection
-```typescript
-// Weight calculation for card selection
-weight = baseWeight(difficulty)
-       * weaknessBoost(dimension)    // Prioritize weak dimensions
-       * noveltyBoost                 // Prefer unseen variants
-       * antiFrustrationPenalty       // Back off after failures
-```
-
-### 4. Safety Rails
-- Max 70% single-dimension focus per session
-- 20% maintenance on strong dimensions
-- Insert confidence-builder after 3 failures
-- Max 4 consecutive same-dimension cards
-
-## 🚀 Getting Started
+## Quick Start
 
 ### Prerequisites
+
 - Node.js 18+
 - npm or yarn
 
 ### Installation
+
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/adaptive-mastery-learning-system.git
+git clone https://github.com/AdamManuel-dev/adaptive-mastery-learning-system.git
 cd adaptive-mastery-learning-system
 
 # Install dependencies
 npm install
 
-# Configure (optional - for LLM features)
-cp config.example.json config.json
-# Edit config.json with your API keys
+# Start development mode
+npm run dev
 ```
 
-### Development
+### Building
+
+```bash
+# Build for production
+npm run build
+
+# Package as desktop app
+npm run make
+
+# Platform-specific builds
+npm run make:mac
+npm run make:win
+npm run make:linux
+```
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| **Framework** | Electron 34 |
+| **Frontend** | React 19, TypeScript 5.7 |
+| **Database** | SQLite (better-sqlite3) |
+| **Charts** | Recharts |
+| **Icons** | Lucide React |
+| **LLM** | OpenAI / Anthropic / Ollama (optional) |
+| **Build** | electron-vite, Electron Forge |
+
+## Project Structure
+
+```
+src/
+├── main/                    # Electron main process
+│   ├── infrastructure/      # Database, LLM integration
+│   │   ├── database/        # SQLite repos, migrations
+│   │   └── llm/             # LLM client, evaluator
+│   └── ipc/                 # IPC handlers
+├── renderer/                # React frontend
+│   ├── components/          # UI components
+│   │   ├── charts/          # Analytics visualizations
+│   │   └── review/          # Review card components
+│   ├── contexts/            # React contexts
+│   ├── hooks/               # Custom hooks
+│   └── pages/               # Route pages
+├── shared/                  # Shared types
+└── preload/                 # Electron preload scripts
+```
+
+## Documentation
+
+Comprehensive documentation following the [Diátaxis framework](https://diataxis.fr/):
+
+| Goal | Type | Link |
+|------|------|------|
+| Learn the basics | Tutorial | [Getting Started](./docs/tutorials/getting-started.md) |
+| Accomplish a task | How-To | [How-To Guides](./docs/how-to/index.md) |
+| Look up details | Reference | [Reference Docs](./docs/reference/index.md) |
+| Understand why | Explanation | [Explanations](./docs/explanation/index.md) |
+
+**Quick links:**
+- [Domain Model](./docs/reference/domain-model.md) — Entities and aggregates
+- [Database Schema](./docs/reference/database-schema.md) — SQLite tables
+- [IPC API](./docs/reference/ipc-api.md) — Communication channels
+- [Mastery Algorithm](./docs/explanation/mastery-algorithm.md) — EWMA scoring
+- [Accessibility](./docs/reference/accessibility.md) — WCAG compliance
+
+## Development
+
 ```bash
 # Run in development mode
 npm run dev
 
-# Build for production
-npm run build
+# Run web-only mode (no Electron)
+npm run dev:web
 
-# Package as Electron app
-npm run package
+# Type checking
+npm run typecheck
+
+# Linting
+npm run lint
+npm run lint:fix
+
+# Formatting
+npm run format
+
+# Testing
+npm run test
+npm run test:watch
+npm run test:coverage
 ```
 
-## 📁 Project Structure
+## Configuration
 
-```
-adaptive-srs/
-├── src/
-│   ├── main/              # Electron main process / server
-│   │   ├── db.ts          # SQLite operations
-│   │   ├── mastery.ts     # EWMA calculations
-│   │   ├── selector.ts    # Weighted card selection
-│   │   ├── generator.ts   # LLM card generation
-│   │   └── scheduler.ts   # SRS algorithm
-│   ├── renderer/          # UI components
-│   │   ├── Review.tsx     # Review screen
-│   │   ├── Dashboard.tsx  # Mastery dashboard
-│   │   └── CardEditor.tsx # Card creation/editing
-│   └── shared/
-│       └── types.ts       # TypeScript interfaces
-├── data/
-│   └── learning.db        # SQLite database (created on first run)
-├── config.json            # API keys, settings
-├── package.json
-└── README.md
-```
+LLM features require API configuration in Settings:
 
-## 📋 Database Schema
+1. Open the app and navigate to **Settings**
+2. Select your LLM provider (OpenAI, Anthropic, or Local)
+3. Enter your API key
+4. Test the connection
 
-### Core Tables
-- **concepts**: Base knowledge units
-- **variants**: Multiple question types per concept
-- **mastery**: Per-dimension skill tracking (EWMA scores)
-- **events**: Complete review history with timing
-- **schedule**: SRS scheduling (concept-level)
+All data is stored locally—no cloud sync, no accounts required.
 
-See [PRD.md](./PRD.md) for complete schema details.
+## Contributing
 
-## 🎮 Usage Example
+Contributions are welcome! Please feel free to:
 
-### Creating a Concept
-```typescript
-// Add a new concept
-const concept = {
-  name: "Mitosis",
-  definition: "Cell division producing two identical daughter cells",
-  facts: [
-    "Involves prophase, metaphase, anaphase, telophase",
-    "Results in diploid cells",
-    "Used for growth and repair"
-  ]
-};
+1. **Report bugs** — Open an issue with reproduction steps
+2. **Suggest features** — Describe your use case
+3. **Submit PRs** — Fork, branch, and open a pull request
 
-// System automatically generates 6 dimension variants
-// or use LLM to create additional practice cards
-```
+### Development Guidelines
 
-### Review Session
-1. System shows next due card
-2. Card type selected based on your weakness profile
-3. Answer with timing tracked
-4. Rate difficulty (again/hard/good/easy)
-5. Mastery scores update instantly
-6. Next card adapts to your performance
+- Follow existing code style (ESLint + Prettier enforced)
+- Add tests for new functionality
+- Update documentation for user-facing changes
+- Use conventional commits (`feat:`, `fix:`, `docs:`, etc.)
 
-### Dashboard View
-```
-Your Mastery Profile
-────────────────────────────────────
-Definition     ████████████░░  85%
-Paraphrase     █████████░░░░░  68%
-Examples       ████████░░░░░░  62%
-Scenarios      ████░░░░░░░░░░  34%  ⚠️ Gap
-Discrimination ██████░░░░░░░░  48%
-Cloze          ████████████░░  82%
-────────────────────────────────────
-💡 Focus on scenario practice
-   to close your biggest gap
-```
+## License
 
-## 🗺️ Development Roadmap
+[ISC License](./LICENSE) — Copyright (c) 2025 Adam Manuel
 
-### Phase 1: Foundation (Weeks 1-2)
-- [x] SQLite schema
-- [ ] Basic SRS scheduling (SM-2)
-- [ ] Simple review UI
-- [ ] Manual card creation
+## Acknowledgments
 
-### Phase 2: Instrumentation (Week 3)
-- [ ] Event logging with timing
-- [ ] EWMA mastery calculation
-- [ ] Basic dashboard with dimension bars
-
-### Phase 3: Adaptation (Weeks 4-5)
-- [ ] Weighted variant selection
-- [ ] Weakness detection
-- [ ] Anti-frustration mechanisms
-- [ ] Selection reason display
-
-### Phase 4: Generation (Week 6)
-- [ ] LLM integration
-- [ ] Scaffolding ladder
-- [ ] Fact grounding validation
-
-### Phase 5: Polish (Weeks 7-8)
-- [ ] Trend tracking over time
-- [ ] Import/export functionality
-- [ ] Settings and configuration
-- [ ] Bug fixes and UX refinement
-
-## 🔬 Key Algorithms
-
-### EWMA Update
-```typescript
-function updateEwma(current: number, newValue: number, alpha = 0.15): number {
-  return (1 - alpha) * current + alpha * newValue;
-}
-```
-
-### Speed Score Calculation
-```typescript
-function speedScore(timeMs: number, difficulty: number): number {
-  const targetMs = [5000, 10000, 20000, 40000, 60000][difficulty - 1];
-  const normalized = Math.min(timeMs / targetMs, 2);
-  return 1 - normalized / 2;
-}
-```
-
-### Weakness Boost
-```typescript
-function weaknessBoost(dimensionMastery: number): number {
-  if (dimensionMastery < 0.7) {
-    return 1 + 2 * (0.7 - dimensionMastery);
-  }
-  return 0.9;
-}
-```
-
-## 🚫 Out of Scope (v1)
-
-- Cloud sync / multi-device support
-- User accounts / authentication
-- Mobile apps (desktop only)
-- Audio/image cards
-- Shared decks / community content
-- Cross-concept prerequisite sequencing
-
-## ✅ Success Criteria
-
-- [ ] Mastery scores update correctly after each review
-- [ ] Weak dimensions receive higher selection weight
-- [ ] Anti-frustration triggers after 3 consecutive failures
-- [ ] Session stays within 70% single-dimension cap
-- [ ] Dashboard shows accurate dimension breakdown
-- [ ] LLM generates usable cards >80% of the time
-- [ ] App runs fully offline (except LLM features)
-
-## 📚 Documentation
-
-Comprehensive documentation following the [Diátaxis framework](https://diataxis.fr/):
-
-### 📖 [Complete Documentation Hub](./docs/index.md)
-
-**Navigate by your goal:**
-
-| I want to... | Documentation Type | Start Here |
-|--------------|-------------------|------------|
-| 🆕 **Learn the basics** | Tutorials | [Getting Started](./docs/tutorials/getting-started.md) (30 min) |
-| 🎯 **Accomplish a task** | How-To Guides | [How-To Index](./docs/how-to/index.md) |
-| 📖 **Look up technical details** | Reference | [Reference Index](./docs/reference/index.md) |
-| 💡 **Understand design decisions** | Explanation | [Explanation Index](./docs/explanation/index.md) |
-
-### Quick Links
-
-**Learning Path:**
-- [Getting Started Tutorial](./docs/tutorials/getting-started.md) - Install, create first concept, complete first review
-- [Understanding Your Mastery Profile](./docs/tutorials/understanding-mastery.md) - Interpret dashboard and skill tracking
-
-**Common Tasks:**
-- [Creating and Managing Concepts](./docs/how-to/creating-concepts.md)
-- [Customizing Review Sessions](./docs/how-to/customizing-reviews.md)
-- [Troubleshooting Common Issues](./docs/how-to/troubleshooting.md)
-
-**Technical Reference:**
-- [Domain Model Specification](./docs/reference/domain-model.md) - Entities, value objects, aggregates
-- [Database Schema](./docs/reference/database-schema.md) - Complete SQLite schema
-- [IPC API Reference](./docs/reference/ipc-api.md) - All communication channels
-- [Type Definitions](./docs/reference/types.md) - TypeScript types and interfaces
-
-**Deep Dives:**
-- [Why This Architecture?](./docs/explanation/architecture.md) - Hexagonal + DDD rationale
-- [Mastery Algorithm Explained](./docs/explanation/mastery-algorithm.md) - EWMA and dual metrics
-- [Six Dimensions Framework](./docs/explanation/six-dimensions.md) - Cognitive science backing
-- [Technology Choices](./docs/explanation/technology-choices.md) - Stack decisions
-
-**Project Documentation:**
-- [PRD.md](./PRD.md) - Complete product requirements document
-- [TECHNICAL.md](./TECHNICAL.md) - Technical architecture document
-
-## 🤝 Contributing
-
-This is a personal learning project, but feedback and ideas are welcome! Feel free to:
-- Open issues for bugs or feature suggestions
-- Submit PRs for improvements
-- Share your experience using the system
-
-## 📄 License
-
-ISC License - Copyright (c) 2025 Adam Manuel
-
-## 🙏 Acknowledgments
-
-- Inspired by spaced repetition research (Piotr Woźniak, Andy Matuschak)
-- Built on SM-2 algorithm foundations
-- Designed for genuine mastery, not just memorization
+Built on research from spaced repetition pioneers (Piotr Wozniak, Andy Matuschak) and designed for genuine mastery over surface-level memorization.
 
 ---
 
-**Philosophy**: "Anki that teaches, not just drills."
-
-The goal isn't to ace flashcards—it's to build robust, transferable knowledge that works in real-world scenarios.
+<p align="center">
+  <strong>Philosophy:</strong> "Anki that teaches, not just drills."
+</p>

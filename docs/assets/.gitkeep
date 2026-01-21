@@ -1,0 +1,15 @@
+# Documentation Assets
+
+Place screenshots and images here:
+
+- `dashboard-preview.png` - Main dashboard screenshot (recommended: 1400x900)
+- `review-card.png` - Review interface screenshot
+- `analytics-page.png` - Analytics dashboard screenshot
+
+## Taking Screenshots
+
+For consistent screenshots:
+1. Use a clean window without personal data
+2. Capture at 2x resolution for retina displays
+3. Crop to focus on relevant UI elements
+4. Use PNG format for UI screenshots
